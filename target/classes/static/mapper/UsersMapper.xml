@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mockproject.du1.mapper.UsersMapper">
+
+	<!--Check user login -->
+	<select id="sqlCheckLoginSelect" resultType="Long" parameterType="com.mockproject.du1.model.Users">
+
+		SELECT COUNT(*)
+		FROM   public.users
+		WHERE  public.users.username = #{username}
+		AND    public.users.password = #{password}
+
+	</select>
+
+	<!--Get User Information -->
+	<resultMap id="GetUserResultMap"
+		type="com.mockproject.du1.model.Users">
+		<result property="id" column="user_id" />
+		<result property="firstname" column="first_name" />
+		<result property="lastname" column="last_name" />
+		<result property="username" column="email" />
+		<result property="password" column="password" />
+	</resultMap>
+
+	<!--Get List Data User Information -->
+	<select id="sqlGetUserSelect" resultMap="GetUserResultMap">
+
+		SELECT
+		user_id,
+		first_name,
+		last_name,
+		email,
+		password
+		FROM
+		public.user
+
+	</select>
+
+</mapper>
