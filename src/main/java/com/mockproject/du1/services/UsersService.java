@@ -16,9 +16,9 @@ public class UsersService {
 	@Autowired
 	private UsersMapper usersMapper;
 
-	public Users loadUserByUsername(String username) {
-		// TODO Auto-generated method stub
-		return null;
+	public Users getUserByUsername(String username) {
+		
+		return usersMapper.sqlGetUserByUsernameSelect(username);
 	}
 
 	public List<GrantedAuthority> getAuthorities(Users user) {

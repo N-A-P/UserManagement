@@ -13,27 +13,61 @@
 
 	</select>
 
-	<!--Get User Information -->
+	<!--Get List Data User Information -->
 	<resultMap id="GetUserResultMap"
 		type="com.mockproject.du1.model.Users">
-		<result property="id" column="user_id" />
-		<result property="firstname" column="first_name" />
-		<result property="lastname" column="last_name" />
-		<result property="username" column="email" />
+		<result property="userId" column="user_id" />
+		<result property="firstName" column="first_name" />
+		<result property="lastName" column="last_name" />
+		<result property="email" column="email" />
+		<result property="username" column="username" />
 		<result property="password" column="password" />
+		<result property="dob" column="dob" />
+		<result property="startDate" column="start_date" />
+		<result property="endDate" column="end_date" />
+		<result property="tenure" column="tenure" />
+		<result property="status" column="status" />
 	</resultMap>
 
 	<!--Get List Data User Information -->
-	<select id="sqlGetUserSelect" resultMap="GetUserResultMap">
+	<select id="sqlGetAllUserSelect" resultMap="GetUserResultMap">
 
 		SELECT
 		user_id,
 		first_name,
 		last_name,
 		email,
-		password
+		username,
+		password,
+		dob,
+		start_date,
+		end_date,
+		tenure,
+		status
 		FROM
-		public.user
+		public.users
+
+	</select>
+	
+	<!--Get List Data User Information By Username -->
+	<select id="sqlGetUserByUsernameSelect" resultMap="GetUserResultMap" parameterType="String">
+
+		SELECT
+		user_id,
+		first_name,
+		last_name,
+		email,
+		username,
+		password,
+		dob,
+		start_date,
+		end_date,
+		tenure,
+		status
+		FROM
+		public.users
+		WHERE 
+		username = #{username}
 
 	</select>
 

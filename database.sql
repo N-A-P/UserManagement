@@ -19,7 +19,7 @@ CREATE TABLE department
 	department_id bigint NOT NULL UNIQUE,
 	department_name varchar(50),
 	number_of_employees int,
-	status bigint,
+	status int,
 	PRIMARY KEY (department_id)
 ) WITHOUT OIDS;
 
@@ -27,7 +27,7 @@ CREATE TABLE department
 CREATE TABLE department_detail
 (
 	department_detail_id bigint NOT NULL UNIQUE,
-	status bigint,
+	status int,
 	department_id bigint NOT NULL UNIQUE,
 	user_id bigint NOT NULL UNIQUE,
 	PRIMARY KEY (department_detail_id)
@@ -82,6 +82,7 @@ CREATE TABLE users
 	start_date date NOT NULL,
 	end_date date NOT NULL,
 	tenure int NOT NULL,
+	status int,
 	PRIMARY KEY (user_id)
 ) WITHOUT OIDS;
 

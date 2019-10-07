@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mockproject.du1.mapper.DepartmentMapper">
+
+	<!--Get List Data Department Information -->
+	<resultMap id="GetDepartmentResultMap"
+		type="com.mockproject.du1.model.Department">
+		<result property="departmentId" column="department_id" />
+		<result property="departmentName" column="department_name" />
+		<result property="numberOfEmployees"
+			column="number_of_employees" />
+		<result property="status" column="status" />
+	</resultMap>
+
+	<!--Get List Data Department Information -->
+	<select id="sqlGetAllDepartmentSelect"
+		resultMap="GetDepartmentResultMap">
+
+		SELECT
+		department_id,
+		department_name,
+		number_of_employees,
+		status
+		FROM
+		public.department
+
+	</select>
+
+	<!--Get List Data Department Information By Status -->
+	<select id="sqlGetDepartmentByStatusSelect"
+		resultMap="GetDepartmentResultMap" parameterType="Integer">
+
+		SELECT
+		department_id,
+		department_name,
+		number_of_employees,
+		status
+		FROM
+		public.department
+		WHERE
+		status = #{status}
+
+	</select>
+
+	<!--Get List Data Department Information By Id -->
+	<select id="sqlGetDepartmentByIdSelect"
+		resultMap="GetDepartmentResultMap" parameterType="Integer">
+
+		SELECT
+		department_id,
+		department_name,
+		number_of_employees,
+		status
+		FROM
+		public.department
+		WHERE
+		department_id = #{department_id}
+
+	</select>
+
+	<!--Get Max Department Id -->
+	<select id="sqlGetMaxDepartmentIdSelect" resultType="Long">
+
+		SELECT
+		COALESCE(MAX(department_id),0)
+		FROM
+		public.department
+
+	</select>
+
+	<!--Update Department Information -->
+	<update id="sqlDepartmentInfoUpdate"
+		parameterType="com.mockproject.du1.model.Department">
+
+		UPDATE public.department
+		SET department_name =
+		#{department_name}
+		number_of_employees = #{number_of_employees}
+		WHERE
+		department_id = #{department_id}
+	</update>
+
+	<!--Update Department Status -->
+	<update id="sqlDepartmentStatusUpdate"
+		parameterType="com.mockproject.du1.model.Department">
+
+		UPDATE public.department
+		SET status = #{status}
+		WHERE
+		department_id = #{department_id}
+	</update>
+
+	<!--Insert Department Information -->
+	<insert id="sqlDepartmentInsert"
+		parameterType="com.mockproject.du1.model.Department">
+		INSERT INTO public.department
+		(department_id,department_name,number_of_employees,status)
+		VALUES
+		(#{department_id},#{department_name},#{number_of_employees},#{status})
+	</insert>
+
+</mapper>

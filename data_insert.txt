@@ -1,0 +1,23 @@
+
+SELECT *
+		FROM
+		public.users
+		
+INSERT INTO public.users VALUES (1,'giap','nguyen','ntgptit#gmail.com','ntgptit','123456','19941015','19941015','19941015',0,1) 
+
+
+INSERT INTO public.department VALUES (1,'DU1','101',1) ;
+INSERT INTO public.department VALUES (2,'DU2','102',1) ;
+INSERT INTO public.department VALUES (3,'DU3','103',1) ;
+INSERT INTO public.department VALUES (4,'DU4','104',1) ;
+INSERT INTO public.department VALUES (5,'DU5','105',1) ;
+INSERT INTO public.department VALUES (6,'DU6','106',1) ;
+INSERT INTO public.department VALUES (7,'DU7','107',1) ;
+INSERT INTO public.department VALUES (8,'DU8','108',1) ;ROLE_ADMIN
+
+INSERT INTO public.role VALUES (1,'ROLE_ADMIN') ;
+INSERT INTO public.role VALUES (2,'ROLE_MANAGER') ;
+INSERT INTO public.role VALUES (3,'ROLE_EMPLOYEE') ;
+INSERT INTO public.role VALUES (4,'ROLE_CUSTOMER') ;
+
+

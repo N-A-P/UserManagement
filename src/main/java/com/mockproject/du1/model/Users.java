@@ -45,4 +45,9 @@ public class Users {
 	 * Tenure(Years)
 	 */
 	private int tenure;
+
+	/*
+	 * status
+	 */
+	private int status;
 }

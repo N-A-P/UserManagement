@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
+import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.Users;
+import com.mockproject.du1.services.DepartmentService;
 import com.mockproject.du1.services.EmailService;
 import com.mockproject.du1.services.JwtService;
 import com.mockproject.du1.services.UsersService;
@@ -20,16 +22,18 @@ import com.mockproject.du1.services.UsersService;
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/rest")
 public class UserRestController {
-    @Autowired
-    private JwtService jwtService;
-    @Autowired
-    private UsersService userService;
-    @Autowired
-    EmailService emailService;
-    @Autowired
-    private RoleMapper roleMapper; 
-    @Autowired
-    private UsersMapper usersMapper;
+	@Autowired
+	private JwtService jwtService;
+	@Autowired
+	private UsersService usersService;
+	@Autowired
+	private DepartmentService departmentService;
+	@Autowired
+	EmailService emailService;
+	@Autowired
+	private RoleMapper roleMapper;
+	@Autowired
+	private UsersMapper usersMapper;
 
 //    /* ---------------- GET ALL USER ------------------------ */
 //    @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -99,22 +103,28 @@ public class UserRestController {
 //        return new ResponseEntity<String>("success", HttpStatus.OK);
 //    }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
-        String result = "";
-        HttpStatus httpStatus = null;
-        try {
-            if (userService.checkLogin(user)) {
-                result = jwtService.generateTokenLogin(user.getUsername());
-                httpStatus = HttpStatus.OK;
-            } else {
-                result = "Wrong userId and password";
-                httpStatus = HttpStatus.BAD_REQUEST;
-            }
-        } catch (Exception ex) {
-            result = "Server Error";
-            httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-        }
-        return new ResponseEntity<String>(result, httpStatus);
-    }
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
+		String result = "";
+		HttpStatus httpStatus = null;
+		try {
+			if (usersService.checkLogin(user)) {
+				result = jwtService.generateTokenLogin(user.getUsername());
+				httpStatus = HttpStatus.OK;
+			} else {
+				result = "Wrong userId and password";
+				httpStatus = HttpStatus.BAD_REQUEST;
+			}
+		} catch (Exception ex) {
+			result = "Server Error";
+			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		return new ResponseEntity<String>(result, httpStatus);
+	}
+
+	@RequestMapping(value = "/getAllListDepartment", method = RequestMethod.GET)
+	public ResponseEntity<List<Department>> getAllListDepartment() {
+		return new ResponseEntity<List<Department>>(departmentService.getAllListDepartment(), HttpStatus.OK);
+	}
+
 }
