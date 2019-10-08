@@ -1,5 +1,7 @@
 package com.mockproject.du1.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.mockproject.du1.model.Users;
@@ -19,13 +21,27 @@ public interface UsersMapper {
 	 *
 	 * @return Users
 	 */
-	Users sqlGetAllUserSelect();
-	
+	List<Users> sqlGetAllUserSelect();
+
 	/**
 	 * Get User By Username
 	 *
 	 * @return User
 	 */
-	Users sqlGetUserByUsernameSelect(String username);
+	Users sqlGetUserByUsernameSelect(@Param("username") String username);
+
+	/**
+	 * Get User By Email
+	 *
+	 * @return User
+	 */
+	Users sqlGetUserByEmailSelect(@Param("email") String email);
+	
+	/**
+	 * Add User
+	 *
+	 * @return User
+	 */
+	void sqlCreateUserInsert(Users user);
 
 }

@@ -50,4 +50,37 @@ public class Users {
 	 * status
 	 */
 	private int status;
+	
+	/*
+	 * Constructor for testing
+	 */
+	public Users(String firstName, String lastName, String email, String username, String password, String dob,
+			String startDate, String endDate, int tenure, int status) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.dob = dob;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.tenure = tenure;
+		this.status = status;
+	}
+
+	public Users(int userId, String firstName, String lastName, String email, String username, String password,
+			String dob, String startDate, String endDate, int tenure, int status) {
+		this.userId = userId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.dob = dob;
+		this.startDate = startDate;
+		this.endDate = endDate;
+		this.tenure = tenure;
+		this.status = status;
+	}
+	
 }

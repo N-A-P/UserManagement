@@ -36,11 +36,11 @@ public class UserRestController {
 	@Autowired
 	private UsersMapper usersMapper;
 
-//    /* ---------------- GET ALL USER ------------------------ */
-//    @RequestMapping(value = "/users", method = RequestMethod.GET)
-//    public ResponseEntity<List<User>> getAllUser() {
-//        return new ResponseEntity<List<User>>(userService.findAll(), HttpStatus.OK);
-//    }
+	/* ---------------- GET ALL USER ------------------------ */
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	public ResponseEntity<List<Users>> getAllUser() {
+		return new ResponseEntity<List<Users>>(usersService.getAllUser(), HttpStatus.OK);
+	}
 //
 //    /* ---------------- GET USER BY ID ------------------------ */
 //    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
@@ -52,15 +52,22 @@ public class UserRestController {
 //        return new ResponseEntity<Object>("Not Found User", HttpStatus.NO_CONTENT);
 //    }
 //
-//    /* ---------------- CREATE NEW USER ------------------------ */
-//    @RequestMapping(value = "/users", method = RequestMethod.POST)
-//    public ResponseEntity<String> createUser(@RequestBody User user, @RequestParam("role") int role) {
-//        if (userService.add(user, role)) {
+	/* ---------------- REGISTRATION ------------------------ */
+	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	public ResponseEntity<String> registerNewCustomer(){
+//	(@RequestBody Users user) {
+//        if (usersService.registerNewCustomer(user)) {
 //            return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
 //        } else {
-//            return new ResponseEntity<String>("User Existed!", HttpStatus.BAD_REQUEST);
+//            return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
 //        }
-//    }
+		if (usersService.registerNewCustomer(new Users("first", "last", "email1", "username1", "password", "10-8-1992",
+				"10-8-1992", "10-8-1992", 0, 0))) {
+			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+		}
+	}
 //
 //    @RequestMapping(value = "/createRole", method = RequestMethod.POST)
 //    public ResponseEntity<String> createRole(@RequestBody User user, @RequestParam("role") int role) {
@@ -113,7 +120,7 @@ public class UserRestController {
 				result = jwtService.generateTokenLogin(user.getUsername());
 				httpStatus = HttpStatus.OK;
 			} else {
-				result = "Wrong userId and password";
+				result = "Wrong username or password";
 				httpStatus = HttpStatus.BAD_REQUEST;
 			}
 		} catch (Exception ex) {
