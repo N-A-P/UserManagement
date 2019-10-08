@@ -69,6 +69,59 @@
 
 	</select>
 
+	<!-- Get a list of non-departmental/departmental employees -->
+	<resultMap type="" id=""></resultMap>
+
+	<select id="sqlGetListEmployeeOfDepartmentByStatus" resultMap="">
+	<![CDATA[  
+		SELECT 
+		a.user_id,
+		a.first_name,
+		a.last_name,
+		a.email,
+		a.tenure,
+		c.role_id,
+		c.role_name,
+		e.department_id,
+		e.department_name
+
+		FROM public.users a
+
+		INNER JOIN
+		public.role_detail b
+		ON a.user_id = b.user_id
+
+		INNER JOIN public.role c
+		ON c.role_id = b.role_id
+
+		INNER JOIN
+		public.department_detail d
+		ON a.user_id = d.user_id
+
+		INNER JOIN
+		public.department e
+		ON e.department_id = d.department_id
+
+
+		<where> 1 = 1
+			<if test="department_id != 0">
+				e.department_id = #{department_id}
+			</if>
+			<choose>
+				<when test="role_id != 4">
+					AND c.role_id <= #{role_id}
+				</when>
+				<when test="role_id == 4">
+					AND c.role_id = #{role_id}
+				</when>
+			</choose>
+			AND d.status = #{statusDepartmentDetail}
+			AND e.status = #{statusDepartment}
+		</where>
+	]]>
+
+	</select>
+
 	<!--Update Department Information -->
 	<update id="sqlDepartmentInfoUpdate"
 		parameterType="com.mockproject.du1.model.Department">

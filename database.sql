@@ -16,7 +16,7 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE department
 (
-	department_id bigint NOT NULL UNIQUE,
+	department_id serial NOT NULL UNIQUE,
 	department_name varchar(50),
 	number_of_employees int,
 	status int,
@@ -26,17 +26,17 @@ CREATE TABLE department
 
 CREATE TABLE department_detail
 (
-	department_detail_id bigint NOT NULL UNIQUE,
+	department_detail_id serial NOT NULL UNIQUE,
 	status int,
-	department_id bigint NOT NULL UNIQUE,
-	user_id bigint NOT NULL UNIQUE,
+	department_id int NOT NULL,
+	user_id int NOT NULL,
 	PRIMARY KEY (department_detail_id)
 ) WITHOUT OIDS;
 
 
 CREATE TABLE email
 (
-	email_id bigint NOT NULL UNIQUE,
+	email_id serial NOT NULL UNIQUE,
 	subject varchar(200) NOT NULL,
 	content varchar(3000) NOT NULL,
 	PRIMARY KEY (email_id)
@@ -45,17 +45,17 @@ CREATE TABLE email
 
 CREATE TABLE mail_histoy
 (
-	mail_histoy_id bigint NOT NULL UNIQUE,
+	mail_histoy_id serial NOT NULL UNIQUE,
 	send_date date NOT NULL,
-	email_id bigint NOT NULL UNIQUE,
-	user_id bigint NOT NULL UNIQUE,
+	user_id int NOT NULL,
+	email_id int NOT NULL,
 	PRIMARY KEY (mail_histoy_id)
 ) WITHOUT OIDS;
 
 
 CREATE TABLE role
 (
-	role_id int NOT NULL UNIQUE,
+	role_id serial NOT NULL UNIQUE,
 	role_name varchar(15) NOT NULL,
 	PRIMARY KEY (role_id)
 ) WITHOUT OIDS;
@@ -63,16 +63,16 @@ CREATE TABLE role
 
 CREATE TABLE role_detail
 (
-	role_detail_id int NOT NULL UNIQUE,
-	role_id int NOT NULL UNIQUE,
-	user_id bigint NOT NULL UNIQUE,
+	role_detail_id serial NOT NULL UNIQUE,
+	user_id int NOT NULL,
+	role_id int NOT NULL,
 	PRIMARY KEY (role_detail_id)
 ) WITHOUT OIDS;
 
 
 CREATE TABLE users
 (
-	user_id bigint NOT NULL UNIQUE,
+	user_id serial NOT NULL UNIQUE,
 	first_name varchar(50),
 	last_name varchar(50),
 	email varchar(50) NOT NULL,
