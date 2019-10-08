@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
 import com.mockproject.du1.model.Department;
+import com.mockproject.du1.model.EmployeeOfDepartment;
 import com.mockproject.du1.model.Users;
 import com.mockproject.du1.services.DepartmentService;
 import com.mockproject.du1.services.EmailService;
@@ -125,6 +126,55 @@ public class UserRestController {
 	@RequestMapping(value = "/getAllListDepartment", method = RequestMethod.GET)
 	public ResponseEntity<List<Department>> getAllListDepartment() {
 		return new ResponseEntity<List<Department>>(departmentService.getAllListDepartment(), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/getListDepartmentActive", method = RequestMethod.GET)
+	public ResponseEntity<List<Department>> getListDepartmentActive() {
+		return new ResponseEntity<List<Department>>(departmentService.getListDepartmentActive(), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/getDepartmentById/{departmentId}", method = RequestMethod.GET)
+	public ResponseEntity<Department> getDepartmentById(@PathVariable int departmentId) {
+		return new ResponseEntity<Department>(departmentService.getDepartmentById(departmentId), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/getListEmployeeOfDepartment/{departmentId}", method = RequestMethod.GET)
+	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeOfDepartment(@PathVariable int departmentId) {
+		return new ResponseEntity<List<EmployeeOfDepartment>>(
+				departmentService.getListEmployeeOfDepartment(departmentId), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/getListEmployeeNotInDepartment/{departmentId}", method = RequestMethod.GET)
+	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeNotInDepartment(@PathVariable int departmentId) {
+		return new ResponseEntity<List<EmployeeOfDepartment>>(
+				departmentService.getListEmployeeNotInDepartment(departmentId), HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/updateDepartmentInfomation", method = RequestMethod.POST)
+	public ResponseEntity<String> updateDepartmentInfomation(@RequestBody Department department) {
+		if (departmentService.departmentInfoUpdate(department) != 0) {
+			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping(value = "/updateDepartmentStatus", method = RequestMethod.POST)
+	public ResponseEntity<String> updateDepartmentStatus(@RequestBody Department department) {
+		if (departmentService.departmentStatusUpdate(department) != 0) {
+			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	@RequestMapping(value = "/insertDepartment", method = RequestMethod.POST)
+	public ResponseEntity<String> insertDepartment(@RequestBody Department department) {
+		if (departmentService.departmentInsert(department) != 0) {
+			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

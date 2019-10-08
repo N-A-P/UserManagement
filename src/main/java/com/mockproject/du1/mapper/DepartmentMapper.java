@@ -1,8 +1,9 @@
 package com.mockproject.du1.mapper;
 
 import java.util.List;
-import com.mockproject.du1.model.Users;
+import org.apache.ibatis.annotations.Param;
 import com.mockproject.du1.model.Department;
+import com.mockproject.du1.model.EmployeeOfDepartment;
 
 public interface DepartmentMapper {
 	/**
@@ -34,21 +35,30 @@ public interface DepartmentMapper {
 	long sqlGetMaxDepartmentIdSelect();
 
 	/**
-	 * Update Department Information
+	 * Get Max Department
 	 *
+	 * @return Max Department Id
 	 */
-	void sqlDepartmentInfoUpdate(Department department);
+	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("department_id") int department_id,
+			@Param("role_id") int role_id, @Param("statusDepartmentDetail") int statusDepartmentDetail,
+			@Param("statusDepartment") int statusDepartment);
 
 	/**
 	 * Update Department Information
 	 *
 	 */
-	void sqlDepartmentStatusUpdate(Department department);
+	int sqlDepartmentInfoUpdate(Department department);
+
+	/**
+	 * Update Department Status
+	 *
+	 */
+	int sqlDepartmentStatusUpdate(Department department);
 
 	/**
 	 * Insert Department Information
 	 *
 	 */
-	void sqlDepartmentInsert(Department department);
+	int sqlDepartmentInsert(Department department);
 
 }
