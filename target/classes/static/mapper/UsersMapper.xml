@@ -5,12 +5,10 @@
 
 	<!--Check user login -->
 	<select id="sqlCheckLoginSelect" resultType="Long" parameterType="com.mockproject.du1.model.Users">
-
 		SELECT COUNT(*)
 		FROM   public.users
 		WHERE  public.users.username = #{username}
 		AND    public.users.password = #{password}
-
 	</select>
 
 	<!--Get List Data User Information -->
@@ -51,7 +49,6 @@
 	
 	<!--Get List Data User Information By Username -->
 	<select id="sqlGetUserByUsernameSelect" resultMap="GetUserResultMap" parameterType="String">
-
 		SELECT
 		user_id,
 		first_name,
@@ -68,7 +65,36 @@
 		public.users
 		WHERE 
 		username = #{username}
-
 	</select>
+	
+	<!--Get List Data User Information By Email -->
+	<select id="sqlGetUserByEmailSelect" resultMap="GetUserResultMap" parameterType="String">
+		SELECT
+		user_id,
+		first_name,
+		last_name,
+		email,
+		username,
+		password,
+		dob,
+		start_date,
+		end_date,
+		tenure,
+		status
+		FROM
+		public.users
+		WHERE 
+		email = #{email}
+	</select>
+	
+		<!--Insert new record into Table User, User_Role -->
+	<insert id="sqlCreateUserInsert" parameterType="com.mockproject.du1.model.Users">
+		INSERT INTO public.users
+		(first_name,last_name,email,username,password,dob,start_date,end_date,tenure,status)
+		VALUES
+		(#{firstName},#{lastName},#{email},#{username},#{password},#{dob},#{startDate},#{endDate},#{tenure},#{status});
+		
+	</insert>
+	
 
 </mapper>
