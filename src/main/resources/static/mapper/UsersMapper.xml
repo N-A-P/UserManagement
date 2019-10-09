@@ -84,16 +84,19 @@
 		FROM
 		public.users
 		WHERE 
-		email = #{email}
+		email  in (#{email})
 	</select>
 	
-		<!--Insert new record into Table User, User_Role -->
+		<!--Insert new record into Table User -->
 	<insert id="sqlCreateUserInsert" parameterType="com.mockproject.du1.model.Users">
 		INSERT INTO public.users
 		(first_name,last_name,email,username,password,dob,start_date,end_date,tenure,status)
 		VALUES
-		(#{firstName},#{lastName},#{email},#{username},#{password},#{dob},#{startDate},#{endDate},#{tenure},#{status});
-		
+		(#{firstName},#{lastName},#{email},#{username},#{password},
+		TO_DATE(#{dob},'YYYY-MM-DD'),
+		TO_DATE(#{startDate},'YYYY-MM-DD'),
+		TO_DATE(#{endDate},'YYYY-MM-DD'),
+		#{tenure},#{status})
 	</insert>
 	
 

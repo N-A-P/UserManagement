@@ -8,13 +8,17 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
 import com.mockproject.du1.model.Users;
+
 @Service
 public class UsersService {
 
 	@Autowired
 	private UsersMapper usersMapper;
+	@Autowired
+	private RoleMapper roleMapper;
 
 	public List<Users> getAllUser() {
 		return usersMapper.sqlGetAllUserSelect();
@@ -26,6 +30,14 @@ public class UsersService {
 
 	public Users getUserByEmail(String email) {
 		return usersMapper.sqlGetUserByEmailSelect(email);
+	}
+
+	public List<Users> getUsersListByEmails(List<String> emails) {
+		List<Users> userList = new ArrayList<>();
+		for (String email : emails) {
+			userList.add(getUserByEmail(email));
+		}
+		return userList;
 	}
 
 	public List<GrantedAuthority> getAuthorities(Users user) {
@@ -46,10 +58,14 @@ public class UsersService {
 	}
 
 	public boolean registerNewCustomer(Users user) {
-//		if (((getUserByUsername(user.getUsername())) != null) || ((getUserByEmail(user.getEmail())) != null))
-//			return false;
-		usersMapper.sqlCreateUserInsert(user);
-		return true;
+		if (((getUserByUsername(user.getUsername())) == null) && ((getUserByEmail(user.getEmail())) == null))
+			if (usersMapper.sqlCreateUserInsert(user) != 0) {
+				roleMapper.sqlCreateUserRoleInsert(1,
+						usersMapper.sqlGetUserByUsernameSelect(user.getUsername()).getUserId());
+				return true;
+			}
+		return false;
+
 	}
 
 }
