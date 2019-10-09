@@ -63,12 +63,11 @@ public class UserRestController {
 //
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public ResponseEntity<String> registerNewCustomer(){
-user.setStartDate(java.time.LocalDate.now().toString());
+	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user){
+        user.setStartDate(java.time.LocalDate.now().toString());
 		user.setTenure(0);
 		user.setStatus(0);
-        if (usersService.registerNewCu
-	    stomer(user)) {
+        if (usersService.registerNewCustomer(user)) {
             return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
