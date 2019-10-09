@@ -112,7 +112,7 @@ public class UserRestController {
 	public ResponseEntity<List<Users>> coverExcel(@RequestBody File file) throws IOException {
 		List<String> emails=emailService.coverExcellFileToArray(file);
 		List <Users> users=new ArrayList<>();
-		users=usersService.getUserByEmail(emails);
+		users=usersService.getUsersListByEmails(emails);
 		return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
 	}
 

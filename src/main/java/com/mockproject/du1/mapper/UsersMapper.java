@@ -35,13 +35,13 @@ public interface UsersMapper {
 	 *
 	 * @return User
 	 */
-	List<Users> sqlGetUserByEmailSelect(@Param("email") List<String> email);
+	Users sqlGetUserByEmailSelect(@Param("email") String email);
 
 	/**
 	 * Add User
 	 *
 	 * @return User
 	 */
-	void sqlCreateUserInsert(Users user);
+	int sqlCreateUserInsert(Users user);
 
 }
