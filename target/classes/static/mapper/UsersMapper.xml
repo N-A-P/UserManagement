@@ -84,7 +84,7 @@
 		FROM
 		public.users
 		WHERE 
-		email = #{email}
+		email  in (#{email})
 	</select>
 	
 		<!--Insert new record into Table User -->
@@ -99,12 +99,5 @@
 		#{tenure},#{status})
 	</insert>
 	
-		<!--Insert new record into User_Role -->
-	<insert id="sqlCreateUserRoleInsert" parameterType="Integer">
-		INSERT INTO public.role_detail
-		(role_id,user_id)
-		VALUES
-		(#{roleId},#{userId})
-	</insert>
 
 </mapper>

@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
 import com.mockproject.du1.model.MailOfUser;
@@ -13,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.mockproject.du1.mapper.RoleMapper;
-import com.mockproject.du1.mapper.UsersMapper;
 import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.EmployeeOfDepartment;
 import com.mockproject.du1.model.Users;
@@ -35,16 +32,15 @@ public class UserRestController {
 	private DepartmentService departmentService;
 	@Autowired
 	EmailService emailService;
-	@Autowired
-	private RoleMapper roleMapper;
-	@Autowired
-	private UsersMapper usersMapper;
+
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public ResponseEntity<List<Users>> getAllUser() {
 		return new ResponseEntity<List<Users>>(usersService.getAllUser(), HttpStatus.OK);
 	}
+	
+	
 	@RequestMapping(value = "/sendMail", method = RequestMethod.GET)
 	public ResponseEntity<String> sendMail(@RequestBody MailOfUser mailOfUser) {
 		emailService.sendEmailToAll(mailOfUser.getUsers(),mailOfUser.getEmailHeader(),mailOfUser.getEmailBodyText());
@@ -62,9 +58,10 @@ public class UserRestController {
 //    }
 //
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
-	@RequestMapping(value = "/registration", method = RequestMethod.POST)
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user){
         user.setStartDate(java.time.LocalDate.now().toString());
+        user.setEndDate(java.time.LocalDate.now().toString());
 		user.setTenure(0);
 		user.setStatus(0);
         if (usersService.registerNewCustomer(user)) {
@@ -119,6 +116,7 @@ public class UserRestController {
 		return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
 	}
 
+	/* ---------------- LOGIN ------------------------ */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";
