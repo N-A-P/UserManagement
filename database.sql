@@ -11,12 +11,34 @@ DROP TABLE IF EXISTS users;
 
 
 
+/* Drop Sequences */
+
+DROP SEQUENCE IF EXISTS department_detail_id_seq;
+DROP SEQUENCE IF EXISTS department_id_seq;
+DROP SEQUENCE IF EXISTS email_id_seq;
+DROP SEQUENCE IF EXISTS mail_history_id_seq;
+DROP SEQUENCE IF EXISTS role_detail_id_seq;
+DROP SEQUENCE IF EXISTS user_id_seq;
+
+
+
+
+/* Create Sequences */
+
+CREATE SEQUENCE department_detail_id_seq INCREMENT 1 MINVALUE 1 START 1;
+CREATE SEQUENCE department_id_seq INCREMENT 1 MINVALUE 1 START 1;
+CREATE SEQUENCE email_id_seq INCREMENT 1 MINVALUE 1 START 1;
+CREATE SEQUENCE mail_history_id_seq INCREMENT 1 MINVALUE 1 START 1;
+CREATE SEQUENCE role_detail_id_seq INCREMENT 1 MINVALUE 1 START 1;
+CREATE SEQUENCE user_id_seq INCREMENT 1 MINVALUE 1 START 1;
+
+
 
 /* Create Tables */
 
 CREATE TABLE department
 (
-	department_id serial NOT NULL UNIQUE,
+	department_id bigint DEFAULT nextval('department_id_seq') NOT NULL UNIQUE,
 	department_name varchar(50),
 	number_of_employees int,
 	status int,
@@ -26,17 +48,17 @@ CREATE TABLE department
 
 CREATE TABLE department_detail
 (
-	department_detail_id serial NOT NULL UNIQUE,
+	department_detail_id bigint NOT NULL UNIQUE,
 	status int,
-	department_id int NOT NULL,
-	user_id int NOT NULL,
+	department_id bigint NOT NULL,
+	user_id bigint NOT NULL,
 	PRIMARY KEY (department_detail_id)
 ) WITHOUT OIDS;
 
 
 CREATE TABLE email
 (
-	email_id serial NOT NULL UNIQUE,
+	email_id bigint DEFAULT nextval('email_id_seq') NOT NULL UNIQUE,
 	subject varchar(200) NOT NULL,
 	content varchar(3000) NOT NULL,
 	PRIMARY KEY (email_id)
@@ -45,17 +67,17 @@ CREATE TABLE email
 
 CREATE TABLE mail_histoy
 (
-	mail_histoy_id serial NOT NULL UNIQUE,
+	mail_histoy_id bigint DEFAULT nextval('mail_histoy_id_seq') NOT NULL UNIQUE,
 	send_date date NOT NULL,
-	user_id int NOT NULL,
-	email_id int NOT NULL,
+	user_id bigint NOT NULL,
+	email_id bigint NOT NULL,
 	PRIMARY KEY (mail_histoy_id)
 ) WITHOUT OIDS;
 
 
 CREATE TABLE role
 (
-	role_id serial NOT NULL UNIQUE,
+	role_id bigint DEFAULT nextval('role_id_seq') NOT NULL UNIQUE,
 	role_name varchar(15) NOT NULL,
 	PRIMARY KEY (role_id)
 ) WITHOUT OIDS;
@@ -63,16 +85,16 @@ CREATE TABLE role
 
 CREATE TABLE role_detail
 (
-	role_detail_id serial NOT NULL UNIQUE,
-	user_id int NOT NULL,
-	role_id int NOT NULL,
+	role_detail_id bigint DEFAULT nextval('role_detail_id_seq') NOT NULL UNIQUE,
+	user_id bigint NOT NULL,
+	role_id bigint NOT NULL,
 	PRIMARY KEY (role_detail_id)
 ) WITHOUT OIDS;
 
 
 CREATE TABLE users
 (
-	user_id serial NOT NULL UNIQUE,
+	user_id bigint DEFAULT nextval('user_id_seq') NOT NULL UNIQUE,
 	first_name varchar(50),
 	last_name varchar(50),
 	email varchar(50) NOT NULL,
