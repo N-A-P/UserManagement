@@ -101,7 +101,6 @@ public class DepartmentService {
 		try {
 			return departmentMapper.sqlDepartmentInfoUpdate(department);
 		} catch (Exception e) {
-			// TODO: handle exception
 			logger.error(e.getMessage());
 		}
 
@@ -116,7 +115,6 @@ public class DepartmentService {
 		try {
 			return departmentMapper.sqlDepartmentStatusUpdate(department);
 		} catch (Exception e) {
-			// TODO: handle exception
 			logger.error(e.getMessage());
 		}
 
@@ -132,7 +130,6 @@ public class DepartmentService {
 			return departmentMapper.sqlDepartmentInsert(department);
 
 		} catch (Exception e) {
-			// TODO: handle exception
 			logger.error(e.getMessage());
 		}
 		return 0;

@@ -1,9 +1,43 @@
+select * from public.users;
 
-SELECT *
-		FROM
-		public.users
-		
-INSERT INTO public.users VALUES (1,'giap','nguyen','ntgptit#gmail.com','ntgptit','123456','19941015','19941015','19941015',0,1) 
+INSERT INTO public.users VALUES (1,'giap1','nguyen1','ntgptit#gmail.com','ntgptit','123456','19941015','19941015','19941015',1,1);
+INSERT INTO public.users VALUES (2,'giap2','nguyen2','ntgptit#gmail.com','ntgptit','123456','19941015','19941015','19941015',2,1);
+INSERT INTO public.users VALUES (3,'giap3','nguyen3','ntgptit#gmail.com','ntgptit','123456','19941015','19941015','19941015',3,1);
+INSERT INTO public.users VALUES (4,'giap4','nguyen4','ntgptit#gmail.com','ntgptit','123456','19941015','19941015','19941015',4,1);
+INSERT INTO public.users VALUES (5,'giap5','nguyen5','ntgptit#gmail.com','ntgptit','123456','19941015','19941015','19941015',5,1);
+INSERT INTO public.users VALUES (6,'giap6','nguyen6','ntgptit#gmail.com','ntgptit','123456','19941015','19941015','19941015',6,1);
+INSERT INTO public.users VALUES (7,'giap7','nguyen7','ntgptit#gmail.com','ntgptit','123456','19941015','19941015','19941015',7,1);
+INSERT INTO public.users VALUES (8,'giap8','nguyen8','ntgptit#gmail.com','ntgptit','123456','19941015','19941015','19941015',8,1);
+
+
+INSERT INTO public.role_detail VALUES (1,1,3);
+INSERT INTO public.role_detail VALUES (2,2,3);
+INSERT INTO public.role_detail VALUES (3,3,3);
+INSERT INTO public.role_detail VALUES (4,4,3);
+INSERT INTO public.role_detail VALUES (5,5,3);
+INSERT INTO public.role_detail VALUES (6,6,3);
+INSERT INTO public.role_detail VALUES (7,7,3);
+INSERT INTO public.role_detail VALUES (8,8,3);
+
+INSERT INTO public.department_detail VALUES (1,1,3,1);
+INSERT INTO public.department_detail VALUES (2,1,3,2);
+INSERT INTO public.department_detail VALUES (3,1,3,3);
+INSERT INTO public.department_detail VALUES (4,1,3,4);
+INSERT INTO public.department_detail VALUES (5,1,3,5);
+INSERT INTO public.department_detail VALUES (6,1,3,6);
+INSERT INTO public.department_detail VALUES (7,1,3,7);
+INSERT INTO public.department_detail VALUES (8,1,3,8);
+
+
+
+
+select * from public.users;
+
+select * from public.role;
+
+select * from public.role_detail;
+
+select * from public.department_detail;
 
 
 INSERT INTO public.department VALUES (1,'DU1','101',1) ;
@@ -13,11 +47,15 @@ INSERT INTO public.department VALUES (4,'DU4','104',1) ;
 INSERT INTO public.department VALUES (5,'DU5','105',1) ;
 INSERT INTO public.department VALUES (6,'DU6','106',1) ;
 INSERT INTO public.department VALUES (7,'DU7','107',1) ;
-INSERT INTO public.department VALUES (8,'DU8','108',1) ;ROLE_ADMIN
+INSERT INTO public.department VALUES (8,'DU8','108',1) ;
 
 INSERT INTO public.role VALUES (1,'ROLE_ADMIN') ;
 INSERT INTO public.role VALUES (2,'ROLE_MANAGER') ;
 INSERT INTO public.role VALUES (3,'ROLE_EMPLOYEE') ;
 INSERT INTO public.role VALUES (4,'ROLE_CUSTOMER') ;
+
+
+
+
 
 
