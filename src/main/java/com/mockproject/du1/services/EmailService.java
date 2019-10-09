@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -27,7 +29,6 @@ import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
 
 @Service
-<<<<<<< HEAD
 public class EmailService {	
 	/*=================IMPORTANT===================*/
 //	TO USE THIS FUNCTION ON YOUR PC, RUN THESE CMD COMMANDS FIRST
@@ -37,11 +38,6 @@ public class EmailService {
 //	echo "sendgrid.env" >> .gitignore
 //
 //	setx SENDGRID_API_KEY "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"
-=======
-public class EmailService {
-
-	private Log log=LogFactory.getLog(EmailService.class);
->>>>>>> branch 'master' of https://github.com/ntgptit/mock
 
 	private Log log=LogFactory.getLog(EmailService.class);
 	
