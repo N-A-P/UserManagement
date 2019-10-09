@@ -46,8 +46,8 @@ public class UsersService {
 	}
 
 	public boolean registerNewCustomer(Users user) {
-//		if (((getUserByUsername(user.getUsername())) != null) || ((getUserByEmail(user.getEmail())) != null))
-//			return false;
+		if (((getUserByUsername(user.getUsername())) != null) || ((getUserByEmail(user.getEmail())) != null))
+			return false;
 		usersMapper.sqlCreateUserInsert(user);
 		return true;
 	}

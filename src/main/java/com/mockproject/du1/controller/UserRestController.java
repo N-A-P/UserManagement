@@ -54,19 +54,19 @@ public class UserRestController {
 //
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public ResponseEntity<String> registerNewCustomer(){
-//	(@RequestBody Users user) {
-//        if (usersService.registerNewCustomer(user)) {
-//            return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
-//        } else {
-//            return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
-//        }
-		if (usersService.registerNewCustomer(new Users("first", "last", "email1", "username1", "password", "10-8-1992",
-				"10-8-1992", "10-8-1992", 0, 0))) {
-			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
+        if (usersService.registerNewCustomer(user)) {
+            return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+        }
+        
+//		if (usersService.registerNewCustomer(new Users("first", "last", "email1", "username1", "password", "100892",
+//				"100892", "100892", 0, 0))) {
+//			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
+//		} else {
+//			return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+//		}
 	}
 //
 //    @RequestMapping(value = "/createRole", method = RequestMethod.POST)
