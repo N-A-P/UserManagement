@@ -17,10 +17,19 @@ import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 
 @Service
-public class EmailService {
-	
-	private Log log=LogFactory.getLog(EmailService.class);
+public class EmailService {	
+	/*=================IMPORTANT===================*/
+//	TO USE THIS FUNCTION ON YOUR PC, RUN THESE CMD COMMANDS FIRST
+//	
+//	echo "export SENDGRID_API_KEY='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'" > sendgrid.env
+//
+//	echo "sendgrid.env" >> .gitignore
+//
+//	setx SENDGRID_API_KEY "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"
 
+	private Log log=LogFactory.getLog(EmailService.class);
+	
+	/* ---------------- SEND PREPARED EMAIL TO LIST OF USERS ------------------------ */
 	public boolean sendEmailToAll(List<Users> recipientList, String emailHeader, String emailBodyText) {
 		if (recipientList != null) {
 			try {
@@ -36,6 +45,7 @@ public class EmailService {
 		return false;
 	}
 
+	/* ---------------- SEND PREPARED EMAIL TO ONE USERS ------------------------ */
 	private void sendEmail(Users recipient, String emailHeader, String emailBodyText) {
 		try {
 			Mail mail = prepareMail(recipient, emailHeader, emailBodyText);
@@ -56,6 +66,7 @@ public class EmailService {
 		log.info("mail has sent to " + recipient.getFirstName() + " " + recipient.getLastName());
 	}
 
+	/* ---------------- PREPARE EMAIL OBJECT WITH CUSTOMIZED HEADER AND BODY ------------------------ */
 	private Mail prepareMail(Users recipient, String emailHeader, String emailBodyText) {
 		// customized email content with user first name, last name
 		final String signature = "Best Regards, \n My Bank Application.";
