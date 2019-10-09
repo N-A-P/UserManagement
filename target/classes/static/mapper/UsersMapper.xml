@@ -87,17 +87,24 @@
 		email = #{email}
 	</select>
 	
-		<!--Insert new record into Table User, User_Role -->
+		<!--Insert new record into Table User -->
 	<insert id="sqlCreateUserInsert" parameterType="com.mockproject.du1.model.Users">
 		INSERT INTO public.users
 		(first_name,last_name,email,username,password,dob,start_date,end_date,tenure,status)
 		VALUES
 		(#{firstName},#{lastName},#{email},#{username},#{password},
-		TO_DATE(#{dob},'MMDDYY'),
-		TO_DATE(#{startDate},'MMDDYY'),
-		TO_DATE(#{endDate},'MMDDYY'),
-		#{tenure},#{status});
+		TO_DATE(#{dob},'YYYY-MM-DD'),
+		TO_DATE(#{startDate},'YYYY-MM-DD'),
+		TO_DATE(#{endDate},'YYYY-MM-DD'),
+		#{tenure},#{status})
 	</insert>
 	
+		<!--Insert new record into User_Role -->
+	<insert id="sqlCreateUserRoleInsert" parameterType="Integer">
+		INSERT INTO public.role_detail
+		(role_id,user_id)
+		VALUES
+		(#{roleId},#{userId})
+	</insert>
 
 </mapper>

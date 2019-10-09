@@ -40,8 +40,15 @@ public interface UsersMapper {
 	/**
 	 * Add User
 	 *
-	 * @return User
+	 * @return Insert query successful or not
 	 */
-	void sqlCreateUserInsert(Users user);
+	int sqlCreateUserInsert(Users user);
+
+	/**
+	 * Add Role_detail
+	 *
+	 * @return Insert query successful or not
+	 */
+	int sqlCreateUserRoleInsert(@Param("roleId")int roleId,@Param("userId")int userId);
 
 }

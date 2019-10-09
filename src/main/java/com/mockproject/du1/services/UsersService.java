@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.mockproject.du1.mapper.UsersMapper;
 import com.mockproject.du1.model.Users;
+
 @Service
 public class UsersService {
 
@@ -46,10 +47,12 @@ public class UsersService {
 	}
 
 	public boolean registerNewCustomer(Users user) {
-		if (((getUserByUsername(user.getUsername())) != null) || ((getUserByEmail(user.getEmail())) != null))
-			return false;
-		usersMapper.sqlCreateUserInsert(user);
-		return true;
+		if (((getUserByUsername(user.getUsername())) == null) && ((getUserByEmail(user.getEmail())) == null))
+			if (usersMapper.sqlCreateUserInsert(user) != 0) {
+				usersMapper.sqlCreateUserRoleInsert(1, usersMapper.sqlGetUserByUsernameSelect(user.getUsername()).getUserId());
+				return true;
+			}
+		return false;
 	}
 
 }

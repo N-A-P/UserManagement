@@ -31,10 +31,7 @@ public class UserRestController {
 	private DepartmentService departmentService;
 	@Autowired
 	EmailService emailService;
-	@Autowired
-	private RoleMapper roleMapper;
-	@Autowired
-	private UsersMapper usersMapper;
+
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -55,25 +52,16 @@ public class UserRestController {
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
+		user.setStartDate(java.time.LocalDate.now().toString());
+		user.setTenure(0);
+		user.setStatus(0);
         if (usersService.registerNewCustomer(user)) {
             return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
         }
-        
-//		if (usersService.registerNewCustomer(new Users("first", "last", "email1", "username1", "password", "100892",
-//				"100892", "100892", 0, 0))) {
-//			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
-//		} else {
-//			return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
-//		}
 	}
-//
-//    @RequestMapping(value = "/createRole", method = RequestMethod.POST)
-//    public ResponseEntity<String> createRole(@RequestBody User user, @RequestParam("role") int role) {
-//        userrolerepo.save(Userrole.builder().userid(user.getId()).roleid(role).count(0).build());
-//        return new ResponseEntity<String>("createRole", HttpStatus.OK);
-//    }
+
 //
 //    @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
 //    public ResponseEntity<String> deleteUserById(@PathVariable int id) {
@@ -112,6 +100,7 @@ public class UserRestController {
         return new ResponseEntity<String>("success", HttpStatus.OK);
     }
 
+	/* ---------------- LOGIN ------------------------ */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";

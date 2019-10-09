@@ -88,7 +88,7 @@ public class EmailService {
 		finalText.append(signature);
 
 		Email fromEmail = new Email("moneydontsleep8888@gmail.com");
-		Email toEmail = new Email(recipient.getUsername());
+		Email toEmail = new Email(recipient.getEmail());
 		Content content = new Content("text/plain", finalText.toString());
 		Mail mail = new Mail(fromEmail, emailHeader, toEmail, content);
 		return mail;
