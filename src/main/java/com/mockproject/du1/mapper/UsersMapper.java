@@ -35,20 +35,13 @@ public interface UsersMapper {
 	 *
 	 * @return User
 	 */
-	Users sqlGetUserByEmailSelect(@Param("email") String email);
-	
+	List<Users> sqlGetUserByEmailSelect(@Param("email") List<String> email);
+
 	/**
 	 * Add User
 	 *
-	 * @return Insert query successful or not
+	 * @return User
 	 */
-	int sqlCreateUserInsert(Users user);
-
-	/**
-	 * Add Role_detail
-	 *
-	 * @return Insert query successful or not
-	 */
-	int sqlCreateUserRoleInsert(@Param("roleId")int roleId,@Param("userId")int userId);
+	void sqlCreateUserInsert(Users user);
 
 }

@@ -1,9 +1,13 @@
 package com.mockproject.du1.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
+
+import com.mockproject.du1.model.MailOfUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,14 +35,22 @@ public class UserRestController {
 	private DepartmentService departmentService;
 	@Autowired
 	EmailService emailService;
-
+	@Autowired
+	private RoleMapper roleMapper;
+	@Autowired
+	private UsersMapper usersMapper;
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public ResponseEntity<List<Users>> getAllUser() {
 		return new ResponseEntity<List<Users>>(usersService.getAllUser(), HttpStatus.OK);
 	}
-//
+	@RequestMapping(value = "/sendMail", method = RequestMethod.GET)
+	public ResponseEntity<String> sendMail(@RequestBody MailOfUser mailOfUser) {
+		emailService.sendEmailToAll(mailOfUser.getUsers(),mailOfUser.getEmailHeader(),mailOfUser.getEmailBodyText());
+		return new ResponseEntity<String>("Success", HttpStatus.OK);
+	}
+	//
 //    /* ---------------- GET USER BY ID ------------------------ */
 //    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
 //    public ResponseEntity<Object> getUserById(@PathVariable int id) {
@@ -51,17 +63,26 @@ public class UserRestController {
 //
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
-		user.setStartDate(java.time.LocalDate.now().toString());
-		user.setTenure(0);
-		user.setStatus(0);
-        if (usersService.registerNewCustomer(user)) {
-            return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
-        }
+	public ResponseEntity<String> registerNewCustomer(){
+//	(@RequestBody Users user) {
+//        if (usersService.registerNewCustomer(user)) {
+//            return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
+//        } else {
+//            return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+//        }
+		if (usersService.registerNewCustomer(new Users("first", "last", "email1", "username1", "password", "10-8-1992",
+				"10-8-1992", "10-8-1992", 0, 0))) {
+			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+		}
 	}
-
+//
+//    @RequestMapping(value = "/createRole", method = RequestMethod.POST)
+//    public ResponseEntity<String> createRole(@RequestBody User user, @RequestParam("role") int role) {
+//        userrolerepo.save(Userrole.builder().userid(user.getId()).roleid(role).count(0).build());
+//        return new ResponseEntity<String>("createRole", HttpStatus.OK);
+//    }
 //
 //    @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
 //    public ResponseEntity<String> deleteUserById(@PathVariable int id) {
@@ -94,13 +115,14 @@ public class UserRestController {
 //    }
 
 	/* ---------------- SEND EMAIL TO LIST OF USERS ------------------------ */
-    @RequestMapping(value = "/email", method = RequestMethod.POST)
-    public ResponseEntity<String> sendmail(@RequestBody List<Users> user) {
-        emailService.sendEmailToAll((List<Users>) user, "emailHeader","emailBody");
-        return new ResponseEntity<String>("success", HttpStatus.OK);
-    }
+	@RequestMapping(value = "/email", method = RequestMethod.POST)
+	public ResponseEntity<List<Users>> coverExcel(@RequestBody File file) throws IOException {
+		List<String> emails=emailService.coverExcellFileToArray(file);
+		List <Users> users=new ArrayList<>();
+		users=usersService.getUserByEmail(emails);
+		return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
+	}
 
-	/* ---------------- LOGIN ------------------------ */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";

@@ -84,7 +84,7 @@
 		FROM
 		public.users
 		WHERE 
-		email = #{email}
+		email  in (#{email})
 	</select>
 	
 		<!--Insert new record into Table User -->
