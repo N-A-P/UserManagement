@@ -57,6 +57,10 @@ public class Users {
 	/*
 	 * Constructor for testing
 	 */
+	public Users() {
+		
+	}
+	
 	public Users(String firstName, String lastName, String email, String username, String password, String dob,
 			String startDate, String endDate, int tenure, int status) {
 		this.firstName = firstName;
