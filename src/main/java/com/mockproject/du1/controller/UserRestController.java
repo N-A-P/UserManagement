@@ -41,6 +41,7 @@ public class UserRestController {
 	public ResponseEntity<List<Users>> getAllUser() {
 		return new ResponseEntity<List<Users>>(usersService.getAllUser(), HttpStatus.OK);
 	}
+
 //
 //    /* ---------------- GET USER BY ID ------------------------ */
 //    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
@@ -54,7 +55,7 @@ public class UserRestController {
 //
 	/* ---------------- REGISTRATION ------------------------ */
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
-	public ResponseEntity<String> registerNewCustomer(){
+	public ResponseEntity<String> registerNewCustomer() {
 //	(@RequestBody Users user) {
 //        if (usersService.registerNewCustomer(user)) {
 //            return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
@@ -68,6 +69,7 @@ public class UserRestController {
 			return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
 		}
 	}
+
 //
 //    @RequestMapping(value = "/createRole", method = RequestMethod.POST)
 //    public ResponseEntity<String> createRole(@RequestBody User user, @RequestParam("role") int role) {
@@ -110,7 +112,9 @@ public class UserRestController {
 //        emailService.sendEmailToAll((List<User>) user, "");
 //        return new ResponseEntity<String>("success", HttpStatus.OK);
 //    }
-
+	/**
+	 * 
+	 */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";
@@ -130,33 +134,51 @@ public class UserRestController {
 		return new ResponseEntity<String>(result, httpStatus);
 	}
 
+	/**
+	 * 
+	 */
 	@RequestMapping(value = "/getAllListDepartment", method = RequestMethod.GET)
 	public ResponseEntity<List<Department>> getAllListDepartment() {
 		return new ResponseEntity<List<Department>>(departmentService.getAllListDepartment(), HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 */
 	@RequestMapping(value = "/getListDepartmentActive", method = RequestMethod.GET)
 	public ResponseEntity<List<Department>> getListDepartmentActive() {
 		return new ResponseEntity<List<Department>>(departmentService.getListDepartmentActive(), HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 */
 	@RequestMapping(value = "/getDepartmentById/{departmentId}", method = RequestMethod.GET)
 	public ResponseEntity<Department> getDepartmentById(@PathVariable int departmentId) {
 		return new ResponseEntity<Department>(departmentService.getDepartmentById(departmentId), HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 */
 	@RequestMapping(value = "/getListEmployeeOfDepartment/{departmentId}", method = RequestMethod.GET)
 	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeOfDepartment(@PathVariable int departmentId) {
 		return new ResponseEntity<List<EmployeeOfDepartment>>(
 				departmentService.getListEmployeeOfDepartment(departmentId), HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 */
 	@RequestMapping(value = "/getListEmployeeNotInDepartment/{departmentId}", method = RequestMethod.GET)
 	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeNotInDepartment(@PathVariable int departmentId) {
 		return new ResponseEntity<List<EmployeeOfDepartment>>(
 				departmentService.getListEmployeeNotInDepartment(departmentId), HttpStatus.OK);
 	}
 
+	/**
+	 * 
+	 */
 	@RequestMapping(value = "/updateDepartmentInfomation", method = RequestMethod.POST)
 	public ResponseEntity<String> updateDepartmentInfomation(@RequestBody Department department) {
 		if (departmentService.departmentInfoUpdate(department) != 0) {
@@ -166,18 +188,60 @@ public class UserRestController {
 		}
 	}
 
-	@RequestMapping(value = "/updateDepartmentStatus", method = RequestMethod.POST)
-	public ResponseEntity<String> updateDepartmentStatus(@RequestBody Department department) {
-		if (departmentService.departmentStatusUpdate(department) != 0) {
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "/activeDepartment", method = RequestMethod.POST)
+	public ResponseEntity<String> activeDepartment(@RequestBody Department department) {
+		if (departmentService.activeDepartment(department.getDepartmentId()) != 0) {
 			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
 		}
 	}
 
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "/inActiveDepartment", method = RequestMethod.POST)
+	public ResponseEntity<String> inActiveDepartment(@RequestBody Department department) {
+		if (departmentService.inActiveDepartment(department.getDepartmentId()) != 0) {
+			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	/**
+	 * 
+	 */
 	@RequestMapping(value = "/insertDepartment", method = RequestMethod.POST)
 	public ResponseEntity<String> insertDepartment(@RequestBody Department department) {
 		if (departmentService.departmentInsert(department) != 0) {
+			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "/addNewEmployeeToDepartment", method = RequestMethod.POST)
+	public ResponseEntity<String> addNewEmployeeToDepartment(@RequestBody EmployeeOfDepartment employeeOfDepartment) {
+		if (departmentService.newEmployeeForDeparmentInsert(employeeOfDepartment) != 0) {
+			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	/**
+	 * 
+	 */
+	@RequestMapping(value = "/removeEmployeeFromDepartment", method = RequestMethod.POST)
+	public ResponseEntity<String> removeEmployeeFromDepartment(@RequestBody EmployeeOfDepartment employeeOfDepartment) {
+		if (departmentService.removeEmployeeFromDepartment(employeeOfDepartment.getDepartmentDetailId()) != 0) {
 			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);

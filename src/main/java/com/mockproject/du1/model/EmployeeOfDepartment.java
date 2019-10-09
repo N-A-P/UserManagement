@@ -13,7 +13,7 @@ public class EmployeeOfDepartment {
 	/**
 	 * User Last Name
 	 */
-	private String lastName; 
+	private String lastName;
 	/**
 	 * User Email
 	 */
@@ -23,6 +23,10 @@ public class EmployeeOfDepartment {
 	 */
 	private int tenure;
 	/**
+	 * Role Detail Id
+	 */
+	private int roleDetailId;
+	/**
 	 * Role Id
 	 */
 	private int roleId;
@@ -30,6 +34,10 @@ public class EmployeeOfDepartment {
 	 * Role Name
 	 */
 	private String roleName;
+	/**
+	 * Department Detail Id
+	 */
+	private int departmentDetailId;
 	/**
 	 * Department Id
 	 */
