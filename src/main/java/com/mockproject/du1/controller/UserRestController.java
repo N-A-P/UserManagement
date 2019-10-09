@@ -36,7 +36,7 @@ public class UserRestController {
 	@Autowired
 	private UsersMapper usersMapper;
 
-	/* ---------------- GET ALL USER ------------------------ */
+	/* ---------------- GET ALL USER LIST ------------------------ */
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
 	public ResponseEntity<List<Users>> getAllUser() {
 		return new ResponseEntity<List<Users>>(usersService.getAllUser(), HttpStatus.OK);
@@ -52,7 +52,7 @@ public class UserRestController {
 //        return new ResponseEntity<Object>("Not Found User", HttpStatus.NO_CONTENT);
 //    }
 //
-	/* ---------------- REGISTRATION ------------------------ */
+	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/registration", method = RequestMethod.POST)
 	public ResponseEntity<String> registerNewCustomer(){
 //	(@RequestBody Users user) {
@@ -104,12 +104,13 @@ public class UserRestController {
 //
 //        return new ResponseEntity<String>("ok", HttpStatus.OK);
 //    }
-//
-//    @RequestMapping(value = "/email", method = RequestMethod.POST)
-//    public ResponseEntity<String> sendmail(@RequestBody List<User> user) {
-//        emailService.sendEmailToAll((List<User>) user, "");
-//        return new ResponseEntity<String>("success", HttpStatus.OK);
-//    }
+
+	/* ---------------- SEND EMAIL TO LIST OF USERS ------------------------ */
+    @RequestMapping(value = "/email", method = RequestMethod.POST)
+    public ResponseEntity<String> sendmail(@RequestBody List<Users> user) {
+        emailService.sendEmailToAll((List<Users>) user, "emailHeader","emailBody");
+        return new ResponseEntity<String>("success", HttpStatus.OK);
+    }
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
