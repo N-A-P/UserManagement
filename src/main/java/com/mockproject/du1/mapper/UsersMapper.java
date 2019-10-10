@@ -40,8 +40,20 @@ public interface UsersMapper {
 	/**
 	 * Add User
 	 *
-	 * @return User
+	 * @return 0 or 1 if Insert query success or not
 	 */
 	int sqlCreateUserInsert(Users user);
+	
+	/**
+	 * Update User table info
+	 *
+	 * @return 0 or 1 if Update query success or not
+	 */
+	int sqlUpdateUserUpdate(Users user);
+	
+	
+	
+	
+
 
 }

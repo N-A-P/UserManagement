@@ -99,5 +99,13 @@
 		#{tenure},#{status})
 	</insert>
 	
+		<!--Update record in Table User -->
+	<update id="sqlUpdateUserUpdate" parameterType="com.mockproject.du1.model.Users">
+		UPDATE public.users
+		(first_name=#{firstName},last_name=#{lastName},email=#{email},username=#{username},password=#{password},dob=TO_DATE(#{dob},'YYYY-MM-DD'))
+		WHERE
+		user_id=#{userId}
+	</update>
+	
 
 </mapper>

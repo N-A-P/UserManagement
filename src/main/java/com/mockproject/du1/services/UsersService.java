@@ -20,18 +20,22 @@ public class UsersService {
 	@Autowired
 	private RoleMapper roleMapper;
 
+	/* ---------------- GET ALL USER LIST ------------------------ */
 	public List<Users> getAllUser() {
 		return usersMapper.sqlGetAllUserSelect();
 	}
 
+	/* ---------------- GET 1 USER BY USERNAME ------------------------ */
 	public Users getUserByUsername(String username) {
 		return usersMapper.sqlGetUserByUsernameSelect(username);
 	}
 
+	/* ---------------- GET 1 USER BY EMAIL ------------------------ */
 	public Users getUserByEmail(String email) {
 		return usersMapper.sqlGetUserByEmailSelect(email);
 	}
 
+	/* ---------------- GET USER LIST BY EMAIL LIST ------------------------ */
 	public List<Users> getUsersListByEmails(List<String> emails) {
 		List<Users> userList = new ArrayList<>();
 		for (String email : emails) {
@@ -40,12 +44,14 @@ public class UsersService {
 		return userList;
 	}
 
+	/* ---------------- GET ROLE LIST OF 1 USER ------------------------ */
 	public List<GrantedAuthority> getAuthorities(Users user) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		return authorities;
 	}
 
+	/* ---------------- CHECK LOGIN USERNAME AND PASSWORD MATCH DB ------------------------ */
 	public boolean checkLogin(Users user) {
 		try {
 			if (usersMapper.sqlCheckLoginSelect(user.getUsername(), user.getPassword()) == 1) {
@@ -57,6 +63,7 @@ public class UsersService {
 		return false;
 	}
 
+	/* ---------------- ADD NEW USER TO TABLE USER, ROLE_DETAIL ------------------------ */
 	public boolean registerNewCustomer(Users user) {
 		if (((getUserByUsername(user.getUsername())) == null) && ((getUserByEmail(user.getEmail())) == null))
 			if (usersMapper.sqlCreateUserInsert(user) != 0) {
@@ -65,7 +72,8 @@ public class UsersService {
 				return true;
 			}
 		return false;
-
 	}
+	
+	
 
 }

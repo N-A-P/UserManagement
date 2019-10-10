@@ -6,7 +6,6 @@ import lombok.Builder;
  * Users Model
  */
 @lombok.Data
-@Builder
 public class Users {
 	/*
 	 * User Id
