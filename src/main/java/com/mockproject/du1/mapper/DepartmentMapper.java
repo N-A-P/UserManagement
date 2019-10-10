@@ -37,11 +37,11 @@ public interface DepartmentMapper {
 	/**
 	 * Get Max Department
 	 *
-	 * @return Max Department Id
+	 * @return List Employee Of Department
 	 */
 	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("department_id") int department_id,
 			@Param("role_id") int role_id, @Param("statusDepartmentDetail") int statusDepartmentDetail,
-			@Param("statusDepartment") int statusDepartment);
+			@Param("statusDepartment") int statusDepartment, int action);
 
 	/**
 	 * Update Department Information
@@ -50,15 +50,28 @@ public interface DepartmentMapper {
 	int sqlDepartmentInfoUpdate(Department department);
 
 	/**
+	 * Update Department Information
+	 *
+	 */
+	int sqlDepartmentDetailStatusUpdate(@Param("departmentDetailId") int departmentDetailId, @Param("status") int status);
+
+	/**
 	 * Update Department Status
 	 *
 	 */
-	int sqlDepartmentStatusUpdate(Department department);
+	int sqlDepartmentStatusUpdate(@Param("departmentId") int departmentId, @Param("status") int status);
 
 	/**
 	 * Insert Department Information
 	 *
 	 */
 	int sqlDepartmentInsert(Department department);
+
+	/**
+	 * Insert New Employee For Deparment
+	 *
+	 */
+	int sqlNewEmployeeForDeparmentInsert(@Param("EmployeeOfDepartment") EmployeeOfDepartment employeeOfDepartment,
+			@Param("status") int status);
 
 }

@@ -78,24 +78,30 @@
 		<result property="lastName" column="last_name" />
 		<result property="email" column="email" />
 		<result property="tenure" column="tenure" />
+		<result property="roleDetailId" column="role_detail_id" />
 		<result property="roleId" column="role_id" />
 		<result property="roleName" column="role_name" />
+		<result property="departmentDetailId"
+			column="department_detail_id" />
 		<result property="departmentId" column="department_id" />
 		<result property="departmentName" column="department_name" />
 	</resultMap>
 
 	<select id="sqlGetListEmployeeOfDepartmentByStatus"
 		resultMap="listEmployeeOfDepartmentResultMap">
-	
-	<![CDATA[  
-		SELECT 
+
+		SELECT
 		a.user_id AS user_id,
 		a.first_name AS first_name,
-		a.last_name AS last_name,
+		a.last_name AS
+		last_name,
 		a.email AS email,
 		a.tenure AS tenure,
+		b.role_detail_id AS
+		role_detail_id,
 		c.role_id AS role_id,
 		c.role_name AS role_name,
+		COALESCE(d.department_detail_id,-1) AS department_detail_id,
 		e.department_id AS department_id,
 		e.department_name AS department_name
 
@@ -103,7 +109,8 @@
 
 		INNER JOIN
 		public.role_detail b
-		ON a.user_id = b.user_id
+		ON a.user_id =
+		b.user_id
 
 		INNER JOIN public.role c
 		ON c.role_id = b.role_id
@@ -114,14 +121,18 @@
 
 		INNER JOIN
 		public.department e
-		ON e.department_id = d.department_id
+		ON
+		e.department_id = d.department_id
 
 		WHERE
-			e.department_id = #{department_id}
+		<if test="action == 1"> e.department_id NOT IN (#{department_id})</if>
+		<if test="action == 2"> e.department_id = #{department_id}</if>
+			<![CDATA[ 
 			AND c.role_id <= #{role_id}
-			AND d.status = #{statusDepartmentDetail}
-			AND e.status = #{statusDepartment}
-	]]>
+			]]>
+		<if test="action == 1">AND d.status IN (0,1)</if>
+		<if test="action == 2">AND d.status = #{statusDepartmentDetail}</if>
+		AND e.status = #{statusDepartment}
 
 	</select>
 
@@ -131,20 +142,30 @@
 
 		UPDATE public.department
 		SET department_name =
-		#{departmentName}
+		#{departmentName},
 		number_of_employees = #{numberOfEmployees}
 		WHERE
 		department_id = #{departmentId}
 	</update>
 
 	<!--Update Department Status -->
-	<update id="sqlDepartmentStatusUpdate"
-		parameterType="com.mockproject.du1.model.Department">
+	<update id="sqlDepartmentStatusUpdate">
 
 		UPDATE public.department
 		SET status = #{status}
 		WHERE
 		department_id = #{departmentId}
+		
+	</update>
+	
+	<!--Update Department Detail Status -->
+	<update id="sqlDepartmentDetailStatusUpdate">
+
+		UPDATE public.department_detail
+		SET status = #{status}
+		WHERE
+		department_detail_id = #{departmentDetailId}
+		
 	</update>
 
 	<!--Insert Department Information -->
@@ -154,6 +175,14 @@
 		(department_id,department_name,number_of_employees,status)
 		VALUES
 		(#{departmentId},#{departmentName},#{numberOfEmployees},#{status})
+	</insert>
+
+	<!--Insert New Employee For Department -->
+	<insert id="sqlNewEmployeeForDeparmentInsert">
+		INSERT INTO public.department_detail
+		(status,department_id,user_id)
+		VALUES
+		(#{status},#{EmployeeOfDepartment.departmentId},#{EmployeeOfDepartment.userId})
 	</insert>
 
 </mapper>
