@@ -23,7 +23,7 @@ import com.mockproject.du1.services.UsersService;
 @RestController
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/rest")
-public class UserRestController {
+public class DepartmentRestController {
 	@Autowired
 	private JwtService jwtService;
 	@Autowired
