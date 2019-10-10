@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mockproject.du1.model.MailOfUser;
 import com.mockproject.du1.model.Users;
+import com.mockproject.du1.model.UsersFull;
 import com.mockproject.du1.services.EmailService;
 import com.mockproject.du1.services.JwtService;
 import com.mockproject.du1.services.UsersService;
@@ -42,20 +43,9 @@ public class UsersRestController {
 	@RequestMapping(value = "/sendMail", method = RequestMethod.GET)
 	public ResponseEntity<String> sendMail(@RequestBody MailOfUser mailOfUser) {
 		emailService.sendEmailToAll(mailOfUser.getUsers(), mailOfUser.getEmailHeader(), mailOfUser.getEmailBodyText());
-		return new ResponseEntity<String>("Success", HttpStatus.OK);
+		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 
-	//
-//    /* ---------------- GET USER BY ID ------------------------ */
-//    @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
-//    public ResponseEntity<Object> getUserById(@PathVariable int id) {
-//        User user = userService.findById(id);
-//        if (user != null) {
-//            return new ResponseEntity<Object>(user, HttpStatus.OK);
-//        }
-//        return new ResponseEntity<Object>("Not Found User", HttpStatus.NO_CONTENT);
-//    }
-//
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
@@ -69,42 +59,6 @@ public class UsersRestController {
 			return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
 		}
 	}
-//
-//    @RequestMapping(value = "/createRole", method = RequestMethod.POST)
-//    public ResponseEntity<String> createRole(@RequestBody User user, @RequestParam("role") int role) {
-//        userrolerepo.save(Userrole.builder().userid(user.getId()).roleid(role).count(0).build());
-//        return new ResponseEntity<String>("createRole", HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
-//    public ResponseEntity<String> deleteUserById(@PathVariable int id) {
-//        userService.delete(id);
-//        return new ResponseEntity<String>("Deleted!", HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/usersfull", method = RequestMethod.GET)
-//    public ResponseEntity<List<Userfull>> findalluserandrole() {
-//        List<Userfull> users = new ArrayList<>();
-//        for (User user : userService.findAll()) {
-//            users.add(Userfull.builder().user(user).Role(rolerepo.getRole(user.getUsername())).build());
-//        }
-//        ;
-//
-//        return new ResponseEntity<List<Userfull>>(users, HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/usersfull", method = RequestMethod.POST)
-//    public ResponseEntity<String> updateRole(@RequestBody Userfull userfull) {
-//        int id = rolerepo.findByRolename(userfull.getRole()).getRoleid();
-//        Optional<Userrole> userrole = userrolerepo.findById((long) id);
-//        rolerepo.setRole(userfull.getUser().getId());
-//        if (userrole.isPresent()) {
-//            userrole.get().setStatus(1);
-//        } else
-//            userrolerepo.save(Userrole.builder().userroleid(userfull.getUser().getId() + id).count(0).status(1).roleid(id).userid(userfull.getUser().getId()).build());
-//
-//        return new ResponseEntity<String>("ok", HttpStatus.OK);
-//    }
 
 	/* ---------------- SEND EMAIL TO LIST OF USERS ------------------------ */
 	@RequestMapping(value = "/email", method = RequestMethod.POST)
@@ -133,5 +87,30 @@ public class UsersRestController {
 			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		return new ResponseEntity<String>(result, httpStatus);
+	}
+
+	/* ---------------- USER MANAGEMENT GET REQUEST ------------------------ */
+	@RequestMapping(value = "/user-management", method = RequestMethod.GET)
+	public ResponseEntity<List<UsersFull>> getUserManagement(HttpServletRequest request,
+			@RequestBody UsersFull userFull) {
+		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(), HttpStatus.OK);
+	}
+
+	/* ---------------- USER MANAGEMENT POST REQUEST ------------------------ */
+	@RequestMapping(value = "/user-management", method = RequestMethod.POST)
+	public ResponseEntity<String> editUserManagement(HttpServletRequest request, @RequestBody UsersFull userFull) {
+		if (usersService.updateUserInfo(userFull))
+			return new ResponseEntity<String>("Edit SUCCESS!", HttpStatus.CREATED);
+		else
+			return new ResponseEntity<String>("Email Existed!", HttpStatus.BAD_REQUEST);
+	}
+
+	/* ---------------- DELETE USER ------------------------ */
+	@RequestMapping(value = "/remove", method = RequestMethod.DELETE)
+	public ResponseEntity<String> deleteUser(HttpServletRequest request, @RequestBody UsersFull userFull) {
+		if (usersService.deleteUser(userFull))
+			return new ResponseEntity<String>("Remove User SUCCESS!", HttpStatus.OK);
+		else
+			return new ResponseEntity<String>("Remove User ERROR", HttpStatus.BAD_REQUEST);
 	}
 }

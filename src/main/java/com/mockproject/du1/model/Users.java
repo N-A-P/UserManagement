@@ -1,6 +1,5 @@
 package com.mockproject.du1.model;
 
-import lombok.Builder;
 
 /*
  * Users Model
