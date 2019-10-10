@@ -52,7 +52,7 @@ public class UsersRestController {
 		user.setStartDate(java.time.LocalDate.now().toString());
 		user.setEndDate(java.time.LocalDate.now().toString());
 		user.setTenure(0);
-		user.setStatus(0);
+		user.setStatus(1);
 		if (usersService.registerNewCustomer(user)) {
 			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
 		} else {
@@ -113,4 +113,6 @@ public class UsersRestController {
 		else
 			return new ResponseEntity<String>("Remove User ERROR", HttpStatus.BAD_REQUEST);
 	}
+	
+	
 }

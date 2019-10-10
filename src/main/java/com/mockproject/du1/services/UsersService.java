@@ -124,8 +124,8 @@ public class UsersService {
 	 * ------------------------
 	 */
 	public boolean deleteUser(UsersFull userFull) {
-		if ((usersMapper.sqlDeleteUserUpdate(userFull.getUserId()) == 1)
-				&& (usersMapper.sqlUpdateDepartmentDetailUpdate(userFull.getUserId()) == 1))
+		usersMapper.sqlUpdateDepartmentDetailUpdate(userFull.getUserId());
+		if (usersMapper.sqlDeleteUserUpdate(userFull.getUserId()) == 1)
 			return true;
 		return false;
 

@@ -61,6 +61,8 @@
 		end_date, tenure, status
 		FROM
 		public.users
+		WHERE
+		status=1
 	</select>
 
 	<!--Get List Data User Information By Username -->
@@ -138,7 +140,7 @@
 		INNER JOIN public.role
 		ON role_detail.role_id =
 		role.role_id
-		WHERE user.status=1
+		WHERE users.status=1
 	</select>
 
 	<!--Get number of user_id by department_id and user_id in Table department_detail -->
