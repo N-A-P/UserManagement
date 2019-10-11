@@ -41,7 +41,7 @@ public interface DepartmentMapper {
 	 */
 	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("department_id") int department_id,
 			@Param("role_id") int role_id, @Param("statusDepartmentDetail") int statusDepartmentDetail,
-			@Param("statusDepartment") int statusDepartment, int action);
+			@Param("statusDepartment") int statusDepartment,@Param("statusUser") int statusUser, int action);
 
 	/**
 	 * Update Department Information

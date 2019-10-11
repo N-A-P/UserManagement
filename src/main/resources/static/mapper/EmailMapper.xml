@@ -15,11 +15,11 @@
 	</resultMap>
 
 
-	<insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.Email">
+	<insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.Email" useGeneratedKeys="true" keyProperty="com.mockproject.du1.model.Email.emailId" keyColumn="email_id">
 		INSERT INTO public.Email
 		(email_id,content,subject)
 		VALUES
-		(nextval('email_seq'),#{content},#{subject})
+		(nextval('email_id_seq'),#{content},#{subject})
 	</insert>
 	
 
