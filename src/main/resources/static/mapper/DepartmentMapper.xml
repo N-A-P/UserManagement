@@ -173,9 +173,9 @@
 	<insert id="sqlDepartmentInsert"
 		parameterType="com.mockproject.du1.model.Department">
 		INSERT INTO public.department
-		(department_id,department_name,number_of_employees,status)
+		(department_name,number_of_employees,status)
 		VALUES
-		(#{departmentId},#{departmentName},#{numberOfEmployees},#{status})
+		(#{departmentName},#{numberOfEmployees},#{status})
 	</insert>
 
 	<!--Insert New Employee For Department -->
