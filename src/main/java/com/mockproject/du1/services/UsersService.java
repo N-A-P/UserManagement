@@ -103,10 +103,14 @@ public class UsersService {
 					userFull.getEmail(), userFull.getUsername(), userFull.getPassword(), userFull.getDob(),
 					userFull.getStartDate(), userFull.getEndDate(), userFull.getTenure(), 1);
 			if (userFull.getRoleId() == 4) {
-				// check if roleId=4 (customer), delete record department_detail
-				usersMapper.sqlDeleteDepartmentDetailDelete(userFull.getUserId());
+				// check if roleId=4 (customer)
+				// update all userId record in Table department_detail to status=0 (deactivated)
+				usersMapper.sqlUpdateDepartmentDetailUpdate(userFull.getUserId(), 0);
 			} else {
-				// check if roleId!=4 (employee/manager/admin), add record department_detail
+				// check if roleId!=4 (employee/manager/admin)
+				// update all userId record in Table department_detail to status=1 (activated)
+				usersMapper.sqlUpdateDepartmentDetailUpdate(userFull.getUserId(), 1);
+				// if record not existed in department_detail, add record
 				if ((usersMapper.sqlSelectDepartmentDetailSelect(userFull.getUserId(),
 						userFull.getDepartmentId())) == 0)
 					usersMapper.sqlInsertDepartmentDetailInsert(1, userFull.getDepartmentId(), userFull.getUserId());
@@ -117,6 +121,21 @@ public class UsersService {
 			return true;
 		}
 		return false;
+
+//				// check if roleId=4 (customer), delete record department_detail
+//				usersMapper.sqlDeleteDepartmentDetailDelete(userFull.getUserId());
+//			} else {
+//				// check if roleId!=4 (employee/manager/admin), add record department_detail
+//				if ((usersMapper.sqlSelectDepartmentDetailSelect(userFull.getUserId(),
+//						userFull.getDepartmentId())) == 0)
+//					usersMapper.sqlInsertDepartmentDetailInsert(1, userFull.getDepartmentId(), userFull.getUserId());
+//			}
+//			// update record in table user & role_detail
+//			usersMapper.sqlUpdateRoleDetailUpdate(userFull.getUserId(), userFull.getRoleId());
+//			usersMapper.sqlUpdateUserUpdate(newUser);
+//			return true;
+//		}
+//		return false;
 	}
 
 	/*
@@ -124,7 +143,7 @@ public class UsersService {
 	 * ------------------------
 	 */
 	public boolean deleteUser(UsersFull userFull) {
-		usersMapper.sqlUpdateDepartmentDetailUpdate(userFull.getUserId());
+		usersMapper.sqlUpdateDepartmentDetailUpdate(userFull.getUserId(), 0);
 		if (usersMapper.sqlDeleteUserUpdate(userFull.getUserId()) == 1)
 			return true;
 		return false;

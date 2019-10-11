@@ -207,7 +207,7 @@
 	<update id="sqlUpdateDepartmentDetailUpdate" parameterType="Integer">
 		UPDATE
 		public.department_detail
-		SET status=0
+		SET status=#{userStatus}
 		WHERE
 		user_id=#{userId}
 	</update>

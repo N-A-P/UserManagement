@@ -78,9 +78,11 @@ public class UsersRestController {
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";
 		HttpStatus httpStatus = null;
+		
 		try {
 			if (usersService.checkLogin(user)) {
-				if (user.getStatus() == 1) {
+				Users userToCheck=usersService.getUserByUsername(user.getUsername());
+				if (userToCheck.getStatus() == 1) {
 					result = jwtService.generateTokenLogin(user.getUsername());
 					httpStatus = HttpStatus.OK;
 				} else {
@@ -100,8 +102,7 @@ public class UsersRestController {
 
 	/* ---------------- USER MANAGEMENT GET REQUEST ------------------------ */
 	@RequestMapping(value = "/user-management", method = RequestMethod.GET)
-	public ResponseEntity<List<UsersFull>> getUserManagement(HttpServletRequest request,
-			@RequestBody UsersFull userFull) {
+	public ResponseEntity<List<UsersFull>> getUserManagement(HttpServletRequest request) {
 		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(), HttpStatus.OK);
 	}
 
