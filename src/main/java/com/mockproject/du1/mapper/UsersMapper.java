@@ -85,7 +85,7 @@ public interface UsersMapper {
 	 *
 	 * @return 0 or 1 if Update query success or not
 	 */
-	int sqlUpdateDepartmentDetailUpdate(Integer userId);
+	int sqlUpdateDepartmentDetailUpdate(Integer userId,Integer userStatus);
 	
 	/**
 	 * Select record in department_detail
