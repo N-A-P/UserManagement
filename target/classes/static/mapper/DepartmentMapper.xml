@@ -133,6 +133,7 @@
 		<if test="action == 1">AND d.status IN (0,1)</if>
 		<if test="action == 2">AND d.status = #{statusDepartmentDetail}</if>
 		AND e.status = #{statusDepartment}
+		AND a.status = #{statusUser}
 
 	</select>
 
