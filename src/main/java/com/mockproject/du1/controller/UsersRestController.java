@@ -76,8 +76,13 @@ public class UsersRestController {
 		HttpStatus httpStatus = null;
 		try {
 			if (usersService.checkLogin(user)) {
-				result = jwtService.generateTokenLogin(user.getUsername());
-				httpStatus = HttpStatus.OK;
+				if (user.getStatus() == 1) {
+					result = jwtService.generateTokenLogin(user.getUsername());
+					httpStatus = HttpStatus.OK;
+				} else {
+					result = "Account Deactivated";
+					httpStatus = HttpStatus.BAD_REQUEST;
+				}
 			} else {
 				result = "Wrong username or password";
 				httpStatus = HttpStatus.BAD_REQUEST;
@@ -113,6 +118,5 @@ public class UsersRestController {
 		else
 			return new ResponseEntity<String>("Remove User ERROR", HttpStatus.BAD_REQUEST);
 	}
-	
-	
+
 }

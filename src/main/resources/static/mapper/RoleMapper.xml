@@ -5,7 +5,7 @@
 
 
 	<!--Insert new record into Table User_Role -->
-	<insert id="sqlCreateUserRoleInsert" parameterType="Integer">
+	<insert id="sqlCreateRoleDetailInsert" parameterType="Integer">
 		INSERT INTO
 		public.role_detail
 		(role_id,user_id)

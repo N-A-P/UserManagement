@@ -9,6 +9,6 @@ public interface RoleMapper {
 	 *
 	 * @return Insert query successful or not
 	 */
-	int sqlCreateUserRoleInsert(@Param("roleId")int roleId,@Param("userId")int userId);
+	int sqlCreateRoleDetailInsert(@Param("roleId")int roleId,@Param("userId")int userId);
 	
 }
