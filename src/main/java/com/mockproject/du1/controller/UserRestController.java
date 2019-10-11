@@ -44,6 +44,10 @@ public class UserRestController {
 		emailService.sendEmailToAll(mailOfUser.getUsers(), mailOfUser.getEmailHeader(), mailOfUser.getEmailBodyText());
 		return new ResponseEntity<String>("Success", HttpStatus.OK);
 	}
+	@RequestMapping(value = "/test", method = RequestMethod.GET)
+	public MailOfUser sendMail() {
+		return MailOfUser.builder().emailBodyText("12312").emailHeader("header").users(List.of(Users.builder().userId(1).firstName("duc").lastName("le").build())).build();
+	}
 
 	//
 //    /* ---------------- GET USER BY ID ------------------------ */
