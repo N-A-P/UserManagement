@@ -84,7 +84,7 @@ public class UsersService {
 	public boolean registerNewCustomer(Users user) {
 		if (((getUserByUsername(user.getUsername())) == null) && ((getUserByEmail(user.getEmail())) == null))
 			if (usersMapper.sqlCreateUserInsert(user) != 0) {
-				roleMapper.sqlCreateUserRoleInsert(1,
+				roleMapper.sqlCreateRoleDetailInsert(1,
 						usersMapper.sqlGetUserByUsernameSelect(user.getUsername()).getUserId());
 				return true;
 			}
@@ -101,12 +101,12 @@ public class UsersService {
 		if ((tempUser == null) || (tempUser.getUserId() == userFull.getUserId())) {
 			Users newUser = new Users(userFull.getUserId(), userFull.getFirstName(), userFull.getLastName(),
 					userFull.getEmail(), userFull.getUsername(), userFull.getPassword(), userFull.getDob(),
-					userFull.getStartDate(), userFull.getEndDate(), userFull.getTenure(), userFull.getStatus());
-			if (userFull.getRoleId() == 1) {
-				// check if roleId=1 (customer), delete record department_detail
+					userFull.getStartDate(), userFull.getEndDate(), userFull.getTenure(), 1);
+			if (userFull.getRoleId() == 4) {
+				// check if roleId=4 (customer), delete record department_detail
 				usersMapper.sqlDeleteDepartmentDetailDelete(userFull.getUserId());
 			} else {
-				// check if roleId>1 (employee/admin), add record department_detail
+				// check if roleId!=4 (employee/manager/admin), add record department_detail
 				if ((usersMapper.sqlSelectDepartmentDetailSelect(userFull.getUserId(),
 						userFull.getDepartmentId())) == 0)
 					usersMapper.sqlInsertDepartmentDetailInsert(1, userFull.getDepartmentId(), userFull.getUserId());
