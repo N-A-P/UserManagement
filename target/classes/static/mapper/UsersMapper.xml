@@ -3,13 +3,7 @@
 
 <mapper namespace="com.mockproject.du1.mapper.UsersMapper">
 
-	<!--Check user login -->
-	<select id="sqlCheckLoginSelect" resultType="Long" parameterType="com.mockproject.du1.model.Users">
-		SELECT COUNT(*)
-		FROM   public.users
-		WHERE  public.users.username = #{username}
-		AND    public.users.password = #{password}
-	</select>
+	<!-- =========== RESULT MAP =============== -->
 
 	<!--Get List Data User Information -->
 	<resultMap id="GetUserResultMap"
@@ -27,28 +21,53 @@
 		<result property="status" column="status" />
 	</resultMap>
 
+	<!--Get List Data UserFull Information -->
+	<resultMap id="GetUserFullResultMap"
+		type="com.mockproject.du1.model.UsersFull">
+		<result property="userId" column="user_id" />
+		<result property="firstName" column="first_name" />
+		<result property="lastName" column="last_name" />
+		<result property="email" column="email" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="dob" column="dob" />
+		<result property="startDate" column="start_date" />
+		<result property="endDate" column="end_date" />
+		<result property="tenure" column="tenure" />
+		<result property="status" column="status" />
+		<result property="roleDetailId" column="role_detail_id" />
+		<result property="roleId" column="role_id" />
+	</resultMap>
+
+
+	<!-- =========== SELECT =============== -->
+
+	<!--Check user login -->
+	<select id="sqlCheckLoginSelect" resultType="Long"
+		parameterType="com.mockproject.du1.model.Users">
+		SELECT COUNT(*)
+		FROM public.users
+		WHERE
+		public.users.username = #{username}
+		AND public.users.password =
+		#{password}
+	</select>
+
 	<!--Get List Data User Information -->
 	<select id="sqlGetAllUserSelect" resultMap="GetUserResultMap">
-
 		SELECT
 		user_id,
-		first_name,
-		last_name,
-		email,
-		username,
-		password,
-		dob,
-		start_date,
-		end_date,
-		tenure,
-		status
+		first_name, last_name, email, username, password, dob, start_date,
+		end_date, tenure, status
 		FROM
 		public.users
-
+		WHERE
+		status=1
 	</select>
-	
+
 	<!--Get List Data User Information By Username -->
-	<select id="sqlGetUserByUsernameSelect" resultMap="GetUserResultMap" parameterType="String">
+	<select id="sqlGetUserByUsernameSelect"
+		resultMap="GetUserResultMap" parameterType="String">
 		SELECT
 		user_id,
 		first_name,
@@ -63,12 +82,13 @@
 		status
 		FROM
 		public.users
-		WHERE 
+		WHERE
 		username = #{username}
 	</select>
-	
+
 	<!--Get List Data User Information By Email -->
-	<select id="sqlGetUserByEmailSelect" resultMap="GetUserResultMap" parameterType="String">
+	<select id="sqlGetUserByEmailSelect"
+		resultMap="GetUserResultMap" parameterType="String">
 		SELECT
 		user_id,
 		first_name,
@@ -83,12 +103,65 @@
 		status
 		FROM
 		public.users
-		WHERE 
-		email  in (#{email})
+		WHERE
+		email = #{email}
 	</select>
-	
-		<!--Insert new record into Table User -->
-	<insert id="sqlCreateUserInsert" parameterType="com.mockproject.du1.model.Users">
+
+	<!--Get List Data User Information By user_id -->
+	<select id="sqlGetUserByIdSelect" resultMap="GetUserResultMap"
+		parameterType="String">
+		SELECT
+		user_id,
+		first_name,
+		last_name,
+		email,
+		username,
+		password,
+		dob,
+		start_date,
+		end_date,
+		tenure,
+		status
+		FROM
+		public.users
+		WHERE
+		user_id= #{userId}
+	</select>
+
+	<!--Get List Data All UserFull Information -->
+	<select id="sqlGetAllUserFullSelect"
+		resultMap="GetUserFullResultMap" parameterType="String">
+		SELECT
+		users.user_id,first_name,last_name,email,username,password,dob,start_date,end_date,tenure,status,role_detail_id,role_detail.role_id
+		FROM public.users
+		INNER JOIN public.role_detail
+		ON users.user_id =
+		role_detail.user_id
+		INNER JOIN public.role
+		ON role_detail.role_id =
+		role.role_id
+		WHERE users.status=1
+	</select>
+
+	<!--Get number of user_id by department_id and user_id in Table department_detail -->
+	<select id="sqlSelectDepartmentDetailSelect"
+		resultType="Integer" parameterType="Integer">
+		SELECT
+		COUNT (*)
+		FROM
+		public.department_detail
+		WHERE
+		user_id = #{userId}
+		AND
+		department_id=#{departmentId}
+	</select>
+
+	<!-- =========== INSERT =============== -->
+
+
+	<!--Insert new record into Table User -->
+	<insert id="sqlCreateUserInsert"
+		parameterType="com.mockproject.du1.model.Users">
 		INSERT INTO public.users
 		(first_name,last_name,email,username,password,dob,start_date,end_date,tenure,status)
 		VALUES
@@ -98,6 +171,66 @@
 		TO_DATE(#{endDate},'YYYY-MM-DD'),
 		#{tenure},#{status})
 	</insert>
+
+	<!--Insert new record into Table department_detail -->
+	<insert id="sqlInsertDepartmentDetailInsert"
+		parameterType="Integer">
+		INSERT INTO public.department_detail
+		(status,department_id,user_id)
+		VALUES
+		(#{status},#{departmentId},#{userId})
+	</insert>
+
+	<!-- =========== UPDATE =============== -->
+
+
+	<!--Update record in Table User -->
+	<update id="sqlUpdateUserUpdate"
+		parameterType="com.mockproject.du1.model.Users">
+		UPDATE public.users
+		SET
+		first_name=#{firstName},last_name=#{lastName},email=#{email},username=#{username},password=#{password},dob=TO_DATE(#{dob},'YYYY-MM-DD')
+		WHERE
+		user_id=#{userId}
+	</update>
+
+	<!--Update record in Table role_detail -->
+	<update id="sqlUpdateRoleDetailUpdate" parameterType="Integer">
+		UPDATE
+		public.role_detail
+		SET role_id=#{roleId}
+		WHERE
+		user_id=#{userId}
+	</update>
 	
+	<!--Update record in Table department_detail -->
+	<update id="sqlUpdateDepartmentDetailUpdate" parameterType="Integer">
+		UPDATE
+		public.department_detail
+		SET status=0
+		WHERE
+		user_id=#{userId}
+	</update>
+	
+	<!--Update record in Table department_detail -->
+	<update id="sqlDeleteUserUpdate" parameterType="Integer">
+		UPDATE
+		public.users
+		SET status=0
+		WHERE
+		user_id=#{userId}
+	</update>
+	
+	
+
+	<!-- =========== DELETE =============== -->
+	<!--Delete records in Table department_detail -->
+	<delete id="sqlDeleteDepartmentDetailDelete"
+		parameterType="Integer">
+		DELETE FROM public.department_detail
+		WHERE
+		user_id=#{userId}
+	</delete>
+
 
 </mapper>

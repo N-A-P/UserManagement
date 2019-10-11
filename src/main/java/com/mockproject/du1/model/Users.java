@@ -1,12 +1,10 @@
 package com.mockproject.du1.model;
 
-import lombok.Builder;
 
 /*
  * Users Model
  */
 @lombok.Data
-@Builder
 public class Users {
 	/*
 	 * User Id
