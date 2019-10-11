@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,10 @@ public class UsersRestController {
 
 	@RequestMapping(value = "/sendMail", method = RequestMethod.GET)
 	public ResponseEntity<String> sendMail(@RequestBody MailOfUser mailOfUser) {
-		emailService.sendEmailToAll(mailOfUser.getUsers(), mailOfUser.getEmailHeader(), mailOfUser.getEmailBodyText());
+		if(emailService.sendEmailToAll(mailOfUser.getUsers(), mailOfUser.getEmailHeader(), mailOfUser.getEmailBodyText())){
+			return new ResponseEntity<String>("ERROR", HttpStatus.BAD_REQUEST);
+
+		}
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 
