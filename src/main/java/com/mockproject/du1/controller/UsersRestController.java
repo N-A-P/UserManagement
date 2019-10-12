@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +43,10 @@ public class UsersRestController {
 
 	@RequestMapping(value = "/sendMail", method = RequestMethod.GET)
 	public ResponseEntity<String> sendMail(@RequestBody MailOfUser mailOfUser) {
-		emailService.sendEmailToAll(mailOfUser.getUsers(), mailOfUser.getEmailHeader(), mailOfUser.getEmailBodyText());
+		if(emailService.sendEmailToAll(mailOfUser.getUsers(), mailOfUser.getEmailHeader(), mailOfUser.getEmailBodyText())){
+			return new ResponseEntity<String>("ERROR", HttpStatus.BAD_REQUEST);
+
+		}
 		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
 	}
 
@@ -74,10 +78,17 @@ public class UsersRestController {
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";
 		HttpStatus httpStatus = null;
+		
 		try {
 			if (usersService.checkLogin(user)) {
-				result = jwtService.generateTokenLogin(user.getUsername());
-				httpStatus = HttpStatus.OK;
+				Users userToCheck=usersService.getUserByUsername(user.getUsername());
+				if (userToCheck.getStatus() == 1) {
+					result = jwtService.generateTokenLogin(user.getUsername());
+					httpStatus = HttpStatus.OK;
+				} else {
+					result = "Account Deactivated";
+					httpStatus = HttpStatus.BAD_REQUEST;
+				}
 			} else {
 				result = "Wrong username or password";
 				httpStatus = HttpStatus.BAD_REQUEST;
@@ -91,8 +102,7 @@ public class UsersRestController {
 
 	/* ---------------- USER MANAGEMENT GET REQUEST ------------------------ */
 	@RequestMapping(value = "/user-management", method = RequestMethod.GET)
-	public ResponseEntity<List<UsersFull>> getUserManagement(HttpServletRequest request,
-			@RequestBody UsersFull userFull) {
+	public ResponseEntity<List<UsersFull>> getUserManagement(HttpServletRequest request) {
 		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(), HttpStatus.OK);
 	}
 
@@ -113,6 +123,5 @@ public class UsersRestController {
 		else
 			return new ResponseEntity<String>("Remove User ERROR", HttpStatus.BAD_REQUEST);
 	}
-	
-	
+
 }

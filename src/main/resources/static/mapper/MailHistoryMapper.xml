@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mockproject.du1.mapper.MailHistoryMapper">
+
+
+
+	<!--Get List Data User Information -->
+	<resultMap id="GetMailHistoryResultMap"
+		type="com.mockproject.du1.model.MailHistory">
+		<result property="mailHistoryId" column="mail_history_id" />
+		<result property="SendDate" column="send_date" />
+		<result property="EmailId" column="email_id" />
+		<result property="UserId" column="user_id" />
+
+	</resultMap>
+
+
+	<insert id="sqlInsertMailHistoryl" parameterType="com.mockproject.du1.model.MailHistory">
+		INSERT INTO public.mail_history
+		(mail_history_id,send_date,email_id,user_id)
+		VALUES
+		(NEXT VALUE FOR email_history_seq,#{SendDate},#{EmailId},#{UserId})
+	</insert>
+	
+
+</mapper>

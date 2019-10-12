@@ -53,58 +53,93 @@ public class DepartmentService {
 	 * 
 	 */
 	public List<Department> getAllListDepartment() {
+		try {
+			return departmentMapper.sqlGetAllDepartmentSelect();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 
-		return departmentMapper.sqlGetAllDepartmentSelect();
+		return null;
+
 	}
 
 	/**
 	 * 
 	 */
 	public List<Department> getListDepartmentActive() {
+		try {
+			return departmentMapper.sqlGetDepartmentByStatusSelect(STATUS_STAY);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 
-		return departmentMapper.sqlGetDepartmentByStatusSelect(STATUS_STAY);
+		return null;
 	}
 
 	/**
 	 * 
 	 */
 	public List<Department> getListDepartmentInActive() {
+		try {
+			return departmentMapper.sqlGetDepartmentByStatusSelect(STATUS_LEAVE);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 
-		return departmentMapper.sqlGetDepartmentByStatusSelect(STATUS_LEAVE);
+		return null;
 	}
 
 	/**
 	 * 
 	 */
 	public Department getDepartmentById(int departmentId) {
+		try {
+			return departmentMapper.sqlGetDepartmentByIdSelect(departmentId);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 
-		return departmentMapper.sqlGetDepartmentByIdSelect(departmentId);
+		return null;
 	}
 
 	/**
 	 * 
 	 */
 	public long getMaxDepartmentIdSelect() {
-
-		return departmentMapper.sqlGetMaxDepartmentIdSelect();
+		try {
+			return departmentMapper.sqlGetMaxDepartmentIdSelect();
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return 0;
 	}
 
 	/**
 	 * 
 	 */
 	public List<EmployeeOfDepartment> getListEmployeeOfDepartment(int department_id) {
+		try {
+			return departmentMapper.sqlGetListEmployeeOfDepartmentByStatus(department_id, ROLE_EMPLOYEE, STATUS_STAY,
+					ACTIVE, ACTIVE, ACTION_DELETE);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 
-		return departmentMapper.sqlGetListEmployeeOfDepartmentByStatus(department_id, ROLE_EMPLOYEE, STATUS_STAY,
-				ACTIVE, ACTION_DELETE);
+		return null;
 	}
 
 	/**
 	 * 
 	 */
 	public List<EmployeeOfDepartment> getListEmployeeNotInDepartment(int department_id) {
+		try {
+			return departmentMapper.sqlGetListEmployeeOfDepartmentByStatus(department_id, ROLE_EMPLOYEE, STATUS_LEAVE,
+					ACTIVE, ACTIVE, ACTION_ADD);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 
-		return departmentMapper.sqlGetListEmployeeOfDepartmentByStatus(department_id, ROLE_EMPLOYEE, STATUS_LEAVE,
-				ACTIVE, ACTION_ADD);
+		return null;
 	}
 
 	/** 
@@ -146,6 +181,7 @@ public class DepartmentService {
 
 		return 0;
 	}
+
 //	/**
 //	 * 
 //	 */

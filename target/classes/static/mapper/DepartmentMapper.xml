@@ -133,6 +133,7 @@
 		<if test="action == 1">AND d.status IN (0,1)</if>
 		<if test="action == 2">AND d.status = #{statusDepartmentDetail}</if>
 		AND e.status = #{statusDepartment}
+		AND a.status = #{statusUser}
 
 	</select>
 
@@ -172,9 +173,9 @@
 	<insert id="sqlDepartmentInsert"
 		parameterType="com.mockproject.du1.model.Department">
 		INSERT INTO public.department
-		(department_id,department_name,number_of_employees,status)
+		(department_name,number_of_employees,status)
 		VALUES
-		(#{departmentId},#{departmentName},#{numberOfEmployees},#{status})
+		(#{departmentName},#{numberOfEmployees},#{status})
 	</insert>
 
 	<!--Insert New Employee For Department -->
