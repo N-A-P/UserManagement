@@ -1,6 +1,5 @@
 package com.mockproject.du1.controller;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,9 @@ public class DepartmentRestController {
 	@Autowired
 	EmailService emailService;
 
-
+	/**
+	 * Click button show list department(Active & Inactive)
+	 */
 	@RequestMapping(value = "/getAllListDepartment", method = RequestMethod.GET)
 	public ResponseEntity<List<Department>> getAllListDepartment() {
 		return new ResponseEntity<List<Department>>(departmentService.getAllListDepartment(), HttpStatus.OK);
@@ -38,7 +39,7 @@ public class DepartmentRestController {
 	}
 
 	/**
-	 * 
+	 * Show list department(Active)
 	 */
 	@RequestMapping(value = "/getDepartmentById/{departmentId}", method = RequestMethod.GET)
 	public ResponseEntity<Department> getDepartmentById(@PathVariable int departmentId) {
@@ -64,7 +65,7 @@ public class DepartmentRestController {
 	}
 
 	/**
-	 * 
+	 * Click button Save 
 	 */
 	@RequestMapping(value = "/updateDepartmentInfomation", method = RequestMethod.POST)
 	public ResponseEntity<String> updateDepartmentInfomation(@RequestBody Department department) {
