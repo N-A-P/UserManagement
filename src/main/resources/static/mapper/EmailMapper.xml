@@ -24,6 +24,18 @@
 		VALUES
 		(nextval('email_id_seq'),#{content},#{subject})
 	</insert>
-	
+
+	<select id="sqlGetAllEmailSelect"
+			resultMap="GetEmailResultMap" >
+		SELECT
+		email_id,
+		content,
+		subject
+		FROM
+		public.Email
+
+	</select>
+
+
 
 </mapper>

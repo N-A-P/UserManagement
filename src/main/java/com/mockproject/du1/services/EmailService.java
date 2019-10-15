@@ -22,7 +22,10 @@ import com.sendgrid.SendGrid;
 
 import java.io.*;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -51,9 +54,7 @@ public class EmailService {
                 emailMapper.sqlCreateEmailInsert(email);
 
                 for (Users user : recipientList) {
-                    if (isValid(user.getEmail())) {
-                        sendEmail(user, emailHeader, emailBodyText);
-                    }
+                        sendEmail(user, emailHeader, emailBodyText,email.getEmailId());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -64,8 +65,8 @@ public class EmailService {
         return false;
     }
 
-    private void sendEmail(Users recipient, String emailHeader, String emailBodyText) {
-        try {
+    private void sendEmail(Users recipient, String emailHeader, String emailBodyText,int emailId) throws IOException {
+
             Mail mail = prepareMail(recipient, emailHeader, emailBodyText);
 
             Request request = new Request();
@@ -74,10 +75,8 @@ public class EmailService {
             request.setBody(mail.build());
             SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
             Response response = sg.api(request);
+            mailHistoryMapper.sqlInsertMailHistoryl(MailHistory.builder().EmailId(emailId).UserId(recipient.getUserId()).SendDate(new java.util.Date()).build());
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private Mail prepareMail(Users recipient, String emailHeader, String emailBodyText) {
@@ -89,30 +88,37 @@ public class EmailService {
         finalText.append(signature);
         Email fromEmail = new Email("moneydontsleep8888@gmail.com");
         Email toEmail = new Email(recipient.getEmail());
+        if(!isValid(recipient.getEmail())){
+            throw new IllegalArgumentException("email inValid");
+        }
         Content content = new Content("text/plain", finalText.toString());
         Mail mail = new Mail(fromEmail, emailHeader, toEmail, content);
         return mail;
     }
 
     public List<String> coverExcellFileToArray(byte[] file) throws IOException {
-        List<String> emails = new ArrayList<>();
-        InputStream is=new ByteArrayInputStream(file);
-        XSSFWorkbook workbook = new XSSFWorkbook(is);
-        XSSFSheet sheet = workbook.getSheetAt(0);
-        Iterator<Row> rowIterator = sheet.iterator();
-        while (rowIterator.hasNext()) {
-            Row row = rowIterator.next();
-            Iterator<Cell> cellIterator = row.cellIterator();
-            while (cellIterator.hasNext()) {
-                Cell cell = cellIterator.next();
-                if (isValid(cell.getStringCellValue())) {
-                    emails.add(cell.getStringCellValue());
+        try {
+            List<String> emails = new ArrayList<>();
+            InputStream is = new ByteArrayInputStream(file);
+            XSSFWorkbook workbook = new XSSFWorkbook(is);
+            XSSFSheet sheet = workbook.getSheetAt(0);
+            Iterator<Row> rowIterator = sheet.iterator();
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                Iterator<Cell> cellIterator = row.cellIterator();
+                while (cellIterator.hasNext()) {
+                    Cell cell = cellIterator.next();
+                    if (isValid(cell.getStringCellValue())) {
+                        emails.add(cell.getStringCellValue());
+                    }
                 }
             }
+            return emails;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
         }
-        return emails;
     }
-
     public boolean isValid(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
@@ -123,5 +129,9 @@ public class EmailService {
         if (email == null)
             return false;
         return pat.matcher(email).matches();
+    }
+
+    public List<com.mockproject.du1.model.Email> getAllemailContent() {
+       return emailMapper.sqlGetAllEmailSelect();
     }
 }

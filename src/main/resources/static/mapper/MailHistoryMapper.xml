@@ -20,7 +20,7 @@
 		INSERT INTO public.mail_history
 		(mail_history_id,send_date,email_id,user_id)
 		VALUES
-		(NEXT VALUE FOR email_history_seq,#{SendDate},#{EmailId},#{UserId})
+		(nextval('email_id_seq'),#{SendDate},#{EmailId},#{UserId})
 	</insert>
 	
 
