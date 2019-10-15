@@ -5,6 +5,11 @@
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-sources/annotations"/>
+<<<<<<< HEAD
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/target/generated-test-sources/test-annotations"/>
+=======
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
+>>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
         <property name="context-root" value="UsersManagement"/>
         <property name="java-output-path" value="/UsersManagement/target/classes"/>
     </wb-module>

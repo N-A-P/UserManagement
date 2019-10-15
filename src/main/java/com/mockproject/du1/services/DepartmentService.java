@@ -120,7 +120,7 @@ public class DepartmentService {
 	public List<EmployeeOfDepartment> getListEmployeeOfDepartment(int department_id) {
 		try {
 			return departmentMapper.sqlGetListEmployeeOfDepartmentByStatus(department_id, ROLE_EMPLOYEE, STATUS_STAY,
-					ACTIVE,ACTIVE, ACTION_DELETE);
+					ACTIVE, ACTIVE, ACTION_DELETE);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -134,7 +134,8 @@ public class DepartmentService {
 	public List<EmployeeOfDepartment> getListEmployeeNotInDepartment(int department_id) {
 		try {
 			return departmentMapper.sqlGetListEmployeeOfDepartmentByStatus(department_id, ROLE_EMPLOYEE, STATUS_LEAVE,
-					ACTIVE,ACTIVE, ACTION_ADD);		} catch (Exception e) {
+					ACTIVE, ACTIVE, ACTION_ADD);
+		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
 
@@ -180,6 +181,7 @@ public class DepartmentService {
 
 		return 0;
 	}
+
 //	/**
 //	 * 
 //	 */
