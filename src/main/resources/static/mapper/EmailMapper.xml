@@ -15,7 +15,10 @@
 	</resultMap>
 
 
-	<insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.Email" useGeneratedKeys="true" keyProperty="com.mockproject.du1.model.Email.emailId" keyColumn="email_id">
+	<insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.Email" >
+		<selectKey keyProperty="emailId" resultType="int">
+			SELECT currval('"email_id_seq"')
+		</selectKey>
 		INSERT INTO public.Email
 		(email_id,content,subject)
 		VALUES

@@ -65,13 +65,13 @@ public class UsersRestController {
 	}
 
 	/* ---------------- SEND EMAIL TO LIST OF USERS ------------------------ */
-	@RequestMapping(value = "/email", method = RequestMethod.POST)
-	public ResponseEntity<List<Users>> coverExcel(@RequestBody File file) throws IOException {
-		List<String> emails = emailService.coverExcellFileToArray(file);
-		List<Users> users = new ArrayList<>();
-		users = usersService.getUsersListByEmails(emails);
-		return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
-	}
+//	@RequestMapping(value = "/email", method = RequestMethod.POST)
+//	public ResponseEntity<List<Users>> coverExcel(@RequestBody File file) throws IOException {
+//		List<String> emails = emailService.coverExcellFileToArray(file);
+//		List<Users> users = new ArrayList<>();
+//		users = usersService.getUsersListByEmails(emails);
+//		return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
+//	}
 
 	/* ---------------- LOGIN ------------------------ */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)

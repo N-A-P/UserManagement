@@ -6,6 +6,8 @@ import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.MailHistory;
 import com.mockproject.du1.model.Users;
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -48,7 +51,9 @@ public class EmailService {
                 emailMapper.sqlCreateEmailInsert(email);
 
                 for (Users user : recipientList) {
-                    sendEmail(user, emailHeader, emailBodyText);
+                    if (isValid(user.getEmail())) {
+                        sendEmail(user, emailHeader, emailBodyText);
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -67,16 +72,12 @@ public class EmailService {
             request.setMethod(Method.POST);
             request.setEndpoint("mail/send");
             request.setBody(mail.build());
-
             SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-
             Response response = sg.api(request);
 
         } catch (IOException e) {
-//			log.error("error sending email to " + recipient.getFirstName() + " " + recipient.getLastName());
             e.printStackTrace();
         }
-//		log.info("mail has sent to " + recipient.getFirstName() + " " + recipient.getLastName());
     }
 
     private Mail prepareMail(Users recipient, String emailHeader, String emailBodyText) {
@@ -86,7 +87,6 @@ public class EmailService {
         finalText.append("Dear " + recipient.getFirstName() + " " + recipient.getLastName() + "," + "\n");
         finalText.append(emailBodyText + "\n");
         finalText.append(signature);
-
         Email fromEmail = new Email("moneydontsleep8888@gmail.com");
         Email toEmail = new Email(recipient.getEmail());
         Content content = new Content("text/plain", finalText.toString());
@@ -94,20 +94,34 @@ public class EmailService {
         return mail;
     }
 
-    public List<String> coverExcellFileToArray(File file) throws IOException {
+    public List<String> coverExcellFileToArray(byte[] file) throws IOException {
         List<String> emails = new ArrayList<>();
-        FileInputStream inputStream = new FileInputStream(file);
-        HSSFWorkbook workbook = new HSSFWorkbook(inputStream);
-        HSSFSheet sheet = workbook.getSheetAt(0);
+        InputStream is=new ByteArrayInputStream(file);
+        XSSFWorkbook workbook = new XSSFWorkbook(is);
+        XSSFSheet sheet = workbook.getSheetAt(0);
         Iterator<Row> rowIterator = sheet.iterator();
         while (rowIterator.hasNext()) {
             Row row = rowIterator.next();
             Iterator<Cell> cellIterator = row.cellIterator();
             while (cellIterator.hasNext()) {
                 Cell cell = cellIterator.next();
-                emails.add(cell.getStringCellValue());
+                if (isValid(cell.getStringCellValue())) {
+                    emails.add(cell.getStringCellValue());
+                }
             }
         }
         return emails;
+    }
+
+    public boolean isValid(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 }

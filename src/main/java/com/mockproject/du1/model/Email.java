@@ -19,8 +19,8 @@ public class Email {
         return emailId;
     }
 
-    public void setEmailId(int emailId) {
-        this.emailId = emailId;
+    public void setEmailId(int value) {
+        this.emailId = value;
     }
 
     public String getContent() {
