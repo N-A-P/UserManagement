@@ -213,7 +213,9 @@ public class DepartmentService {
 	 */
 	public int departmentInsert(Department department) {
 		try {
-			return departmentMapper.sqlDepartmentInsert(department);
+			if (departmentMapper.sqlCountDepartmentByNameSelect(department.getDepartmentName()) == 0) {
+				return departmentMapper.sqlDepartmentInsert(department);
+			}
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());

@@ -33,6 +33,13 @@ public interface DepartmentMapper {
 	 * @return Max Department Id
 	 */
 	long sqlGetMaxDepartmentIdSelect();
+	
+	/**
+	 * Count Number Of Department By Name
+	 *
+	 * @return Count Number Of Department By Name
+	 */
+	long sqlCountDepartmentByNameSelect(String departmentName);
 
 	/**
 	 * Get Max Department

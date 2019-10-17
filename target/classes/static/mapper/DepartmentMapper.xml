@@ -68,6 +68,18 @@
 		public.department
 
 	</select>
+	
+	<!--Get Count Department Name -->
+	<select id="sqlCountDepartmentByNameSelect" resultType="Long" parameterType="String">
+
+		SELECT
+		COUNT(*)
+		FROM
+		public.department
+		WHERE 
+		public.department.department_name = #{department_name}
+
+	</select>
 
 	<!-- Get a list of non-departmental/departmental employees -->
 	<resultMap
