@@ -17,4 +17,8 @@ public class UpdateInfo implements Serializable {
 	 */
 	private LocalDateTime updateTimestapm;
 
+
+
+
+
 }
