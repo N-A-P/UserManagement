@@ -188,7 +188,7 @@ public class DepartmentRestController {
 	@RequestMapping(value = "/removeEmployeeFromDepartment", method = RequestMethod.POST)
 	public ResponseEntity<String> removeEmployeeFromDepartment(
 			@Valid @RequestBody EmployeeOfDepartment employeeOfDepartment) {
-		if (departmentService.removeEmployeeFromDepartment(employeeOfDepartment.getDepartmentDetailId()) != 0) {
+		if (departmentService.removeEmployeeFromDepartment(employeeOfDepartment.getUserDepartmentId()) != 0) {
 			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
