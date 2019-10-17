@@ -213,10 +213,17 @@ public class DepartmentService {
 	 */
 	public int departmentInsert(Department department) {
 		try {
+			// Check duplicate Department Name
 			if (departmentMapper.sqlCountDepartmentByNameSelect(department.getDepartmentName()) == 0) {
-				return departmentMapper.sqlDepartmentInsert(department);
+				// Check duplicate Department Code
+				if (departmentMapper.sqlCountDepartmentByCodeSelect(department.getDepartmentCode()) == 0) {
+					return departmentMapper.sqlDepartmentInsert(department);
+				} else {
+					return -2;
+				}
+			} else {
+				return -1;
 			}
-
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}

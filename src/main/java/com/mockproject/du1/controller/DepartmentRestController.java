@@ -120,6 +120,7 @@ public class DepartmentRestController {
 	@RequestMapping(value = "/updateDepartmentInfomation", method = RequestMethod.POST)
 	public ResponseEntity<String> updateDepartmentInfomation(@Valid @RequestBody Department department) {
 		if (departmentService.departmentInfoUpdate(department) != 0) {
+			
 			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
@@ -155,6 +156,12 @@ public class DepartmentRestController {
 	 */
 	@RequestMapping(value = "/insertDepartment", method = RequestMethod.POST)
 	public ResponseEntity<String> insertDepartment(@Valid @RequestBody Department department) {
+		if (departmentService.departmentInsert(department) == -2) {
+			return new ResponseEntity<String>("Duplicated Department code!!! Please Check!!!", HttpStatus.BAD_REQUEST);
+		} else {
+
+		}
+		
 		if (departmentService.departmentInsert(department) != 0) {
 			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 		} else {
