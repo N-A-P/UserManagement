@@ -3,12 +3,12 @@ package com.mockproject.du1.model;
 import javax.persistence.Embedded;
 
 /*
- * Department Detail Model
+ * User Department Model
  */
 @lombok.Data
 public class UserDepartment {
 	/**
-	 * Department Detail Id
+	 * User Department Id
 	 */
 	private int userDepartmentId;
 	/**
@@ -20,17 +20,20 @@ public class UserDepartment {
 	 */
 	private int userId;
 	/**
-	 * Number Of Employees
+	 * Stay Or Leave
 	 */
-	private int numberOfEmployees;
+	private int stayOrLeave;
 	/**
-	 * Status
+	 * Join Date
 	 */
-	private int stayOfLeave;
-
 	private String joinDate;
-
+	/**
+	 * Leave Date
+	 */
 	private String leaveDate;
+	/**
+	 * Update Info
+	 */
 	@Embedded
 	private UpdateInfo updateInfo;
 

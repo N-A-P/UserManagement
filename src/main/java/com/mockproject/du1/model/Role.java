@@ -7,10 +7,22 @@ import javax.persistence.Embedded;
 @lombok.Data
 @Builder
 public class Role {
-    private int roleId;
-    private String roleName;
-    private String roleEmail;
-    @Embedded
-    private UpdateInfo updateInfo;
+	/**
+	 * Role Id
+	 */
+	private int roleId;
+	/**
+	 * Role Name
+	 */
+	private String roleName;
+	/**
+	 * Role Code
+	 */
+	private String roleCode;
+	/**
+	 * Role Id
+	 */
+	@Embedded
+	private UpdateInfo updateInfo;
 
 }

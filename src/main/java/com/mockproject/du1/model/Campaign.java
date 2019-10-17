@@ -7,15 +7,38 @@ import javax.persistence.Embedded;
 @lombok.Data
 @Builder
 public class Campaign {
-    private int campaignId;
-    private String title;
-    private String description;
-    private int duration;
-    private String startDate;
-    private String endDate;
-    private int emailTemplateId;
-    @Embedded
-    private UpdateInfo updateInfo;
-
+	/**
+	 * Campaign Id
+	 */
+	private int campaignId;
+	/**
+	 * Title
+	 */
+	private String title;
+	/**
+	 * Campaign description
+	 */
+	private String description;
+	/**
+	 * Campaign duration
+	 */
+	private int duration;
+	/**
+	 * Campaign start Date
+	 */
+	private String startDate;
+	/**
+	 * Campaign end Date
+	 */
+	private String endDate;
+	/**
+	 * Campaign email Template Id
+	 */
+	private int emailTemplateId;
+	/**
+	 * updateInfo
+	 */
+	@Embedded
+	private UpdateInfo updateInfo;
 
 }

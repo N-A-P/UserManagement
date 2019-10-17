@@ -1,58 +1,30 @@
-<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mockproject.du1.mapper.EmailMapper">
 
-
-
 	<!--Get List Data User Information -->
 	<resultMap id="GetEmailResultMap"
-		type="com.mockproject.du1.model.Email">
+		type="com.mockproject.du1.model.EmailTemplate">
 		<result property="emailId" column="email_id" />
 		<result property="content" column="content" />
 		<result property="subject" column="subject" />
 
 	</resultMap>
 
-
-	<insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.Email" useGeneratedKeys="true" keyProperty="com.mockproject.du1.model.Email.emailId" keyColumn="email_id">
+	<insert id="sqlCreateEmailInsert"
+		parameterType="com.mockproject.du1.model.EmailTemplate">
+		<selectKey keyProperty="emailId" resultType="int">
+			SELECT
+			currval('"email_id_seq"')
+		</selectKey>
 		INSERT INTO public.Email
 		(email_id,content,subject)
 		VALUES
 		(nextval('email_id_seq'),#{content},#{subject})
 	</insert>
-	
 
-=======
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<mapper namespace="com.mockproject.du1.mapper.EmailMapper">
-
-
-    <!--Get List Data User Information -->
-    <resultMap id="GetEmailResultMap"
-               type="com.mockproject.du1.model.EmailTemplate">
-        <result property="emailId" column="email_id"/>
-        <result property="content" column="content"/>
-        <result property="subject" column="subject"/>
-
-    </resultMap>
-
-
-    <insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.EmailTemplate">
-        <selectKey keyProperty="emailId" resultType="int">
-            SELECT currval('"email_id_seq"')
-        </selectKey>
-        INSERT INTO public.Email
-        (email_id,content,subject)
-        VALUES
-        (nextval('email_id_seq'),#{content},#{subject})
-    </insert>
-
-    <select id="sqlGetAllEmailSelect"
-            resultMap="GetEmailResultMap">
+	<select id="sqlGetAllEmailSelect" resultMap="GetEmailResultMap">
 		SELECT
 		email_id,
 		content,
@@ -62,23 +34,24 @@
 
 	</select>
 
-    <select id="sqlGetEmailSelectById"
-            resultMap="GetEmailResultMap" parameterType="INT">
+	<select id="sqlGetEmailSelectById" resultMap="GetEmailResultMap"
+		parameterType="INT">
 		SELECT
 		email_id,
 		content,
 		subject
 		FROM
 		public.Email
-        WHERE
+		WHERE
 		email_id = #{id}
 	</select>
-    <update id="sqlEmailUpdate">
+	
+	<update id="sqlEmailUpdate">
 		UPDATE public.email
-        SET subject=#{subject}, content=#{content}
-        WHERE email_id=#{emailId}
+		SET subject=#{subject},
+		content=#{content}
+		WHERE email_id=#{emailId}
 
 	</update>
 
->>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
 </mapper>

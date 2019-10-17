@@ -4,10 +4,17 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class UpdateInfo implements Serializable {
-    private int updateBy;
-    private LocalDateTime createTimestapm;
-    private LocalDateTime updateTimestapm;
-
-
+	/**
+	 * Update By
+	 */
+	private String updateBy;
+	/**
+	 * Create Timestapm
+	 */
+	private LocalDateTime createTimestapm;
+	/**
+	 * Update Timestapm
+	 */
+	private LocalDateTime updateTimestapm;
 
 }

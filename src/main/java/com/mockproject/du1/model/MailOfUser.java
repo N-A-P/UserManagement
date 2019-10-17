@@ -7,8 +7,17 @@ import java.util.List;
 @lombok.Data
 @Builder
 public class MailOfUser {
+	/**
+	 * List User
+	 */
     List<Users> users;
+    /**
+	 * Email Header
+	 */
     String emailHeader;
+    /**
+	 * Email Body Text
+	 */
     String emailBodyText;
 
 }

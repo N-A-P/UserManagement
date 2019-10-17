@@ -23,6 +23,9 @@ public class Department {
 	 * Status
 	 */
 	private int isActivated;
+	/**
+	 * Update Info
+	 */
 	@Embedded
 	private UpdateInfo updateInfo;
 

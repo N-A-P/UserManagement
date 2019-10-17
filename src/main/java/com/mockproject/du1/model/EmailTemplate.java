@@ -7,36 +7,22 @@ import javax.persistence.Embedded;
 @lombok.Data
 @Builder
 public class EmailTemplate {
-    private int emailId;
-    private String title;
-    private String body;
-    @Embedded
-    private UpdateInfo updateInfo;
+	/**
+	 * Email Template Id
+	 */
+	private int emaiTemplateId;
+	/**
+	 * Email Template title
+	 */
+	private String title;
+	/**
+	 * Email Template body
+	 */
+	private String body;
+	/**
+	 * Update Info
+	 */
+	@Embedded
+	private UpdateInfo updateInfo;
 
-
-
-
-    public int getEmailId() {
-        return emailId;
-    }
-
-    public void setEmailId(int value) {
-        this.emailId = value;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
 }
