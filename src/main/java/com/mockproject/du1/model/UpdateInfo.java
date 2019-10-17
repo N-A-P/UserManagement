@@ -7,7 +7,7 @@ public class UpdateInfo implements Serializable {
     private int updateBy;
     private LocalDateTime createTimestapm;
     private LocalDateTime updateTimestapm;
-    private UpdateInfo updateInfo;
+    
 
 
 }
