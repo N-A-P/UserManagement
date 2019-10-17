@@ -1,5 +1,7 @@
 package com.mockproject.du1.model;
 
+import javax.persistence.Embedded;
+
 /*
  * Department Detail Model
  */
@@ -29,7 +31,7 @@ public class UserDepartment {
 	private String joinDate;
 
 	private String leaveDate;
-
+	@Embedded
 	private UpdateInfo updateInfo;
 
 }

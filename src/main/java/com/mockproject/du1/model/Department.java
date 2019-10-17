@@ -1,5 +1,7 @@
 package com.mockproject.du1.model;
 
+import javax.persistence.Embedded;
+
 /*
  * Department Model
  */
@@ -21,6 +23,7 @@ public class Department {
 	 * Status
 	 */
 	private int isActivated;
+	@Embedded
 	private UpdateInfo updateInfo;
 
 }

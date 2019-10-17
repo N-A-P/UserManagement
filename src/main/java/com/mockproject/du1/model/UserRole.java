@@ -2,6 +2,8 @@ package com.mockproject.du1.model;
 
 import lombok.Builder;
 
+import javax.persistence.Embedded;
+
 @lombok.Data
 @Builder
 public class UserRole {
@@ -10,6 +12,7 @@ public class UserRole {
     private int roleId;
     private String joinDate;
     private String leaveDate;
+    @Embedded
     private UpdateInfo updateInfo;
 
 }

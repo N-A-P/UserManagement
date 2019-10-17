@@ -2,6 +2,7 @@ package com.mockproject.du1.model;
 
 import lombok.Builder;
 
+import javax.persistence.Embedded;
 import java.util.Date;
 
 @lombok.Data
@@ -13,6 +14,7 @@ public class CampaignCustomer {
     private Date joinDate;
     private int campaignId;
     private int customerId;
+    @Embedded
     private UpdateInfo updateInfo;
 
 }
