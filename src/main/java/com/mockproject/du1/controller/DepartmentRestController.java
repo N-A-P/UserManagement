@@ -59,11 +59,8 @@ public class DepartmentRestController {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Show list department(Active)
-=======
 	 *
->>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
 	 */
 	@RequestMapping(value = "/getDepartmentById/{departmentId}", method = RequestMethod.GET)
 	public ResponseEntity<Department> getDepartmentById(@PathVariable int departmentId) {
@@ -117,11 +114,8 @@ public class DepartmentRestController {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Click button Save 
-=======
 	 *
->>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
 	 */
 	@RequestMapping(value = "/updateDepartmentInfomation", method = RequestMethod.POST)
 	public ResponseEntity<String> updateDepartmentInfomation(@Valid @RequestBody Department department) {

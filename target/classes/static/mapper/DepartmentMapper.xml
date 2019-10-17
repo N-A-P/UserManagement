@@ -3,14 +3,15 @@
 
 <mapper namespace="com.mockproject.du1.mapper.DepartmentMapper">
 
-	<!--Get List Data Department Information -->
+	<!--Get List Data Department Information Result Map -->
 	<resultMap id="GetDepartmentResultMap"
 		type="com.mockproject.du1.model.Department">
 		<result property="departmentId" column="department_id" />
 		<result property="departmentName" column="department_name" />
+		<result property="departmentCode" column="department_code" />
 		<result property="numberOfEmployees"
-			column="number_of_employees" />
-		<result property="status" column="status" />
+			column="number_of_employee" />
+		<result property="isActivated" column="is_activated" />
 	</resultMap>
 
 	<!--Get List Data Department Information -->
@@ -20,26 +21,28 @@
 		SELECT
 		department_id,
 		department_name,
-		number_of_employees,
-		status
+		department_code,
+		number_of_employee,
+		isActivated
 		FROM
 		public.department
 
 	</select>
 
-	<!--Get List Data Department Information By Status -->
+	<!--Get List Data Department Information Actived/Inactived -->
 	<select id="sqlGetDepartmentByStatusSelect"
 		resultMap="GetDepartmentResultMap" parameterType="Integer">
 
 		SELECT
 		department_id,
 		department_name,
-		number_of_employees,
-		status
+		department_code,
+		number_of_employee,
+		is_activated
 		FROM
 		public.department
 		WHERE
-		status = #{status}
+		is_activated = #{isActivated}
 
 	</select>
 
@@ -50,8 +53,9 @@
 		SELECT
 		department_id,
 		department_name,
-		number_of_employees,
-		status
+		department_code,
+		number_of_employee,
+		is_activated
 		FROM
 		public.department
 		WHERE
@@ -68,16 +72,30 @@
 		public.department
 
 	</select>
-	
-	<!--Get Count Department Name -->
-	<select id="sqlCountDepartmentByNameSelect" resultType="Long" parameterType="String">
+
+	<!--Get Count Department: Check duplicate department name -->
+	<select id="sqlCountDepartmentByNameSelect" resultType="Long"
+		parameterType="String">
 
 		SELECT
 		COUNT(*)
 		FROM
 		public.department
-		WHERE 
-		public.department.department_name = #{department_name}
+		WHERE
+		public.department.department_name = #{departmentName}
+
+	</select>
+
+	<!--Get Count Department: Check duplicate department code -->
+	<select id="sqlCountDepartmentByCodeSelect" resultType="Long"
+		parameterType="String">
+
+		SELECT
+		COUNT(*)
+		FROM
+		public.department
+		WHERE
+		public.department.department_code = #{departmentCode}
 
 	</select>
 
@@ -89,12 +107,11 @@
 		<result property="firstName" column="first_name" />
 		<result property="lastName" column="last_name" />
 		<result property="email" column="email" />
-		<result property="tenure" column="tenure" />
-		<result property="roleDetailId" column="role_detail_id" />
+		<result property="seniorlity" column="seniorlity" />
+		<result property="userRoleId" column="user_role_id" />
 		<result property="roleId" column="role_id" />
 		<result property="roleName" column="role_name" />
-		<result property="departmentDetailId"
-			column="department_detail_id" />
+		<result property="userDepartmentId" column="user_department_id" />
 		<result property="departmentId" column="department_id" />
 		<result property="departmentName" column="department_name" />
 	</resultMap>
@@ -108,19 +125,20 @@
 		a.last_name AS
 		last_name,
 		a.email AS email,
-		a.tenure AS tenure,
-		b.role_detail_id AS
-		role_detail_id,
+		a.seniorlity AS seniorlity,
+		b.user_role_id
+		AS
+		user_role_id,
 		c.role_id AS role_id,
 		c.role_name AS role_name,
-		COALESCE(d.department_detail_id,-1) AS department_detail_id,
+		COALESCE(d.user_department_id,-1) AS user_department_id,
 		e.department_id AS department_id,
 		e.department_name AS department_name
 
 		FROM public.users a
 
 		INNER JOIN
-		public.role_detail b
+		public.user_role b
 		ON a.user_id =
 		b.user_id
 
@@ -128,7 +146,7 @@
 		ON c.role_id = b.role_id
 
 		INNER JOIN
-		public.department_detail d
+		public.user_department d
 		ON a.user_id = d.user_id
 
 		INNER JOIN
@@ -137,15 +155,19 @@
 		e.department_id = d.department_id
 
 		WHERE
-		<if test="action == 1"> e.department_id NOT IN (#{department_id})</if>
-		<if test="action == 2"> e.department_id = #{department_id}</if>
-			<![CDATA[ 
-			AND c.role_id <= #{role_id}
-			]]>
-		<if test="action == 1">AND d.status IN (0,1)</if>
-		<if test="action == 2">AND d.status = #{statusDepartmentDetail}</if>
-		AND e.status = #{statusDepartment}
-		AND a.status = #{statusUser}
+		<if test="action == 1">
+			e.department_id NOT IN (#{department_id})
+			AND
+			d.stay_or_leave IN (0,1)
+		</if>
+		<if test="action == 2">
+			e.department_id = #{department_id}
+			AND d.stay_or_leave =
+			#{statusUserDepartment}
+		</if>
+		AND e.is_activated = #{statusDepartment}
+		AND a.is_activated =
+		#{statusUser}
 
 	</select>
 
@@ -156,46 +178,63 @@
 		UPDATE public.department
 		SET department_name =
 		#{departmentName},
-		number_of_employees = #{numberOfEmployees}
+		department_code = #{departmentCode},
+		number_of_employee = #{numberOfEmployees},
+		is_activated
+		=#{isActivated},
+		updated_by=#{updateBy},
+		updated_timestamp
+		=#{updateTimestamp}
 		WHERE
-		department_id = #{departmentId}
+		department_id =
+		#{departmentId}
 	</update>
 
 	<!--Update Department Status -->
 	<update id="sqlDepartmentStatusUpdate">
 
 		UPDATE public.department
-		SET status = #{status}
+		SET is_activated =
+		#{isActivated},
+		updated_by= #{updateBy},
+		updated_timestamp
+		=#{updateTimestamp}
 		WHERE
-		department_id = #{departmentId}
-		
-	</update>
-	
-	<!--Update Department Detail Status -->
-	<update id="sqlDepartmentDetailStatusUpdate">
+		department_id =
+		#{departmentId}
 
-		UPDATE public.department_detail
-		SET status = #{status}
+	</update>
+
+	<!--Update User Department Status -->
+	<update id="sqlUserDepartmentStatusUpdate">
+
+		UPDATE public.user_department
+		SET is_activated =
+		#{isActivated},
+		updated_by=#{updateBy},
+		updated_timestamp
+		=#{updateTimestamp}
 		WHERE
-		department_detail_id = #{departmentDetailId}
-		
+		user_department_id = #{userDepartmentId}
+
 	</update>
 
 	<!--Insert Department Information -->
 	<insert id="sqlDepartmentInsert"
 		parameterType="com.mockproject.du1.model.Department">
 		INSERT INTO public.department
-		(department_name,number_of_employees,status)
+		(department_code,department_name,number_of_employee,is_activated,updated_by,created_timestamp,updated_timestamp)
 		VALUES
-		(#{departmentName},#{numberOfEmployees},#{status})
+		(#{departmentCode},#{departmentName},#{numberOfEmployees},#{isActivated},#{updateBy},#{createTimestamp},#{updateTimestamp})
 	</insert>
 
 	<!--Insert New Employee For Department -->
-	<insert id="sqlNewEmployeeForDeparmentInsert">
-		INSERT INTO public.department_detail
-		(status,department_id,user_id)
+	<insert id="sqlNewEmployeeForDeparmentInsert"
+		parameterType="com.mockproject.du1.model.UserDepartment">>
+		INSERT INTO public.user_department
+		(department_id,user_id,stay_or_leave,join_date,leave_date,updated_by,created_timestamp,updated_timestamp)
 		VALUES
-		(#{status},#{EmployeeOfDepartment.departmentId},#{EmployeeOfDepartment.userId})
+		(#{departmentId},#{userId},#{stayOrLeave},#{joinDate},#{leaveDate},#{updateBy},#{createTimestamp},#{updateTimestamp})
 	</insert>
 
 </mapper>

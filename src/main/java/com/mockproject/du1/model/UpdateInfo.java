@@ -9,13 +9,13 @@ public class UpdateInfo implements Serializable {
 	 */
 	private String updateBy;
 	/**
-	 * Create Timestapm
+	 * Create Timestamp
 	 */
-	private LocalDateTime createTimestapm;
+	private LocalDateTime createTimestamp;
 	/**
-	 * Update Timestapm
+	 * Update Timestamp
 	 */
-	private LocalDateTime updateTimestapm;
+	private LocalDateTime updateTimestamp;
 
 
 
