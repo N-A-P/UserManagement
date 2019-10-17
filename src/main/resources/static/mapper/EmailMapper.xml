@@ -4,29 +4,28 @@
 <mapper namespace="com.mockproject.du1.mapper.EmailMapper">
 
 
+    <!--Get List Data User Information -->
+    <resultMap id="GetEmailResultMap"
+               type="com.mockproject.du1.model.EmailTemplate">
+        <result property="emailId" column="email_id"/>
+        <result property="content" column="content"/>
+        <result property="subject" column="subject"/>
 
-	<!--Get List Data User Information -->
-	<resultMap id="GetEmailResultMap"
-		type="com.mockproject.du1.model.Email">
-		<result property="emailId" column="email_id" />
-		<result property="content" column="content" />
-		<result property="subject" column="subject" />
-
-	</resultMap>
+    </resultMap>
 
 
-	<insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.Email" >
-		<selectKey keyProperty="emailId" resultType="int">
-			SELECT currval('"email_id_seq"')
-		</selectKey>
-		INSERT INTO public.Email
-		(email_id,content,subject)
-		VALUES
-		(nextval('email_id_seq'),#{content},#{subject})
-	</insert>
+    <insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.EmailTemplate">
+        <selectKey keyProperty="emailId" resultType="int">
+            SELECT currval('"email_id_seq"')
+        </selectKey>
+        INSERT INTO public.Email
+        (email_id,content,subject)
+        VALUES
+        (nextval('email_id_seq'),#{content},#{subject})
+    </insert>
 
-	<select id="sqlGetAllEmailSelect"
-			resultMap="GetEmailResultMap" >
+    <select id="sqlGetAllEmailSelect"
+            resultMap="GetEmailResultMap">
 		SELECT
 		email_id,
 		content,
@@ -36,6 +35,22 @@
 
 	</select>
 
+    <select id="sqlGetEmailSelectById"
+            resultMap="GetEmailResultMap" parameterType="INT">
+		SELECT
+		email_id,
+		content,
+		subject
+		FROM
+		public.Email
+        WHERE
+		email_id = #{id}
+	</select>
+    <update id="sqlEmailUpdate">
+		UPDATE public.email
+        SET subject=#{subject}, content=#{content}
+        WHERE email_id=#{emailId}
 
+	</update>
 
 </mapper>

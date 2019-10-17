@@ -1,11 +1,9 @@
 package com.mockproject.du1.services;
 
+import com.mockproject.du1.mapper.CustomerMapper;
 import com.mockproject.du1.mapper.EmailMapper;
 import com.mockproject.du1.mapper.MailHistoryMapper;
-import com.mockproject.du1.model.Department;
-import com.mockproject.du1.model.MailHistory;
-import com.mockproject.du1.model.Users;
-import org.apache.commons.logging.LogFactory;
+import com.mockproject.du1.model.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,21 +19,14 @@ import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 
 import java.io.*;
-import java.io.File;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
+import org.springframework.util.Assert;
 
 @Service
 public class EmailService {
@@ -43,18 +34,20 @@ public class EmailService {
     EmailMapper emailMapper;
     @Autowired
     MailHistoryMapper mailHistoryMapper;
+    @Autowired
+    CustomerMapper customerMapper;
 
     public boolean sendEmailToAll(List<Users> recipientList, String emailHeader, String emailBodyText) {
         if (recipientList != null) {
             try {
-                com.mockproject.du1.model.Email email = com.mockproject.du1.model.Email.builder()
-                        .content(emailBodyText)
-                        .subject(emailHeader)
+                EmailTemplate email = EmailTemplate.builder()
+                        .title(emailBodyText)
+                        .body(emailHeader)
                         .build();
                 emailMapper.sqlCreateEmailInsert(email);
 
                 for (Users user : recipientList) {
-                        sendEmail(user, emailHeader, emailBodyText,email.getEmailId());
+                    sendEmail(user, emailHeader, emailBodyText, email.getEmailId());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -65,17 +58,17 @@ public class EmailService {
         return false;
     }
 
-    private void sendEmail(Users recipient, String emailHeader, String emailBodyText,int emailId) throws IOException {
+    private void sendEmail(Users recipient, String emailHeader, String emailBodyText, int emailId) throws IOException {
 
-            Mail mail = prepareMail(recipient, emailHeader, emailBodyText);
+        Mail mail = prepareMail(recipient, emailHeader, emailBodyText);
 
-            Request request = new Request();
-            request.setMethod(Method.POST);
-            request.setEndpoint("mail/send");
-            request.setBody(mail.build());
-            SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-            Response response = sg.api(request);
-            mailHistoryMapper.sqlInsertMailHistoryl(MailHistory.builder().EmailId(emailId).UserId(recipient.getUserId()).SendDate(new java.util.Date()).build());
+        Request request = new Request();
+        request.setMethod(Method.POST);
+        request.setEndpoint("mail/send");
+        request.setBody(mail.build());
+        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+        Response response = sg.api(request);
+        mailHistoryMapper.sqlInsertMailHistoryl(CampaignCustomer.builder().campaignId(emailId).customerId(recipient.getUserId()).sendTime(new java.util.Date()).build());
 
     }
 
@@ -88,7 +81,7 @@ public class EmailService {
         finalText.append(signature);
         Email fromEmail = new Email("moneydontsleep8888@gmail.com");
         Email toEmail = new Email(recipient.getEmail());
-        if(!isValid(recipient.getEmail())){
+        if (!isValid(recipient.getEmail())) {
             throw new IllegalArgumentException("email inValid");
         }
         Content content = new Content("text/plain", finalText.toString());
@@ -97,8 +90,9 @@ public class EmailService {
     }
 
     public List<String> coverExcellFileToArray(byte[] file) throws IOException {
+        List<String> error = new ArrayList<>();
         try {
-            List<String> emails = new ArrayList<>();
+            int rowCount = 0;
             InputStream is = new ByteArrayInputStream(file);
             XSSFWorkbook workbook = new XSSFWorkbook(is);
             XSSFSheet sheet = workbook.getSheetAt(0);
@@ -106,19 +100,35 @@ public class EmailService {
             while (rowIterator.hasNext()) {
                 Row row = rowIterator.next();
                 Iterator<Cell> cellIterator = row.cellIterator();
-                while (cellIterator.hasNext()) {
-                    Cell cell = cellIterator.next();
-                    if (isValid(cell.getStringCellValue())) {
-                        emails.add(cell.getStringCellValue());
+                try {
+                    Assert.notNull(row.getCell(0), "error null email in row : " + rowCount);
+                    String email = row.getCell(0).getStringCellValue();
+                    if (!isValid(row.getCell(0).getStringCellValue())) {
+                        throw new IllegalArgumentException("email inValid in row : " + rowCount);
                     }
+                    Assert.notNull(row.getCell(1), "error null name in row : " + rowCount);
+                    String name = row.getCell(1).getStringCellValue();
+                    Customer customer = customerMapper.sqlGetCustomerByEmailSelect(email);
+                    Assert.isNull(customer, "Customer Exit in row : " + rowCount);
+                    customer = Customer.builder().customerEmail(email).customerName(name).build();
+                    customerMapper.sqlCreateCustomerInsert(customer);
+                    error.add("add success customer :" + customer.getCustomerName());
+                } catch (Exception e) {
+                    error.add(e.getMessage());
                 }
+
+                rowCount++;
+
             }
-            return emails;
-        }catch(Exception e){
+
+
+            return error;
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
+
     public boolean isValid(String email) {
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
                 "[a-zA-Z0-9_+&*-]+)*@" +
@@ -131,7 +141,21 @@ public class EmailService {
         return pat.matcher(email).matches();
     }
 
-    public List<com.mockproject.du1.model.Email> getAllemailContent() {
-       return emailMapper.sqlGetAllEmailSelect();
+    public EmailTemplate getEmailById(int emailId) {
+        return emailMapper.sqlGetEmailSelectById(emailId);
+
+    }
+
+    public String editTopic(EmailTemplate email) {
+
+        if (emailMapper.sqlGetEmailSelectById(email.getEmailId()) == null) {
+            return "email doesnt exit";
+        }
+        emailMapper.sqlEmailUpdate(email);
+        return "success";
+    }
+
+    public List<EmailTemplate> getAllemailContent() {
+        return emailMapper.sqlGetAllEmailSelect();
     }
 }

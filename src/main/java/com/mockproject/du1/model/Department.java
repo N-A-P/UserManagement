@@ -20,5 +20,7 @@ public class Department {
 	/**
 	 * Status
 	 */
-	private int status;
+	private int isActivated;
+	private UpdateInfo updateInfo;
+
 }

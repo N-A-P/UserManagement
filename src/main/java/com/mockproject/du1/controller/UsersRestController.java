@@ -1,8 +1,5 @@
 package com.mockproject.du1.controller;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -53,10 +49,10 @@ public class UsersRestController {
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
-		user.setStartDate(java.time.LocalDate.now().toString());
+		user.setRegisteredDate(java.time.LocalDate.now().toString());
 		user.setEndDate(java.time.LocalDate.now().toString());
-		user.setTenure(0);
-		user.setStatus(1);
+		user.setSeniority(0);
+		user.setIsActivated(1);
 		if (usersService.registerNewCustomer(user)) {
 			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
 		} else {
@@ -82,7 +78,7 @@ public class UsersRestController {
 		try {
 			if (usersService.checkLogin(user)) {
 				Users userToCheck=usersService.getUserByUsername(user.getUsername());
-				if (userToCheck.getStatus() == 1) {
+				if (userToCheck.getIsActivated() == 1) {
 					result = jwtService.generateTokenLogin(user.getUsername());
 					httpStatus = HttpStatus.OK;
 				} else {

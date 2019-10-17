@@ -67,7 +67,10 @@ public class UsersFull {
 	 * department id
 	 */
 	private int departmentId;
-	
-	
-	
+
+
+	private UpdateInfo updateInfo;
+
+
+
 }

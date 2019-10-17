@@ -7,7 +7,6 @@ import lombok.Builder;
  * Users Model
  */
 @lombok.Data
-@Builder
 public class Users {
 	/*
 	 * User Id
@@ -40,26 +39,30 @@ public class Users {
 	/*
 	 * Start Date
 	 */
-	private String startDate;
+	private String registeredDate;
 	/*
 	 * End Date
 	 */
+	private String activatedDate;
+
+	private int activatedBy;
+
 	private String endDate;
 	/*
 	 * Tenure(Years)
 	 */
-	private int tenure;
+	private int seniority;
 
 	/*
 	 * status
 	 */
-	private int status;
+	private int isActivated;
 	
 	/*
 	 * Constructor for testing
 	 */
 	public Users() {
-		
+
 	}
 	
 	public Users(String firstName, String lastName, String email, String username, String password, String dob,
@@ -70,10 +73,10 @@ public class Users {
 		this.username = username;
 		this.password = password;
 		this.dob = dob;
-		this.startDate = startDate;
+		this.registeredDate = startDate;
 		this.endDate = endDate;
-		this.tenure = tenure;
-		this.status = status;
+		this.seniority = tenure;
+		this.isActivated = status;
 	}
 
 	public Users(int userId, String firstName, String lastName, String email, String username, String password,
@@ -85,10 +88,10 @@ public class Users {
 		this.username = username;
 		this.password = password;
 		this.dob = dob;
-		this.startDate = startDate;
+		this.registeredDate = startDate;
 		this.endDate = endDate;
-		this.tenure = tenure;
-		this.status = status;
+		this.seniority = tenure;
+		this.isActivated = status;
 	}
 	
 }

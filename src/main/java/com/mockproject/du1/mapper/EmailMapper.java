@@ -1,15 +1,16 @@
 package com.mockproject.du1.mapper;
 
 
-import com.mockproject.du1.model.Email;
+import com.mockproject.du1.model.EmailTemplate;
 
 import java.util.List;
 
 public interface EmailMapper {
 
-    List<Email> sqlGetAllEmailSelect();
+    List<EmailTemplate> sqlGetAllEmailSelect();
 
-    Email sqlGetEmailSelectById();
+    EmailTemplate sqlGetEmailSelectById(int id);
 
-    int sqlCreateEmailInsert(Email email);
+    int sqlCreateEmailInsert(EmailTemplate email);
+    int sqlEmailUpdate(EmailTemplate email);
 }

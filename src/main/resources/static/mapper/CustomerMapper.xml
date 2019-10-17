@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mockproject.du1.mapper.CustomerMapper">
+
+
+
+	<!--Get List Data User Information -->
+	<resultMap id="GetCustomerResultMap"
+		type="com.mockproject.du1.model.Customer">
+		<result property="customerId" column="customer_id" />
+		<result property="customerName" column="customer_name" />
+		<result property="customerEmail" column="customer_email" />
+		<result property="status" column="status" />
+
+	</resultMap>
+
+
+	<insert id="sqlCreateCustomerInsert" parameterType="com.mockproject.du1.model.Customer">
+		INSERT INTO public.customer
+		(customer_id,customer_name,customer_email,status)
+		VALUES
+		(nextval('customer_seq'),#{customerName},#{customerEmail},#{status})
+	</insert>
+
+	<select id="sqlGetCustomerByEmailSelect"
+			resultMap="GetCustomerResultMap" parameterType="String">
+		SELECT
+		customer_id,
+		customer_name,
+		customer_email,
+		status
+		FROM
+		public.customer
+		WHERE
+		customer_email = #{email}
+	</select>
+	
+
+</mapper>

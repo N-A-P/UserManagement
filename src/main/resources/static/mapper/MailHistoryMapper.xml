@@ -7,21 +7,40 @@
 
 	<!--Get List Data User Information -->
 	<resultMap id="GetMailHistoryResultMap"
-		type="com.mockproject.du1.model.MailHistory">
+		type="com.mockproject.du1.model.CampaignCustomer">
 		<result property="mailHistoryId" column="mail_history_id" />
 		<result property="SendDate" column="send_date" />
 		<result property="EmailId" column="email_id" />
-		<result property="UserId" column="user_id" />
+		<result property="customerId" column="customer_id" />
 
 	</resultMap>
 
 
-	<insert id="sqlInsertMailHistoryl" parameterType="com.mockproject.du1.model.MailHistory">
+	<insert id="sqlInsertMailHistoryl" parameterType="com.mockproject.du1.model.CampaignCustomer">
 		INSERT INTO public.mail_history
-		(mail_history_id,send_date,email_id,user_id)
+		(mail_history_id,send_date,email_id,customer_id)
 		VALUES
-		(nextval('email_id_seq'),#{SendDate},#{EmailId},#{UserId})
+		(nextval('email_id_seq'),#{SendDate},#{EmailId},#{customerId})
 	</insert>
-	
+	<select id="sqlGetAllMailHistorySelect"
+			resultMap="GetMailHistoryResultMap">
+		SELECT
+		mail_history_id,
+		send_date,
+		email_id,
+		customer_id
+		FROM
+		public.mail_history
+
+	</select>
+	<select id="sqlGetMailHistorySelectByEmail"
+			resultMap="GetMailHistoryResultMap" parameterType="String">
+		SELECT
+		count(*)
+		FROM
+		public.mail_history
+         WHERE
+		email_id = #{id}
+	</select>
 
 </mapper>
