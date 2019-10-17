@@ -39,9 +39,15 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/rest/login**").permitAll();
         http.antMatcher("/rest/**").httpBasic().authenticationEntryPoint(restServicesEntryPoint()).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().authorizeRequests()
+<<<<<<< HEAD
                 //.antMatchers(HttpMethod.GET, "/rest/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_CUSTOMER')")
                //.antMatchers(HttpMethod.POST, "/rest/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/rest/**").access("hasRole('ROLE_ADMIN')").and()
+=======
+                .antMatchers(HttpMethod.GET, "/rest/**").permitAll()
+               .antMatchers(HttpMethod.POST, "/rest/**").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/rest/**").permitAll().and()
+>>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
                 .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());
     }

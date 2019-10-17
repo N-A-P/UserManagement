@@ -10,4 +10,5 @@ public class MailOfUser {
     List<Users> users;
     String emailHeader;
     String emailBodyText;
+
 }

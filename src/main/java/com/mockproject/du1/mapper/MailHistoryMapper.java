@@ -1,14 +1,13 @@
 package com.mockproject.du1.mapper;
 
-import com.mockproject.du1.model.Email;
-import com.mockproject.du1.model.MailHistory;
+import com.mockproject.du1.model.CampaignCustomer;
 
 import java.util.List;
 
 public interface MailHistoryMapper {
-    List<Email> sqlGetAllMailHistorySelect();
+    List<CampaignCustomer> sqlGetAllMailHistorySelect();
 
-    Email sqlGetMailHistorySelectById();
+    CampaignCustomer sqlGetMailHistorySelectByEmail(String email);
 
-    int sqlInsertMailHistoryl(MailHistory mailHistory);
+    int sqlInsertMailHistoryl(CampaignCustomer mailHistory);
 }

@@ -5,6 +5,8 @@ package com.mockproject.du1.model;
  * UsersFull Model
  */
 
+import javax.persistence.Embedded;
+
 @lombok.Data
 public class UsersFull {
 	/*
@@ -67,7 +69,10 @@ public class UsersFull {
 	 * department id
 	 */
 	private int departmentId;
-	
-	
-	
+
+   @Embedded
+	private UpdateInfo updateInfo;
+
+
+
 }
