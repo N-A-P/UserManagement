@@ -11,33 +11,30 @@
 		<result property="userId" column="user_id" />
 		<result property="firstName" column="first_name" />
 		<result property="lastName" column="last_name" />
+		<result property="dob" column="dob" />
 		<result property="email" column="email" />
 		<result property="username" column="username" />
 		<result property="password" column="password" />
-		<result property="dob" column="dob" />
-		<result property="startDate" column="start_date" />
-		<result property="endDate" column="end_date" />
-		<result property="tenure" column="tenure" />
-		<result property="status" column="status" />
+		<result property="registeredDate" column="registered_date" />
+		<result property="activatedDate" column="activated_date" />
+		<result property="seniority" column="seniority" />
+		<result property="isActivated" column="is_activated" />
+		<result property="updateBy" column="updated_by" />
+		<result property="createTimestamp" column="created_timestamp" />
+		<result property="updateTimestamp" column="updated_timestamp" />
 	</resultMap>
 
 	<!--Get List Data UserFull Information -->
-	<resultMap id="GetUserFullResultMap"
-		type="com.mockproject.du1.model.UsersFull">
-		<result property="userId" column="user_id" />
-		<result property="firstName" column="first_name" />
-		<result property="lastName" column="last_name" />
-		<result property="email" column="email" />
-		<result property="username" column="username" />
-		<result property="password" column="password" />
-		<result property="dob" column="dob" />
-		<result property="startDate" column="start_date" />
-		<result property="endDate" column="end_date" />
-		<result property="tenure" column="tenure" />
-		<result property="status" column="status" />
-		<result property="roleDetailId" column="role_detail_id" />
-		<result property="roleId" column="role_id" />
-	</resultMap>
+	<!--<resultMap id="GetUserFullResultMap" type="com.mockproject.du1.model.UsersFull"> 
+		<result property="userId" column="user_id" /> <result property="firstName" 
+		column="first_name" /> <result property="lastName" column="last_name" /> 
+		<result property="email" column="email" /> <result property="username" column="username" 
+		/> <result property="password" column="password" /> <result property="dob" 
+		column="dob" /> <result property="startDate" column="start_date" /> <result 
+		property="endDate" column="end_date" /> <result property="tenure" column="tenure" 
+		/> <result property="status" column="status" /> <result property="roleDetailId" 
+		column="role_detail_id" /> <result property="roleId" column="role_id" /> 
+		</resultMap> -->
 
 
 	<!-- =========== SELECT =============== -->
@@ -57,12 +54,14 @@
 	<select id="sqlGetAllUserSelect" resultMap="GetUserResultMap">
 		SELECT
 		user_id,
-		first_name, last_name, email, username, password, dob, start_date,
-		end_date, tenure, status
+		first_name, last_name, dob, email, username, password,
+		registered_date,activated_date
+		seniority, is_activated,
+		updated_by,created_timestamp,updated_timestamp
 		FROM
 		public.users
 		WHERE
-		status=1
+		is_activated = 1
 	</select>
 
 	<!--Get List Data User Information By Username -->
@@ -70,16 +69,10 @@
 		resultMap="GetUserResultMap" parameterType="String">
 		SELECT
 		user_id,
-		first_name,
-		last_name,
-		email,
-		username,
-		password,
-		dob,
-		start_date,
-		end_date,
-		tenure,
-		status
+		first_name, last_name, dob, email, username, password,
+		registered_date,activated_date
+		seniority, is_activated,
+		updated_by,created_timestamp,updated_timestamp
 		FROM
 		public.users
 		WHERE
@@ -91,16 +84,10 @@
 		resultMap="GetUserResultMap" parameterType="String">
 		SELECT
 		user_id,
-		first_name,
-		last_name,
-		email,
-		username,
-		password,
-		dob,
-		start_date,
-		end_date,
-		tenure,
-		status
+		first_name, last_name, dob, email, username, password,
+		registered_date,activated_date
+		seniority, is_activated,
+		updated_by,created_timestamp,updated_timestamp
 		FROM
 		public.users
 		WHERE
@@ -129,7 +116,7 @@
 	</select>
 
 	<!--Get List Data All UserFull Information -->
-	<select id="sqlGetAllUserFullSelect"
+	<!--<select id="sqlGetAllUserFullSelect"
 		resultMap="GetUserFullResultMap" parameterType="String">
 		SELECT
 		users.user_id,first_name,last_name,email,username,password,dob,start_date,end_date,tenure,status,role_detail_id,role_detail.role_id
@@ -141,7 +128,7 @@
 		ON role_detail.role_id =
 		role.role_id
 		WHERE users.status=1
-	</select>
+	</select> -->
 
 	<!--Get number of user_id by department_id and user_id in Table department_detail -->
 	<select id="sqlSelectDepartmentDetailSelect"
@@ -202,16 +189,17 @@
 		WHERE
 		user_id=#{userId}
 	</update>
-	
+
 	<!--Update record in Table department_detail -->
-	<update id="sqlUpdateDepartmentDetailUpdate" parameterType="Integer">
+	<update id="sqlUpdateDepartmentDetailUpdate"
+		parameterType="Integer">
 		UPDATE
 		public.department_detail
 		SET status=#{userStatus}
 		WHERE
 		user_id=#{userId}
 	</update>
-	
+
 	<!--Update record in Table department_detail -->
 	<update id="sqlDeleteUserUpdate" parameterType="Integer">
 		UPDATE
@@ -220,8 +208,8 @@
 		WHERE
 		user_id=#{userId}
 	</update>
-	
-	
+
+
 
 	<!-- =========== DELETE =============== -->
 	<!--Delete records in Table department_detail -->

@@ -87,7 +87,7 @@ CREATE TABLE customer
 	first_name varchar(50) NOT NULL,
 	last_name varchar(50) NOT NULL,
 	dob date,
-	email varchar(50) NOT NULL,
+	email varchar(50) NOT NULL UNIQUE,
 	address varchar(200),
 	company varchar(50),
 	is_activated int,
@@ -101,8 +101,8 @@ CREATE TABLE customer
 CREATE TABLE department
 (
 	department_id bigint DEFAULT nextval('department_id_seq') NOT NULL UNIQUE,
-	department_code varchar(13) NOT NULL,
-	department_name varchar(50) NOT NULL,
+	department_code varchar(13) NOT NULL UNIQUE,
+	department_name varchar(50) NOT NULL UNIQUE,
 	number_of_employee int NOT NULL,
 	is_activated int NOT NULL,
 	updated_by varchar(50),
