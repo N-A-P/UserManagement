@@ -1,97 +1,65 @@
 package com.mockproject.du1.model;
 
+import javax.persistence.Embedded;
 
-import lombok.Builder;
-
-/*
+/**
  * Users Model
  */
 @lombok.Data
 public class Users {
-	/*
+	/***
 	 * User Id
 	 */
 	private int userId;
-	/*
+	/**
 	 * First Name
 	 */
 	private String firstName;
-	/*
+	/**
 	 * Last Name
 	 */
 	private String lastName;
-	/*
+	/**
 	 * Email
 	 */
 	private String email;
-	/*
+	/**
 	 * Username
 	 */
 	private String username;
-	/*
+	/**
 	 * Password
 	 */
 	private String password;
-	/*
+	/**
 	 * Date Of birth
 	 */
 	private String dob;
-	/*
-	 * Start Date
+	/**
+	 * Registered Date
 	 */
 	private String registeredDate;
-	/*
-	 * End Date
+	/**
+	 * Activated Date
 	 */
 	private String activatedDate;
-
-	private int activatedBy;
-
+	/**
+	 * End Date
+	 */
 	private String endDate;
-	/*
-	 * Tenure(Years)
+	/**
+	 * Seniority(Years)
 	 */
 	private int seniority;
 
-	/*
-	 * status
+	/**
+	 * IsActivated
 	 */
 	private int isActivated;
-	
-	/*
-	 * Constructor for testing
+	/**
+	 * Update Info
 	 */
-	public Users() {
+	@Embedded
+	private UpdateInfo updateInfo;
 
-	}
-	
-	public Users(String firstName, String lastName, String email, String username, String password, String dob,
-			String startDate, String endDate, int tenure, int status) {
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.username = username;
-		this.password = password;
-		this.dob = dob;
-		this.registeredDate = startDate;
-		this.endDate = endDate;
-		this.seniority = tenure;
-		this.isActivated = status;
-	}
-
-	public Users(int userId, String firstName, String lastName, String email, String username, String password,
-			String dob, String startDate, String endDate, int tenure, int status) {
-		this.userId = userId;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.username = username;
-		this.password = password;
-		this.dob = dob;
-		this.registeredDate = startDate;
-		this.endDate = endDate;
-		this.seniority = tenure;
-		this.isActivated = status;
-	}
-	
 }

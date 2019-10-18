@@ -8,37 +8,23 @@ import java.time.LocalDateTime;
 @lombok.Data
 @Builder
 public class EmailTemplate {
-    private int emailId;
-    private String title;
-    private String body;
+	/**
+	 * Email Template Id
+	 */
+	private int emaiTemplateId;
+	/**
+	 * Email Template title
+	 */
+	private String title;
+	/**
+	 * Email Template body
+	 */
+	private String body;
+	/**
+	 * Update Info
+	 */
     private String updateBy;
     private LocalDateTime createTimestapm;
     private LocalDateTime updateTimestapm;
 
-
-
-
-    public int getEmailId() {
-        return emailId;
-    }
-
-    public void setEmailId(int value) {
-        this.emailId = value;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
 }

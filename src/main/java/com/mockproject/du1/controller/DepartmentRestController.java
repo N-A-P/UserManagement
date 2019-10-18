@@ -126,6 +126,7 @@ public class DepartmentRestController {
 	@RequestMapping(value = "/updateDepartmentInfomation", method = RequestMethod.POST)
 	public ResponseEntity<String> updateDepartmentInfomation(@Valid @RequestBody Department department) {
 		if (departmentService.departmentInfoUpdate(department) != 0) {
+
 			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
@@ -161,10 +162,15 @@ public class DepartmentRestController {
 	 */
 	@RequestMapping(value = "/insertDepartment", method = RequestMethod.POST)
 	public ResponseEntity<String> insertDepartment(@Valid @RequestBody Department department) {
-		if (departmentService.departmentInsert(department) != 0) {
-			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+		if (departmentService.departmentInsert(department) == -2) {
+			return new ResponseEntity<String>("Duplicated Department code!!! Please Check!!!", HttpStatus.BAD_REQUEST);
+		} else if (departmentService.departmentInsert(department) == -1) {
+			return new ResponseEntity<String>("Duplicated Department name!!! Please Check!!!", HttpStatus.BAD_REQUEST);
+		} else if (departmentService.departmentInsert(department) == 0) {
+			return new ResponseEntity<String>("Database rollback!!! Adding new department failed!!!",
+					HttpStatus.BAD_REQUEST);
 		} else {
-			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 		}
 	}
 
@@ -188,7 +194,7 @@ public class DepartmentRestController {
 	@RequestMapping(value = "/removeEmployeeFromDepartment", method = RequestMethod.POST)
 	public ResponseEntity<String> removeEmployeeFromDepartment(
 			@Valid @RequestBody EmployeeOfDepartment employeeOfDepartment) {
-		if (departmentService.removeEmployeeFromDepartment(employeeOfDepartment.getDepartmentDetailId()) != 0) {
+		if (departmentService.removeEmployeeFromDepartment(employeeOfDepartment.getUserDepartmentId()) != 0) {
 			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);

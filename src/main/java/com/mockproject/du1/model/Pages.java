@@ -8,10 +8,26 @@ import java.time.LocalDateTime;
 @lombok.Data
 @Builder
 public class Pages {
-    private int pagesId;
-    private String pagesName;
-    private String pagesCode;
-    private String pagesUrl;
+	/**
+	 * Pages Id
+	 */
+	private int pagesId;
+	/**
+	 * Pages Name
+	 */
+	private String pagesName;
+	/**
+	 * Pages Code
+	 */
+	private String pagesCode;
+	/**
+	 * Pages Url
+	 */
+	private String pagesUrl;
+	/**
+	 * Update Info
+	 */
+
     private String updateBy;
     private LocalDateTime createTimestapm;
     private LocalDateTime updateTimestapm;

@@ -1,6 +1,10 @@
 package com.mockproject.du1.services;
 
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.mockproject.du1.mapper.DepartmentMapper;
 import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.EmployeeOfDepartment;
+import com.mockproject.du1.model.UpdateInfo;
 
 @Service
 public class DepartmentService {
@@ -43,6 +48,10 @@ public class DepartmentService {
 	 * 
 	 */
 	private static final int ROLE_EMPLOYEE = 3;
+	/**
+	 * 
+	 */
+	private static final int NUMBER_OF_EMPLOYEE_ZERO = 0;
 	/**
 	 * 
 	 */
@@ -212,9 +221,23 @@ public class DepartmentService {
 	 * 
 	 */
 	public int departmentInsert(Department department) {
+		HttpServletRequest request = null;
+		HttpSession session = request.getSession(false);
 		try {
-			return departmentMapper.sqlDepartmentInsert(department);
-
+			// Check duplicate Department Name
+			if (departmentMapper.sqlCountDepartmentByNameSelect(department.getDepartmentName()) == 0) {
+				// Check duplicate Department Code
+				if (departmentMapper.sqlCountDepartmentByCodeSelect(department.getDepartmentCode()) == 0) {
+					department.setNumberOfEmployees(NUMBER_OF_EMPLOYEE_ZERO);
+					department.setIsActivated(ACTIVE);
+					department.setUpdateInfo(new UpdateInfo(session.getAttribute("usernameLogin"),));
+					return departmentMapper.sqlDepartmentInsert(department);
+				} else {
+					return -2;
+				}
+			} else {
+				return -1;
+			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}

@@ -21,19 +21,21 @@ public class UserDepartment {
 	 */
 	private int userId;
 	/**
-	 * Number Of Employees
+	 * Stay Or Leave
 	 */
-	private int numberOfEmployees;
+	private int stayOrLeave;
 	/**
-	 * Status
+	 * Join Date
 	 */
-	private int stayOfLeave;
-
 	private String joinDate;
-
+	/**
+	 * Leave Date
+	 */
 	private String leaveDate;
+
 	private String updateBy;
 	private LocalDateTime createTimestapm;
 	private LocalDateTime updateTimestapm;
+
 
 }

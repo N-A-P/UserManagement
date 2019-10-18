@@ -47,7 +47,7 @@ public class EmailService {
                 emailMapper.sqlCreateEmailInsert(email);
 
                 for (Users user : recipientList) {
-                    sendEmail(user, emailHeader, emailBodyText, email.getEmailId());
+                    sendEmail(user, emailHeader, emailBodyText, email.getEmaiTemplateId());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -148,7 +148,7 @@ public class EmailService {
 
     public String editTopic(EmailTemplate email) {
 
-        if (emailMapper.sqlGetEmailSelectById(email.getEmailId()) == null) {
+        if (emailMapper.sqlGetEmailSelectById(email.getEmaiTemplateId()) == null) {
             return "email doesnt exit";
         }
         emailMapper.sqlEmailUpdate(email);

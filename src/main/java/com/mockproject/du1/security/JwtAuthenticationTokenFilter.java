@@ -8,10 +8,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import com.mockproject.du1.common.DataUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,29 +28,31 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
     @Autowired
     private UsersService userService;
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String authToken = httpRequest.getHeader(TOKEN_HEADER);
-        if (authToken != null) {
-            if (jwtService.validateTokenLogin(authToken)) {
-                String username = jwtService.getUsernameFromToken(authToken);
-                Users users = userService.getUserByUsername(username);
-                if (users != null) {
-                    boolean enabled = true;
-                    boolean accountNonExpired = true;
-                    boolean credentialsNonExpired = true;
-                    boolean accountNonLocked = true;
-                    UserDetails userDetail = new User(username, users.getPassword(), enabled, accountNonExpired,
-                            credentialsNonExpired, accountNonLocked, userService.getAuthorities(users));
-                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userDetail, null, userDetail.getAuthorities());
-                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                }
-            }
-        }
-        chain.doFilter(request, response);
-    }
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+			throws IOException, ServletException {
+		HttpServletRequest httpRequest = (HttpServletRequest) request;
+		String authToken = httpRequest.getHeader(TOKEN_HEADER);
+		if (authToken != null) {
+			if (jwtService.validateTokenLogin(authToken)) {
+				String username = jwtService.getUsernameFromToken(authToken);
+				HttpSession session = httpRequest.getSession();
+				session.setAttribute("usernameLogin", username);
+				Users users = userService.getUserByUsername(username);
+				if (users != null) {
+					boolean enabled = true;
+					boolean accountNonExpired = true;
+					boolean credentialsNonExpired = true;
+					boolean accountNonLocked = true;
+					UserDetails userDetail = new User(username, users.getPassword(), enabled, accountNonExpired,
+							credentialsNonExpired, accountNonLocked, userService.getAuthorities(users));
+					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+							userDetail, null, userDetail.getAuthorities());
+					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpRequest));
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+				}
+			}
+		}
+		chain.doFilter(request, response);
+	}
 }

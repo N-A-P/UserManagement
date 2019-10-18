@@ -8,9 +8,20 @@ import java.time.LocalDateTime;
 @lombok.Data
 @Builder
 public class UpdateInfo implements Serializable {
-    private String updateBy;
-    private LocalDateTime createTimestapm;
-    private LocalDateTime updateTimestapm;
+	/**
+	 * Update By
+	 */
+	private String updateBy;
+	/**
+	 * Create Timestamp
+	 */
+	private LocalDateTime createTimestamp;
+	/**
+	 * Update Timestamp
+	 */
+	private LocalDateTime updateTimestamp;
+
+
 
 
 

@@ -9,14 +9,34 @@ import java.util.Date;
 @lombok.Data
 @Builder
 public class CampaignCustomer {
-    private int campaignCustomerId;
-    private Date sendTime;
-    private int sendBy;
-    private Date joinDate;
-    private int campaignId;
-    private int customerId;
-    private String updateBy;
-    private LocalDateTime createTimestapm;
-    private LocalDateTime updateTimestapm;
+	/**
+	 * Campaign Customer Id
+	 */
+	private int campaignCustomerId;
+	/**
+	 * Campaign send Time
+	 */
+	private Date sendTime;
+	/**
+	 * Campaign sendBy
+	 */
+	private int sendBy;
+	/**
+	 * Campaign joinDate
+	 */
+	private Date joinDate;
+	/**
+	 * Campaign Id
+	 */
+	private int campaignId;
+	/**
+	 * Customer Id
+	 */
+	private int customerId;
+	/**
+	 * Update Info
+	 */
+	@Embedded
+	private UpdateInfo updateInfo;
 
 }

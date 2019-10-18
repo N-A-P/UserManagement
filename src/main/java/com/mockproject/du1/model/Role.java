@@ -8,9 +8,21 @@ import java.time.LocalDateTime;
 @lombok.Data
 @Builder
 public class Role {
-    private int roleId;
-    private String roleName;
-    private String roleEmail;
+	/**
+	 * Role Id
+	 */
+	private int roleId;
+	/**
+	 * Role Name
+	 */
+	private String roleName;
+	/**
+	 * Role Code
+	 */
+	private String roleCode;
+	/**
+	 * Role Id
+	 */
     private String updateBy;
     private LocalDateTime createTimestapm;
     private LocalDateTime updateTimestapm;

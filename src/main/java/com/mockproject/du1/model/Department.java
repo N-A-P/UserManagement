@@ -17,6 +17,10 @@ public class Department {
 	 */
 	private String departmentName;
 	/**
+	 * Department Code
+	 */
+	private String departmentCode;
+	/**
 	 * Number Of Employees
 	 */
 	private int numberOfEmployees;
