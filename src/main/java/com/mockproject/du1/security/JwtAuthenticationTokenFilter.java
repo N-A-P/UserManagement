@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,6 +36,8 @@ public class JwtAuthenticationTokenFilter extends UsernamePasswordAuthentication
 		if (authToken != null) {
 			if (jwtService.validateTokenLogin(authToken)) {
 				String username = jwtService.getUsernameFromToken(authToken);
+				HttpSession session = httpRequest.getSession();
+				session.setAttribute("usernameLogin", username);
 				Users users = userService.getUserByUsername(username);
 				if (users != null) {
 					boolean enabled = true;
