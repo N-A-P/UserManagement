@@ -3,6 +3,7 @@ package com.mockproject.du1.model;
 import lombok.Builder;
 
 import javax.persistence.Embedded;
+import java.time.LocalDateTime;
 
 @lombok.Data
 @Builder
@@ -14,8 +15,9 @@ public class Campaign {
     private String startDate;
     private String endDate;
     private int emailTemplateId;
-    @Embedded
-    private UpdateInfo updateInfo;
+    private String updateBy;
+    private LocalDateTime createTimestapm;
+    private LocalDateTime updateTimestapm;
 
 
 }

@@ -4,37 +4,46 @@
 <mapper namespace="com.mockproject.du1.mapper.CustomerMapper">
 
 
+    <!--Get List Data User Information -->
+    <resultMap id="GetCustomerResultMap"
+               type="com.mockproject.du1.model.Customer">
+        <result property="customerId" column="customer_id"/>
+        <result property="firstName" column="first_name"/>
+        <result property="lastName" column="last_name"/>
+        <result property="dob" column="dob"/>
+        <result property="customerEmail" column="email"/>
+        <result property="isActivated" column="is_activated"/>
+        <result property="address" column="address"/>
+        <result property="company" column="company"/>
 
-	<!--Get List Data User Information -->
-	<resultMap id="GetCustomerResultMap"
-		type="com.mockproject.du1.model.Customer">
-		<result property="customerId" column="customer_id" />
-		<result property="customerName" column="customer_name" />
-		<result property="customerEmail" column="customer_email" />
-		<result property="status" column="status" />
-
-	</resultMap>
+    </resultMap>
 
 
-	<insert id="sqlCreateCustomerInsert" parameterType="com.mockproject.du1.model.Customer">
+    <insert id="sqlCreateCustomerInsert" parameterType="com.mockproject.du1.model.Customer">
 		INSERT INTO public.customer
-		(customer_id,customer_name,customer_email,status)
-		VALUES
-		(nextval('customer_seq'),#{customerName},#{customerEmail},#{status})
+        (first_name, last_name, dob, email, is_activated, updated_by, created_timestapm, updated_timestapm, address, company)
+        VALUES
+        (#{firstName}, #{lastName}, #{dob}, #{customerEmail}, #{isActivated}, #{updateBy}, #{createTimestapm}, #{updateTimestapm}, #{address}, #{company});
+
+
+
 	</insert>
 
-	<select id="sqlGetCustomerByEmailSelect"
-			resultMap="GetCustomerResultMap" parameterType="String">
+    <select id="sqlGetCustomerByEmailSelect"
+            resultMap="GetCustomerResultMap" parameterType="String">
 		SELECT
-		customer_id,
-		customer_name,
-		customer_email,
-		status
+		first_name,
+		last_name,
+	    dob,
+	    email,
+	    is_activated,
+	    address,
+	    company
 		FROM
 		public.customer
 		WHERE
-		customer_email = #{email}
+		email = #{customerEmail}
 	</select>
-	
+
 
 </mapper>

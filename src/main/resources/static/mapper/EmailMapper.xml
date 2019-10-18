@@ -7,21 +7,21 @@
     <!--Get List Data User Information -->
     <resultMap id="GetEmailResultMap"
                type="com.mockproject.du1.model.EmailTemplate">
-        <result property="emailId" column="email_id"/>
-        <result property="content" column="content"/>
-        <result property="subject" column="subject"/>
+        <result property="emailId" column="email_template_id"/>
+        <result property="title" column="title"/>
+        <result property="body" column="body"/>
 
     </resultMap>
 
 
     <insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.EmailTemplate">
         <selectKey keyProperty="emailId" resultType="int">
-            SELECT currval('"email_id_seq"')
+            SELECT currval('"email_template_id_seq"')
         </selectKey>
         INSERT INTO public.Email
-        (email_id,content,subject)
+        (title,body)
         VALUES
-        (nextval('email_id_seq'),#{content},#{subject})
+        (#{title},#{body})
     </insert>
 
     <select id="sqlGetAllEmailSelect"

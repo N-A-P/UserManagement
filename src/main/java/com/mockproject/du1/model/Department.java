@@ -1,6 +1,7 @@
 package com.mockproject.du1.model;
 
 import javax.persistence.Embedded;
+import java.time.LocalDateTime;
 
 /*
  * Department Model
@@ -23,7 +24,8 @@ public class Department {
 	 * Status
 	 */
 	private int isActivated;
-	@Embedded
-	private UpdateInfo updateInfo;
+	private String updateBy;
+	private LocalDateTime createTimestapm;
+	private LocalDateTime updateTimestapm;
 
 }

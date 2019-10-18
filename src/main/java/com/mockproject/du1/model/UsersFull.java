@@ -6,6 +6,7 @@ package com.mockproject.du1.model;
  */
 
 import javax.persistence.Embedded;
+import java.time.LocalDateTime;
 
 @lombok.Data
 public class UsersFull {
@@ -70,8 +71,9 @@ public class UsersFull {
 	 */
 	private int departmentId;
 
-   @Embedded
-	private UpdateInfo updateInfo;
+	private String updateBy;
+	private LocalDateTime createTimestapm;
+	private LocalDateTime updateTimestapm;
 
 
 

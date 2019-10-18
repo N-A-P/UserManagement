@@ -110,9 +110,9 @@ public class EmailService {
                     String name = row.getCell(1).getStringCellValue();
                     Customer customer = customerMapper.sqlGetCustomerByEmailSelect(email);
                     Assert.isNull(customer, "Customer Exit in row : " + rowCount);
-                    customer = Customer.builder().customerEmail(email).customerName(name).build();
+                    customer = Customer.builder().customerEmail(email).firstName(name).build();
                     customerMapper.sqlCreateCustomerInsert(customer);
-                    error.add("add success customer :" + customer.getCustomerName());
+                    error.add("add success customer :" + customer.getFirstName());
                 } catch (Exception e) {
                     error.add(e.getMessage());
                 }
