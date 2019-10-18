@@ -34,9 +34,16 @@ public class CampaignCustomer {
 	 */
 	private int customerId;
 	/**
-	 * Update Info
+	 * Update By
 	 */
-	@Embedded
-	private UpdateInfo updateInfo;
+	private String updateBy;
+	/**
+	 * Create Timestamp
+	 */
+	private LocalDateTime createTimestamp;
+	/**
+	 * Update Timestamp
+	 */
+	private LocalDateTime updateTimestamp;
 
 }

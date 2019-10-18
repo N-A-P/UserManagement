@@ -1,8 +1,13 @@
 package com.mockproject.du1.controller;
 
+import static org.mockito.Mockito.RETURNS_SMART_NULLS;
+
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +23,15 @@ import javax.validation.Valid;
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/rest")
 public class DepartmentRestController {
+
+	/**
+	 * 
+	 */
+	private static final int CONSTANT_CHECK_DUPLICATED_CODE = -2;
+	/**
+	 * 
+	 */
+	private static final int CONSTANT_CHECK_DUPLICATED_NAME = -1;
 
 	@Autowired
 	private DepartmentService departmentService;
@@ -59,11 +73,9 @@ public class DepartmentRestController {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Show list department(Active)
-=======
+	 * <<<<<<< HEAD Show list department(Active) =======
 	 *
->>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
+	 * >>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
 	 */
 	@RequestMapping(value = "/getDepartmentById/{departmentId}", method = RequestMethod.GET)
 	public ResponseEntity<Department> getDepartmentById(@PathVariable int departmentId) {
@@ -117,20 +129,34 @@ public class DepartmentRestController {
 	}
 
 	/**
-<<<<<<< HEAD
-	 * Click button Save 
-=======
+	 * <<<<<<< HEAD Click button Save =======
 	 *
->>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
+	 * >>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
 	 */
 	@RequestMapping(value = "/updateDepartmentInfomation", method = RequestMethod.POST)
 	public ResponseEntity<String> updateDepartmentInfomation(@Valid @RequestBody Department department) {
-		if (departmentService.departmentInfoUpdate(department) != 0) {
 
-			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+		try {
+
+			if (departmentService.departmentInfoUpdate(department) == CONSTANT_CHECK_DUPLICATED_CODE) {
+				return new ResponseEntity<String>("Duplicated Department code!!! Please Check!!!",
+						HttpStatus.BAD_REQUEST);
+
+			} else if (departmentService.departmentInfoUpdate(department) == CONSTANT_CHECK_DUPLICATED_NAME) {
+				return new ResponseEntity<String>("Duplicated Department name!!! Please Check!!!",
+						HttpStatus.BAD_REQUEST);
+
+			} else if (departmentService.departmentInfoUpdate(department) == 0) {
+				return new ResponseEntity<String>("Database rollback!!! Adding new department failed!!!",
+						HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+			}
+
+		} catch (SQLException e) {
+			return new ResponseEntity<String>("SQL Error Code: " + e.getErrorCode(), HttpStatus.BAD_REQUEST);
 		}
+
 	}
 
 	/**
@@ -138,11 +164,17 @@ public class DepartmentRestController {
 	 */
 	@RequestMapping(value = "/activeDepartment", method = RequestMethod.POST)
 	public ResponseEntity<String> activeDepartment(@Valid @RequestBody Department department) {
-		if (departmentService.activeDepartment(department.getDepartmentId()) != 0) {
-			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+
+		try {
+			if (departmentService.activeDepartment(department.getDepartmentId()) != 0) {
+				return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+			} else {
+				return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+			}
+		} catch (SQLException e) {
+			return new ResponseEntity<String>("SQL Error Code: " + e.getErrorCode(), HttpStatus.BAD_REQUEST);
 		}
+
 	}
 
 	/**
@@ -150,10 +182,14 @@ public class DepartmentRestController {
 	 */
 	@RequestMapping(value = "/inActiveDepartment", method = RequestMethod.POST)
 	public ResponseEntity<String> inActiveDepartment(@Valid @RequestBody Department department) {
-		if (departmentService.inActiveDepartment(department.getDepartmentId()) != 0) {
-			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+		try {
+			if (departmentService.inActiveDepartment(department.getDepartmentId()) != 0) {
+				return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+			} else {
+				return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+			}
+		} catch (SQLException e) {
+			return new ResponseEntity<String>("SQL Error Code: " + e.getErrorCode(), HttpStatus.BAD_REQUEST);
 		}
 	}
 
@@ -162,30 +198,45 @@ public class DepartmentRestController {
 	 */
 	@RequestMapping(value = "/insertDepartment", method = RequestMethod.POST)
 	public ResponseEntity<String> insertDepartment(@Valid @RequestBody Department department) {
-		if (departmentService.departmentInsert(department) == -2) {
-			return new ResponseEntity<String>("Duplicated Department code!!! Please Check!!!", HttpStatus.BAD_REQUEST);
-		} else if (departmentService.departmentInsert(department) == -1) {
-			return new ResponseEntity<String>("Duplicated Department name!!! Please Check!!!", HttpStatus.BAD_REQUEST);
-		} else if (departmentService.departmentInsert(department) == 0) {
-			return new ResponseEntity<String>("Database rollback!!! Adding new department failed!!!",
+
+		try {
+			if (departmentService.departmentInsert(department) == CONSTANT_CHECK_DUPLICATED_CODE) {
+				return new ResponseEntity<String>("Duplicated Department code!!! Please Check!!!",
+						HttpStatus.BAD_REQUEST);
+
+			} else if (departmentService.departmentInsert(department) == CONSTANT_CHECK_DUPLICATED_NAME) {
+				return new ResponseEntity<String>("Duplicated Department name!!! Please Check!!!",
+						HttpStatus.BAD_REQUEST);
+
+			} else if (departmentService.departmentInsert(department) == 0) {
+				return new ResponseEntity<String>("Database rollback!!! Adding new department failed!!!",
+						HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+			}
+		} catch (DuplicateKeyException e) {
+			return new ResponseEntity<String>("Duplicated Key!!! Database rollback!!! Adding new department failed!!!",
 					HttpStatus.BAD_REQUEST);
-		} else {
-			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+		} catch (SQLException e) {
+			return new ResponseEntity<String>("SQL Error Code: " + e.getErrorCode(), HttpStatus.BAD_REQUEST);
 		}
+
 	}
 
 	/**
 	 *
 	 */
 	@RequestMapping(value = "/addNewEmployeeToDepartment", method = RequestMethod.POST)
-	public ResponseEntity<String> addNewEmployeeToDepartment(
-			@Valid @RequestBody EmployeeOfDepartment employeeOfDepartment) {
-		if (departmentService.newEmployeeForDeparmentInsert(employeeOfDepartment) != 0) {
-
-			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+	public ResponseEntity<List<EmployeeOfDepartment>> addNewEmployeeToDepartment(
+			@Valid @RequestBody List<EmployeeOfDepartment> listEmployeeNotInDepartment) {
+		List<EmployeeOfDepartment> listRecordError = departmentService
+				.newEmployeeForDeparmentInsert(listEmployeeNotInDepartment);
+		if (listRecordError.isEmpty()) {
+			return new ResponseEntity<List<EmployeeOfDepartment>>(listRecordError, HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<List<EmployeeOfDepartment>>(listRecordError, HttpStatus.BAD_REQUEST);
 		}
+
 	}
 
 	/**

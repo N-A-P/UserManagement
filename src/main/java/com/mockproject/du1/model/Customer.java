@@ -35,12 +35,18 @@ public class Customer {
 	 * Customer company
 	 */
     private String company;
-    /**
-	 * UpdateInfo
+	/**
+	 * Update By
 	 */
-    private String updateBy;
-    private LocalDateTime createTimestapm;
-    private LocalDateTime updateTimestapm;
+	private String updateBy;
+	/**
+	 * Create Timestamp
+	 */
+	private LocalDateTime createTimestamp;
+	/**
+	 * Update Timestamp
+	 */
+	private LocalDateTime updateTimestamp;
 
 
 }

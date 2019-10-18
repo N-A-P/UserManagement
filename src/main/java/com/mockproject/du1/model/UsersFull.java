@@ -1,6 +1,5 @@
 package com.mockproject.du1.model;
 
-
 /*
  * UsersFull Model
  */
@@ -55,7 +54,7 @@ public class UsersFull {
 	 * status
 	 */
 	private int status;
-	
+
 	/**
 	 * user Role Id
 	 */
@@ -65,16 +64,23 @@ public class UsersFull {
 	 * role id
 	 */
 	private int roleId;
-	
+
 	/**
 	 * department id
 	 */
 	private int departmentId;
 
+	/**
+	 * Update By
+	 */
 	private String updateBy;
-	private LocalDateTime createTimestapm;
-	private LocalDateTime updateTimestapm;
-
-
+	/**
+	 * Create Timestamp
+	 */
+	private LocalDateTime createTimestamp;
+	/**
+	 * Update Timestamp
+	 */
+	private LocalDateTime updateTimestamp;
 
 }

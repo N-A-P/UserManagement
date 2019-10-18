@@ -25,11 +25,20 @@ public class Department {
 	 */
 	private int numberOfEmployees;
 	/**
-	 * Status
+	 * isActivated
 	 */
 	private int isActivated;
+	/**
+	 * Update By
+	 */
 	private String updateBy;
-	private LocalDateTime createTimestapm;
-	private LocalDateTime updateTimestapm;
+	/**
+	 * Create Timestamp
+	 */
+	private LocalDateTime createTimestamp;
+	/**
+	 * Update Timestamp
+	 */
+	private LocalDateTime updateTimestamp;
 
 }

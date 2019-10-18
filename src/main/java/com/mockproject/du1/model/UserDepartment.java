@@ -32,10 +32,18 @@ public class UserDepartment {
 	 * Leave Date
 	 */
 	private String leaveDate;
-
+	/**
+	 * Update By
+	 */
 	private String updateBy;
-	private LocalDateTime createTimestapm;
-	private LocalDateTime updateTimestapm;
+	/**
+	 * Create Timestamp
+	 */
+	private LocalDateTime createTimestamp;
+	/**
+	 * Update Timestamp
+	 */
+	private LocalDateTime updateTimestamp;
 
 
 }

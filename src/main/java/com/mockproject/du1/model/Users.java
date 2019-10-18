@@ -1,5 +1,7 @@
 package com.mockproject.du1.model;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Embedded;
 
 /**
@@ -57,9 +59,16 @@ public class Users {
 	 */
 	private int isActivated;
 	/**
-	 * Update Info
+	 * Update By
 	 */
-	@Embedded
-	private UpdateInfo updateInfo;
+	private String updateBy;
+	/**
+	 * Create Timestamp
+	 */
+	private LocalDateTime createTimestamp;
+	/**
+	 * Update Timestamp
+	 */
+	private LocalDateTime updateTimestamp;
 
 }

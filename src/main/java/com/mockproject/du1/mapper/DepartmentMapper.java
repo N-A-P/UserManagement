@@ -53,8 +53,7 @@ public interface DepartmentMapper {
 	 *
 	 * @return List Employee Of Department
 	 */
-	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("department_id") int department_id,
-			@Param("role_id") int role_id, @Param("statusDepartmentDetail") int statusDepartmentDetail,
+	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("department_id") int department_id, @Param("statusUserDepartment") int statusUserDepartment,
 			@Param("statusDepartment") int statusDepartment, @Param("statusUser") int statusUser, int action);
 
 	/**

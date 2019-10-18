@@ -25,11 +25,16 @@ public class Pages {
 	 */
 	private String pagesUrl;
 	/**
-	 * Update Info
+	 * Update By
 	 */
-
-    private String updateBy;
-    private LocalDateTime createTimestapm;
-    private LocalDateTime updateTimestapm;
+	private String updateBy;
+	/**
+	 * Create Timestamp
+	 */
+	private LocalDateTime createTimestamp;
+	/**
+	 * Update Timestamp
+	 */
+	private LocalDateTime updateTimestamp;
 
 }
