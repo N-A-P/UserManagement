@@ -230,7 +230,6 @@ public class DepartmentService {
 				if (departmentMapper.sqlCountDepartmentByCodeSelect(department.getDepartmentCode()) == 0) {
 					department.setNumberOfEmployees(NUMBER_OF_EMPLOYEE_ZERO);
 					department.setIsActivated(ACTIVE);
-					department.setUpdateInfo(new UpdateInfo(session.getAttribute("usernameLogin"),));
 					return departmentMapper.sqlDepartmentInsert(department);
 				} else {
 					return -2;

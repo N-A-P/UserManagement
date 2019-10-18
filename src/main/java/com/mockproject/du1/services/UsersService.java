@@ -99,9 +99,9 @@ public class UsersService {
 		// check if new email existed
 		Users tempUser = getUserByEmail(userFull.getEmail());
 		if ((tempUser == null) || (tempUser.getUserId() == userFull.getUserId())) {
-			Users newUser = new Users(userFull.getUserId(), userFull.getFirstName(), userFull.getLastName(),
-					userFull.getEmail(), userFull.getUsername(), userFull.getPassword(), userFull.getDob(),
-					userFull.getStartDate(), userFull.getEndDate(), userFull.getTenure(), 1);
+//			Users newUser = new Users(userFull.getUserId(), userFull.getFirstName(), userFull.getLastName(),
+//					userFull.getEmail(), userFull.getUsername(), userFull.getPassword(), userFull.getDob(),
+//					userFull.getStartDate(), userFull.getEndDate(), userFull.getTenure(), 1);
 			if (userFull.getRoleId() == 4) {
 				// check if roleId=4 (customer)
 				// update all userId record in Table department_detail to status=0 (deactivated)
@@ -117,7 +117,7 @@ public class UsersService {
 			}
 			// update record in table user & role_detail
 			usersMapper.sqlUpdateRoleDetailUpdate(userFull.getUserId(), userFull.getRoleId());
-			usersMapper.sqlUpdateUserUpdate(newUser);
+//			usersMapper.sqlUpdateUserUpdate(newUser);
 			return true;
 		}
 		return false;
