@@ -1,8 +1,5 @@
 package com.mockproject.du1.controller;
 
-import static org.mockito.Mockito.RETURNS_SMART_NULLS;
-
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -15,8 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.EmployeeOfDepartment;
 import com.mockproject.du1.services.DepartmentService;
-import com.mockproject.du1.services.EmailService;
-
 import javax.validation.Valid;
 
 @RestController
@@ -32,11 +27,11 @@ public class DepartmentRestController {
 	 * 
 	 */
 	private static final int CONSTANT_CHECK_DUPLICATED_NAME = -1;
-
+	/**
+	 * 
+	 */
 	@Autowired
 	private DepartmentService departmentService;
-	@Autowired
-	EmailService emailService;
 
 	/**
 	 * Click button show list department(Active & Inactive)
@@ -147,7 +142,7 @@ public class DepartmentRestController {
 						HttpStatus.BAD_REQUEST);
 
 			} else if (departmentService.departmentInfoUpdate(department) == 0) {
-				return new ResponseEntity<String>("Database rollback!!! Adding new department failed!!!",
+				return new ResponseEntity<String>("Database rollback!!! Modify department failed!!!",
 						HttpStatus.BAD_REQUEST);
 			} else {
 				return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
@@ -201,7 +196,7 @@ public class DepartmentRestController {
 
 		try {
 			int checkInsertSuccess = departmentService.departmentInsert(department);
-			
+
 			if (checkInsertSuccess == CONSTANT_CHECK_DUPLICATED_CODE) {
 				return new ResponseEntity<String>("Duplicated Department code!!! Please Check!!!",
 						HttpStatus.BAD_REQUEST);

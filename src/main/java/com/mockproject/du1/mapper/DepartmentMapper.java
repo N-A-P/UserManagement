@@ -33,14 +33,14 @@ public interface DepartmentMapper {
 	 * @return Max Department Id
 	 */
 	long sqlGetMaxDepartmentIdSelect();
-	
+
 	/**
 	 * Count Number Of Department By Name
 	 *
 	 * @return Count Number Of Department By Name
 	 */
 	long sqlCountDepartmentByNameSelect(String departmentName);
-	
+
 	/**
 	 * Count Number Of Department By Code
 	 *
@@ -53,8 +53,9 @@ public interface DepartmentMapper {
 	 *
 	 * @return List Employee Of Department
 	 */
-	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("department_id") int department_id, @Param("statusUserDepartment") int statusUserDepartment,
-			@Param("statusDepartment") int statusDepartment, @Param("statusUser") int statusUser, int action);
+	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("department_id") int department_id,
+			@Param("statusUserDepartment") int statusUserDepartment, @Param("statusDepartment") int statusDepartment,
+			@Param("statusUser") int statusUser, int action);
 
 	/**
 	 * Update Department Information
@@ -73,7 +74,8 @@ public interface DepartmentMapper {
 	 * Update Department Status
 	 *
 	 */
-	int sqlDepartmentStatusUpdate(@Param("departmentId") int departmentId, @Param("status") int status);
+	int sqlDepartmentStatusUpdate(@Param("departmentId") int departmentId, @Param("isActivated") int isActivated,
+			@Param("updateBy") String updateBy, @Param("updateTimestamp") String updateTimestamp);
 
 	/**
 	 * Insert Department Information

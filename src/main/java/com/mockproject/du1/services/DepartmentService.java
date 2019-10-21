@@ -1,29 +1,21 @@
 package com.mockproject.du1.services;
 
-import java.io.IOException;
-import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import org.mockito.internal.stubbing.answers.ThrowsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.jdbc.support.SQLErrorCodes;
 import org.springframework.stereotype.Service;
-
 import com.mockproject.du1.common.DataUtil;
 import com.mockproject.du1.mapper.DepartmentMapper;
 import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.EmployeeOfDepartment;
-import com.mockproject.du1.model.UpdateInfo;
 
 @Service
 public class DepartmentService {
@@ -58,10 +50,6 @@ public class DepartmentService {
 	 */
 	private static final int INACTIVE = 0;
 
-	/**
-	 * 
-	 */
-	private static final int ROLE_EMPLOYEE = 3;
 	/**
 	 * 
 	 */
@@ -218,7 +206,7 @@ public class DepartmentService {
 	 */
 	public int activeDepartment(int departmentId) throws SQLException {
 
-		return departmentMapper.sqlDepartmentStatusUpdate(departmentId, ACTIVE);
+		return departmentMapper.sqlDepartmentStatusUpdate(departmentId, ACTIVE, usernameLogin, currentTimestamp);
 	}
 
 	/**
@@ -226,7 +214,7 @@ public class DepartmentService {
 	 */
 	public int inActiveDepartment(int departmentId) throws SQLException {
 
-		return departmentMapper.sqlDepartmentStatusUpdate(departmentId, INACTIVE);
+		return departmentMapper.sqlDepartmentStatusUpdate(departmentId, INACTIVE, usernameLogin, currentTimestamp);
 	}
 
 //	/**
@@ -261,7 +249,7 @@ public class DepartmentService {
 	public int departmentInsert(Department department) throws DuplicateKeyException, SQLException {
 		try {
 			HttpSession session = request.getSession(false);
-			String usernameLogin = (String) session.getAttribute("usernameLogin");
+			usernameLogin = (String) session.getAttribute("usernameLogin");
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
@@ -278,7 +266,6 @@ public class DepartmentService {
 					department.setIsActivated(ACTIVE);
 					// set value for field public.department.updated_by
 					department.setUpdateBy(usernameLogin);
-					// department.setUpdateBy("ntgptit");
 					// set value for field public.department.created_timestamp
 					department.setCreateTimestamp(currentTimestamp);
 					// set value for field public.department.updated_timestamp

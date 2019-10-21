@@ -196,7 +196,7 @@
 		=#{isActivated},
 		updated_by=#{updateBy},
 		updated_timestamp
-		=#{updateTimestamp}
+		=#{updateTimestamp}::timestamp without time zone
 		WHERE
 		department_id =
 		#{departmentId}
@@ -210,7 +210,7 @@
 		#{isActivated},
 		updated_by= #{updateBy},
 		updated_timestamp
-		=#{updateTimestamp}
+		=#{updateTimestamp}::timestamp without time zone
 		WHERE
 		department_id =
 		#{departmentId}
