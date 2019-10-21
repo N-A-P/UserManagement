@@ -200,15 +200,17 @@ public class DepartmentRestController {
 	public ResponseEntity<String> insertDepartment(@Valid @RequestBody Department department) {
 
 		try {
-			if (departmentService.departmentInsert(department) == CONSTANT_CHECK_DUPLICATED_CODE) {
+			int checkInsertSuccess = departmentService.departmentInsert(department);
+			
+			if (checkInsertSuccess == CONSTANT_CHECK_DUPLICATED_CODE) {
 				return new ResponseEntity<String>("Duplicated Department code!!! Please Check!!!",
 						HttpStatus.BAD_REQUEST);
 
-			} else if (departmentService.departmentInsert(department) == CONSTANT_CHECK_DUPLICATED_NAME) {
+			} else if (checkInsertSuccess == CONSTANT_CHECK_DUPLICATED_NAME) {
 				return new ResponseEntity<String>("Duplicated Department name!!! Please Check!!!",
 						HttpStatus.BAD_REQUEST);
 
-			} else if (departmentService.departmentInsert(department) == 0) {
+			} else if (checkInsertSuccess == 0) {
 				return new ResponseEntity<String>("Database rollback!!! Adding new department failed!!!",
 						HttpStatus.BAD_REQUEST);
 			} else {

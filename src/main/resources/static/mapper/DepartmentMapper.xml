@@ -12,6 +12,9 @@
 		<result property="numberOfEmployees"
 			column="number_of_employee" />
 		<result property="isActivated" column="is_activated" />
+		<result property="updateBy" column="updated_by" />
+		<result property="createTimestamp" column="created_timestamp" />
+		<result property="updateTimestamp" column="updated_timestamp" />
 	</resultMap>
 
 	<!--Get List Data Department Information -->
@@ -23,7 +26,10 @@
 		department_name,
 		department_code,
 		number_of_employee,
-		is_activated
+		is_activated,
+		updated_by,
+		created_timestamp,
+		updated_timestamp
 		FROM
 		public.department
 
@@ -38,7 +44,10 @@
 		department_name,
 		department_code,
 		number_of_employee,
-		is_activated
+		is_activated,
+		updated_by,
+		created_timestamp,
+		updated_timestamp
 		FROM
 		public.department
 		WHERE
@@ -55,7 +64,10 @@
 		department_name,
 		department_code,
 		number_of_employee,
-		is_activated
+		is_activated,
+		updated_by,
+		created_timestamp,
+		updated_timestamp
 		FROM
 		public.department
 		WHERE
@@ -225,7 +237,7 @@
 		INSERT INTO public.department
 		(department_code,department_name,number_of_employee,is_activated,updated_by,created_timestamp,updated_timestamp)
 		VALUES
-		(#{departmentCode},#{departmentName},#{numberOfEmployees},#{isActivated},#{updateBy},#{createTimestamp},#{updateTimestamp})
+		(#{departmentCode},#{departmentName},#{numberOfEmployees},#{isActivated},#{updateBy},#{createTimestamp}::timestamp without time zone,#{updateTimestamp}::timestamp without time zone)
 	</insert>
 
 	<!--Insert New Employee For Department -->
@@ -234,7 +246,7 @@
 		INSERT INTO public.user_department
 		(department_id,user_id,stay_or_leave,join_date,leave_date,updated_by,created_timestamp,updated_timestamp)
 		VALUES
-		(#{departmentId},#{userId},#{stayOrLeave},#{joinDate},#{leaveDate},#{updateBy},#{createTimestamp},#{updateTimestamp})
+		(#{departmentId},#{userId},#{stayOrLeave},#{joinDate},#{leaveDate},#{updateBy},#{createTimestamp}::timestamp without time zone,#{updateTimestamp}::timestamp without time zone)
 	</insert>
 
 </mapper>

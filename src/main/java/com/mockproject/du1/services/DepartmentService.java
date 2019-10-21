@@ -3,7 +3,9 @@ package com.mockproject.du1.services;
 import java.io.IOException;
 import java.sql.SQLDataException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +28,8 @@ import com.mockproject.du1.model.UpdateInfo;
 @Service
 public class DepartmentService {
 	HttpServletRequest request = null;
+	String usernameLogin;
+	String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 	private static final Logger logger = LoggerFactory.getLogger(DepartmentService.class);
 	/**
 	 * 
@@ -174,8 +178,12 @@ public class DepartmentService {
 	 */
 	public int departmentInfoUpdate(Department department) throws SQLException {
 
-		HttpSession session = request.getSession(false);
-		String usernameLogin = (String) session.getAttribute("usernameLogin");
+		try {
+			HttpSession session = request.getSession(false);
+			usernameLogin = (String) session.getAttribute("usernameLogin");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
 
 		try {
 			// Check duplicate Department Name
@@ -251,9 +259,13 @@ public class DepartmentService {
 	 * 
 	 */
 	public int departmentInsert(Department department) throws DuplicateKeyException, SQLException {
+		try {
+			HttpSession session = request.getSession(false);
+			String usernameLogin = (String) session.getAttribute("usernameLogin");
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 
-		HttpSession session = request.getSession(false);
-		String usernameLogin = (String) session.getAttribute("usernameLogin");
 		try {
 			// Check duplicate Department Name
 			if (departmentMapper.sqlCountDepartmentByNameSelect(department.getDepartmentName()) == 0) {
@@ -266,10 +278,11 @@ public class DepartmentService {
 					department.setIsActivated(ACTIVE);
 					// set value for field public.department.updated_by
 					department.setUpdateBy(usernameLogin);
+					// department.setUpdateBy("ntgptit");
 					// set value for field public.department.created_timestamp
-					department.setCreateTimestamp(DataUtil.getCurrentTimestamp().toString());
+					department.setCreateTimestamp(currentTimestamp);
 					// set value for field public.department.updated_timestamp
-					department.setUpdateTimestamp(DataUtil.getCurrentTimestamp().toString());
+					department.setUpdateTimestamp(currentTimestamp);
 
 					// return result insert database query
 					return departmentMapper.sqlDepartmentInsert(department);

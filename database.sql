@@ -59,8 +59,8 @@ CREATE TABLE campaign
 	start_date date,
 	end_date date,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	email_template_id bigint DEFAULT nextval('email_template_id_seq') NOT NULL UNIQUE,
 	PRIMARY KEY (campaign_id)
 ) WITHOUT OIDS;
@@ -70,10 +70,10 @@ CREATE TABLE campaign_customer
 (
 	campaign_customer_id bigint DEFAULT nextval('campaign_customer_id_seq') NOT NULL UNIQUE,
 	join_date date NOT NULL,
-	sent_by date NOT NULL,
+	sent_date date NOT NULL,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	campaign_id bigint NOT NULL UNIQUE,
 	user_id bigint DEFAULT nextval('user_id_seq') NOT NULL UNIQUE,
 	customer_id bigint NOT NULL UNIQUE,
@@ -92,8 +92,8 @@ CREATE TABLE customer
 	company varchar(50),
 	is_activated int,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	PRIMARY KEY (customer_id)
 ) WITHOUT OIDS;
 
@@ -106,8 +106,8 @@ CREATE TABLE department
 	number_of_employee int NOT NULL,
 	is_activated int NOT NULL,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	PRIMARY KEY (department_id)
 ) WITHOUT OIDS;
 
@@ -118,8 +118,8 @@ CREATE TABLE email_template
 	title varchar(200) NOT NULL,
 	body varchar(3000) NOT NULL,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	PRIMARY KEY (email_template_id)
 ) WITHOUT OIDS;
 
@@ -131,8 +131,8 @@ CREATE TABLE pages
 	page_code varchar(13) NOT NULL,
 	url varchar(255) NOT NULL,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	PRIMARY KEY (page_id)
 ) WITHOUT OIDS;
 
@@ -143,8 +143,8 @@ CREATE TABLE role
 	role_code varchar(13) NOT NULL,
 	role_name varchar(15) NOT NULL,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	PRIMARY KEY (role_id)
 ) WITHOUT OIDS;
 
@@ -153,8 +153,8 @@ CREATE TABLE role_pages
 (
 	role_page_id bigint DEFAULT nextval('role_page_id_seq') NOT NULL UNIQUE,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	page_id bigint NOT NULL UNIQUE,
 	role_id bigint DEFAULT nextval('role_id_seq') NOT NULL UNIQUE,
 	PRIMARY KEY (role_page_id)
@@ -175,8 +175,8 @@ CREATE TABLE users
 	seniority int,
 	is_activated int,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	PRIMARY KEY (user_id)
 ) WITHOUT OIDS;
 
@@ -188,8 +188,8 @@ CREATE TABLE user_department
 	leave_date date,
 	stay_or_leave int,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	department_id bigint NOT NULL,
 	user_id bigint NOT NULL,
 	PRIMARY KEY (user_department_id)
@@ -202,8 +202,8 @@ CREATE TABLE user_role
 	join_date date,
 	leave_date date,
 	updated_by varchar(50),
-	created_timestamp date,
-	updated_timestamp date,
+	created_timestamp timestamp with time zone,
+	updated_timestamp timestamp with time zone,
 	user_id bigint NOT NULL,
 	role_id bigint NOT NULL,
 	PRIMARY KEY (user_role_id)
