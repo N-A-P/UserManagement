@@ -97,7 +97,8 @@ public class PagesRestController {
 				return new ResponseEntity<String>("Duplicated Pages name!!! Please Check!!!", HttpStatus.BAD_REQUEST);
 
 			} else if (pageService.editPagesInfoUpdate(page) == 0) {
-				return new ResponseEntity<String>("Database rollback!!! Modify Pages failed!!!", HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<String>("Database rollback!!! Modify Pages failed!!!",
+						HttpStatus.BAD_REQUEST);
 			} else {
 				return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 			}
