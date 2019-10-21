@@ -92,7 +92,7 @@
 	<insert id="sqlRoleInsert"
 		parameterType="com.mockproject.du1.model.Role">
 		INSERT INTO public.role
-		(roleName,roleCode,updated_by,created_timestamp,updated_timestamp)
+		(role_name,role_code,updated_by,created_timestamp,updated_timestamp)
 		VALUES
 		(#{roleName},#{roleCode},#{updateBy},#{createTimestamp}::timestamp
 		without time zone,#{updateTimestamp}::timestamp without time zone)

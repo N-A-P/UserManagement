@@ -4,8 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.validation.Valid;
-
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -23,7 +21,7 @@ import com.mockproject.du1.services.RoleService;
 @RestController
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/rest")
-public class RoleController {
+public class RoleRestController {
 	/**
 	 * 
 	 */
@@ -39,7 +37,7 @@ public class RoleController {
 	private RoleService roleService;
 
 	/**
-	 * Click button show list role 
+	 * Click button show list role
 	 */
 	@RequestMapping(value = "/getAllListRole", method = RequestMethod.GET)
 	public ResponseEntity<List<Role>> getAllListRole() {
@@ -71,7 +69,7 @@ public class RoleController {
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value = "/getRoleById/{roleId}", method = RequestMethod.GET)
 	public ResponseEntity<Role> getRoleById(@PathVariable int roleId) {
 		Role role = roleService.getRoleById(roleId);
