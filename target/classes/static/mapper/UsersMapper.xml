@@ -55,7 +55,7 @@
 		SELECT
 		user_id,
 		first_name, last_name, dob, email, username, password,
-		registered_date,activated_date
+		registered_date,activated_date,
 		seniority, is_activated,
 		updated_by,created_timestamp,updated_timestamp
 		FROM
@@ -70,7 +70,7 @@
 		SELECT
 		user_id,
 		first_name, last_name, dob, email, username, password,
-		registered_date,activated_date
+		registered_date,activated_date,
 		seniority, is_activated,
 		updated_by,created_timestamp,updated_timestamp
 		FROM
@@ -84,7 +84,8 @@
 		resultMap="GetUserResultMap" parameterType="String">
 		SELECT
 		user_id,
-		first_name, last_name, dob, email, username, password,
+		first_name,
+		last_name, dob, email, username, password,
 		registered_date,activated_date
 		seniority, is_activated,
 		updated_by,created_timestamp,updated_timestamp
@@ -99,16 +100,10 @@
 		parameterType="String">
 		SELECT
 		user_id,
-		first_name,
-		last_name,
-		email,
-		username,
-		password,
-		dob,
-		start_date,
-		end_date,
-		tenure,
-		status
+		first_name, last_name, dob, email, username, password,
+		registered_date,activated_date,
+		seniority, is_activated,
+		updated_by,created_timestamp,updated_timestamp
 		FROM
 		public.users
 		WHERE
@@ -116,19 +111,11 @@
 	</select>
 
 	<!--Get List Data All UserFull Information -->
-	<!--<select id="sqlGetAllUserFullSelect"
-		resultMap="GetUserFullResultMap" parameterType="String">
-		SELECT
-		users.user_id,first_name,last_name,email,username,password,dob,start_date,end_date,tenure,status,role_detail_id,role_detail.role_id
-		FROM public.users
-		INNER JOIN public.role_detail
-		ON users.user_id =
-		role_detail.user_id
-		INNER JOIN public.role
-		ON role_detail.role_id =
-		role.role_id
-		WHERE users.status=1
-	</select> -->
+	<!--<select id="sqlGetAllUserFullSelect" resultMap="GetUserFullResultMap" 
+		parameterType="String"> SELECT users.user_id,first_name,last_name,email,username,password,dob,start_date,end_date,tenure,status,role_detail_id,role_detail.role_id 
+		FROM public.users INNER JOIN public.role_detail ON users.user_id = role_detail.user_id 
+		INNER JOIN public.role ON role_detail.role_id = role.role_id WHERE users.status=1 
+		</select> -->
 
 	<!--Get number of user_id by department_id and user_id in Table department_detail -->
 	<select id="sqlSelectDepartmentDetailSelect"

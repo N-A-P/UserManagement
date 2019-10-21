@@ -46,7 +46,7 @@ public class DepartmentRestController {
 		List<Department> departments = departmentService.getAllListDepartment();
 		try {
 			if (departments != null && !departments.isEmpty()) {
-				return new ResponseEntity<List<Department>>(departmentService.getAllListDepartment(), HttpStatus.OK);
+				return new ResponseEntity<List<Department>>(departments, HttpStatus.OK);
 			}
 
 		} catch (Exception e) {

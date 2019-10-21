@@ -23,7 +23,7 @@
 		department_name,
 		department_code,
 		number_of_employee,
-		isActivated
+		is_activated
 		FROM
 		public.department
 

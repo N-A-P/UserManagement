@@ -186,9 +186,9 @@ public class DepartmentService {
 					// set value for field public.department.updated_by
 					department.setUpdateBy(usernameLogin);
 					// set value for field public.department.created_timestamp
-					department.setCreateTimestamp(DataUtil.getCurrentTimestamp());
+					department.setCreateTimestamp(DataUtil.getCurrentTimestamp().toString());
 					// set value for field public.department.updated_timestamp
-					department.setUpdateTimestamp(DataUtil.getCurrentTimestamp());
+					department.setUpdateTimestamp(DataUtil.getCurrentTimestamp().toString());
 
 					// return result update database query
 					return departmentMapper.sqlDepartmentInfoUpdate(department);
@@ -267,9 +267,9 @@ public class DepartmentService {
 					// set value for field public.department.updated_by
 					department.setUpdateBy(usernameLogin);
 					// set value for field public.department.created_timestamp
-					department.setCreateTimestamp(DataUtil.getCurrentTimestamp());
+					department.setCreateTimestamp(DataUtil.getCurrentTimestamp().toString());
 					// set value for field public.department.updated_timestamp
-					department.setUpdateTimestamp(DataUtil.getCurrentTimestamp());
+					department.setUpdateTimestamp(DataUtil.getCurrentTimestamp().toString());
 
 					// return result insert database query
 					return departmentMapper.sqlDepartmentInsert(department);

@@ -65,10 +65,10 @@ public class Users {
 	/**
 	 * Create Timestamp
 	 */
-	private LocalDateTime createTimestamp;
+	private String createTimestamp;
 	/**
 	 * Update Timestamp
 	 */
-	private LocalDateTime updateTimestamp;
+	private String updateTimestamp;
 
 }
