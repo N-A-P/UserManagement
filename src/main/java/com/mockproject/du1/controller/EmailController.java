@@ -32,10 +32,10 @@ public class EmailController {
         return new ResponseEntity("Failen", HttpStatus.BAD_REQUEST);
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public MailOfUser sendMail() {
-        return MailOfUser.builder().campaignId(1).sendEmailUserId(1).customers(List.of(Customer.builder().customerId(13).customerEmail("admin123@gmail.com").build())).build();
-    }
+//    @RequestMapping(value = "/test", method = RequestMethod.GET)
+//    public MailOfUser sendMail() {
+//        return MailOfUser.builder().campaignId(1).sendEmailUserId(1).customers(List.of(Customer.builder().customerId(13).customerEmail("admin123@gmail.com").build())).build();
+//    }
 
     @RequestMapping(value = "/coverExcel", method = RequestMethod.POST)
     public byte[] coverExcel(@RequestBody MultipartFile file) throws IOException {

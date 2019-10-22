@@ -84,8 +84,7 @@ public class UsersService {
 	public boolean registerNewCustomer(Users user) {
 		if (((getUserByUsername(user.getUsername())) == null) && ((getUserByEmail(user.getEmail())) == null))
 			if (usersMapper.sqlCreateUserInsert(user) != 0) {
-				roleMapper.sqlCreateRoleDetailInsert(1,
-						usersMapper.sqlGetUserByUsernameSelect(user.getUsername()).getUserId());
+//				roleMapper.sqlCreateRoleDetailInsert(1,usersMapper.sqlGetUserByUsernameSelect(user.getUsername()).getUserId());
 				return true;
 			}
 		return false;
