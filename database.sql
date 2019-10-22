@@ -61,7 +61,7 @@ CREATE TABLE campaign
 	updated_by varchar(50),
 	created_timestamp timestamp with time zone,
 	updated_timestamp timestamp with time zone,
-	email_template_id bigint DEFAULT nextval('email_template_id_seq') NOT NULL,
+	email_template_id bigint NOT NULL,
 	PRIMARY KEY (campaign_id)
 ) WITHOUT OIDS;
 
@@ -75,7 +75,7 @@ CREATE TABLE campaign_customer
 	created_timestamp timestamp with time zone,
 	updated_timestamp timestamp with time zone,
 	campaign_id bigint NOT NULL,
-	user_id bigint DEFAULT nextval('user_id_seq') NOT NULL,
+	user_id bigint NOT NULL,
 	customer_id bigint NOT NULL,
 	PRIMARY KEY (campaign_customer_id)
 ) WITHOUT OIDS;
@@ -156,7 +156,7 @@ CREATE TABLE role_pages
 	created_timestamp timestamp with time zone,
 	updated_timestamp timestamp with time zone,
 	page_id bigint NOT NULL,
-	role_id bigint DEFAULT nextval('role_id_seq') NOT NULL,
+	role_id bigint NOT NULL,
 	PRIMARY KEY (role_page_id)
 ) WITHOUT OIDS;
 
