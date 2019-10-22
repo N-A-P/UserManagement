@@ -24,7 +24,7 @@ public class EmailTemplate {
 	 * Update Info
 	 */
     private String updateBy;
-    private LocalDateTime createTimestapm;
-    private LocalDateTime updateTimestapm;
+    private String createTimestamp;
+    private String updateTimestamp;
 
 }

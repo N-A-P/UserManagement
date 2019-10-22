@@ -72,8 +72,8 @@ public class UsersFull {
 	private int departmentId;
 
 	private String updateBy;
-	private LocalDateTime createTimestapm;
-	private LocalDateTime updateTimestapm;
+	private String createTimestamp;
+	private String updateTimestamp;
 
 
 

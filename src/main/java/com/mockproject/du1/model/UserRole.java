@@ -29,7 +29,7 @@ public class UserRole {
 	 */
     private String leaveDate;
     private String updateBy;
-    private LocalDateTime createTimestapm;
-    private LocalDateTime updateTimestapm;
+    private String createTimestamp;
+    private String updateTimestamp;
 
 }

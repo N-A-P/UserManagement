@@ -37,14 +37,7 @@ public class UsersRestController {
 		return new ResponseEntity<List<Users>>(usersService.getAllUser(), HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/sendMail", method = RequestMethod.GET)
-	public ResponseEntity<String> sendMail(@RequestBody MailOfUser mailOfUser) {
-		if(emailService.sendEmailToAll(mailOfUser.getUsers(), mailOfUser.getEmailHeader(), mailOfUser.getEmailBodyText())){
-			return new ResponseEntity<String>("ERROR", HttpStatus.BAD_REQUEST);
 
-		}
-		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
-	}
 
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)

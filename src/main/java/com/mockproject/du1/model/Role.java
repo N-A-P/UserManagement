@@ -23,8 +23,8 @@ public class Role {
 	/**
 	 * Role Id
 	 */
-    private String updateBy;
-    private LocalDateTime createTimestapm;
-    private LocalDateTime updateTimestapm;
+	private String updateBy;
+	private String createTimestamp;
+	private String updateTimestamp;
 
 }

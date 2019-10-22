@@ -17,10 +17,7 @@ public class CampaignCustomer {
 	 * Campaign send Time
 	 */
 	private Date sendTime;
-	/**
-	 * Campaign sendBy
-	 */
-	private int sendBy;
+
 	/**
 	 * Campaign joinDate
 	 */
@@ -33,10 +30,15 @@ public class CampaignCustomer {
 	 * Customer Id
 	 */
 	private int customerId;
+
+	private int userId;
+
 	/**
 	 * Update Info
 	 */
-	@Embedded
-	private UpdateInfo updateInfo;
+	private String updateBy;
+	private String createTimestamp;
+	private String updateTimestamp;
+
 
 }

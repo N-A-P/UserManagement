@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mockproject.du1.mapper.EmailTemplateMapper">
+
+
+    <!--Get List Data User Information -->
+    <resultMap id="GetEmailResultMap"
+               type="com.mockproject.du1.model.EmailTemplate">
+        <result property="emaiTemplateId" column="email_template_id"/>
+        <result property="title" column="title"/>
+        <result property="body" column="body"/>
+        <result property="updateBy" column="updated_by"/>
+        <result property="createTimestamp" column="created_timestapm"/>
+        <result property="updateTimestamp" column="updated_timestapm"/>
+
+
+    </resultMap>
+
+
+    <insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.EmailTemplate">
+        <selectKey keyProperty="emaiTemplateId" resultType="int">
+            SELECT currval('"email_template_id_seq"')
+        </selectKey>
+        INSERT INTO public.email_template
+        (title,body)
+        VALUES
+        (#{title},#{body})
+    </insert>
+
+    <select id="sqlGetAllEmailTemplateSelect"
+            resultMap="GetEmailResultMap">
+		SELECT
+		email_template_id,
+		title, body,
+		updated_by,
+		created_timestapm,
+		updated_timestapm
+		FROM
+		public.email_template
+
+	</select>
+
+    <select id="sqlGetEmailSelectById"
+            resultMap="GetEmailResultMap" parameterType="INT">
+		SELECT
+	    email_template_id,
+	    title,
+	    body,
+	    updated_by,
+	    created_timestapm,
+	    updated_timestapm
+		FROM
+		public.email_template
+        WHERE
+		email_template_id = #{id}
+	</select>
+    <update id="sqlEmailUpdate">
+		UPDATE public.email_template
+        SET title=#{title}, body=#{body}
+        WHERE email_template_id=#{emaiTemplateId}
+
+	</update>
+    <select id="sqlGetEmailTemplateSelectByCampaintId"
+            resultMap="GetEmailResultMap" parameterType="INT">
+		SELECT
+	    b.email_template_id,
+	    b.title,
+	    b.body,
+	    b.created_timestapm,
+	    b.updated_by,
+	    b.updated_timestapm
+		FROM
+		public.campaign a inner join public.email_template b
+		on
+		a.email_template_id=b.email_template_id
+        WHERE
+		a.campaign_id = #{id}
+	</select>
+
+</mapper>

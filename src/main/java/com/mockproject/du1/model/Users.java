@@ -59,7 +59,8 @@ public class Users {
 	/**
 	 * Update Info
 	 */
-	@Embedded
-	private UpdateInfo updateInfo;
+	private String updateBy;
+	private String createTimestamp;
+	private String updateTimestamp;
 
 }

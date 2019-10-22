@@ -15,15 +15,18 @@
         <result property="isActivated" column="is_activated"/>
         <result property="address" column="address"/>
         <result property="company" column="company"/>
+        <result property="updateBy" column="updated_by"/>
+        <result property="createTimestamp" column="created_timestamp"/>
+        <result property="updateTimestamp" column="updated_timestamp"/>
 
     </resultMap>
 
 
     <insert id="sqlCreateCustomerInsert" parameterType="com.mockproject.du1.model.Customer">
 		INSERT INTO public.customer
-        (first_name, last_name, dob, email, is_activated, updated_by, created_timestapm, updated_timestapm, address, company)
+        (first_name, last_name, dob, email, is_activated, updated_by, created_timestamp, updated_timestamp, address, company)
         VALUES
-        (#{firstName}, #{lastName}, #{dob}, #{customerEmail}, #{isActivated}, #{updateBy}, #{createTimestapm}, #{updateTimestapm}, #{address}, #{company});
+        (#{firstName}, #{lastName}, #{dob}, #{customerEmail}, #{isActivated}, #{updateBy}, #{createTimestamp}, #{updateTimestamp}, #{address}, #{company});
 
 
 
@@ -32,18 +35,57 @@
     <select id="sqlGetCustomerByEmailSelect"
             resultMap="GetCustomerResultMap" parameterType="String">
 		SELECT
+		customer_id,
 		first_name,
 		last_name,
 	    dob,
 	    email,
 	    is_activated,
-	    address,
+        updated_by,
+        created_timestamp,
+        updated_timestamp,
+        address,
 	    company
 		FROM
 		public.customer
 		WHERE
 		email = #{customerEmail}
 	</select>
+    <select id="sqlGetAllCustomer"
+            resultMap="GetCustomerResultMap" >
+		SELECT
+		customer_id,
+		first_name,
+		last_name,
+	    dob,
+	    email,
+	    is_activated,
+        address,
+	    company,
+	    updated_by,
+        created_timestamp,
+        updated_timestamp
+		FROM
+		public.customer
+	</select>
+    <select id="sqlGetCustomerByCampaignAndMaxTime"
+            resultMap="GetCustomerResultMap" parameterType="int">
+	select c.customer_id,
+	 c.first_name,
+	 c.last_name,
+	 c.dob, c.email,
+	 c.address, c.company,
+	 c.is_activated, c.updated_by,
+	 c.created_timestamp,
+	 c.updated_timestamp
+	  from
+	  campaign a inner join campaign_customer b
+	  on a.campaign_id=b.campaign_id
+	  inner join customer c on c.customer_id=b.customer_id
+	  where
+	  b.send_date=(select max(send_date) from campaign_customer d where d.campaign_id=a.campaign_id)
+	  and a.campaign_id=#{CampaignId}
 
+	</select>
 
 </mapper>

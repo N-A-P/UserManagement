@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mockproject.du1.mapper.CampaignCustomerMapper">
+
+
+
+	<!--Get List Data User Information -->
+	<resultMap id="GetMailHistoryResultMap"
+		type="com.mockproject.du1.model.CampaignCustomer">
+		<result property="campaignCustomerId" column="campaign_customer_id" />
+		<result property="sendTime" column="send_time" />
+		<result property="joinDate" column="join_date" />
+		<result property="updateBy" column="updated_by" />
+		<result property="createTimestamp" column="created_timestamp" />
+		<result property="updateTimestamp" column="updated_timestamp" />
+		<result property="campaignId" column="campaign_id" />
+		<result property="userId" column="user_id" />
+		<result property="customerId" column="customer_id" />
+	</resultMap>
+
+
+	<insert id="sqlInsertMailHistoryl" parameterType="com.mockproject.du1.model.CampaignCustomer">
+		INSERT INTO public.campaign_customer
+		(send_time,user_id,customer_id,campaign_id)
+		VALUES
+		(#{sendTime},#{userId},#{customerId},#{campaignId})
+	</insert>
+	<select id="sqlGetAllMailHistorySelect"
+			resultMap="GetMailHistoryResultMap">
+		SELECT
+		 campaign_customer_id,
+		 join_date,
+	     sent_time,
+		 updated_by,
+		 created_timestapm,
+		 updated_timestapm,
+		 campaign_id,
+		 user_id,
+		 customer_id
+         FROM public.campaign_customer;
+
+	</select>
+	<select id="sqlGetMailHistorySelectByEmail"
+			resultMap="GetMailHistoryResultMap" parameterType="String">
+		SELECT
+		count(*)
+		FROM
+		public.campaign_customer
+         WHERE
+		email_id = #{id}
+	</select>
+
+</mapper>

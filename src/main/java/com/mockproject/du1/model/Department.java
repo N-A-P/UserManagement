@@ -29,7 +29,7 @@ public class Department {
 	 */
 	private int isActivated;
 	private String updateBy;
-	private LocalDateTime createTimestapm;
-	private LocalDateTime updateTimestapm;
+	private String createTimestamp;
+	private String updateTimestamp;
 
 }
