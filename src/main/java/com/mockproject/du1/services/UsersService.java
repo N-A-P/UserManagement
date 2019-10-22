@@ -1,6 +1,8 @@
 package com.mockproject.du1.services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import com.mockproject.du1.common.DataUtil;
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
 import com.mockproject.du1.model.Users;
@@ -20,6 +23,9 @@ public class UsersService {
 	private UsersMapper usersMapper;
 	@Autowired
 	private RoleMapper roleMapper;
+	
+	String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
 	public List<Users> getAllUser() {
@@ -82,12 +88,21 @@ public class UsersService {
 	 * ------------------------
 	 */
 	public boolean registerNewCustomer(Users user) {
-		if (((getUserByUsername(user.getUsername())) == null) && ((getUserByEmail(user.getEmail())) == null))
+		if (((getUserByUsername(user.getUsername())) == null) && ((getUserByEmail(user.getEmail())) == null)) {
+			user.setRegisteredDate(java.time.LocalDate.now().toString());
+			user.setEndDate(java.time.LocalDate.now().toString());
+			user.setSeniority(0);
+			user.setIsActivated(1);
+			user.setActivatedDate(java.time.LocalDate.now().toString()); 
+			user.setCreateTimestamp(currentTimestamp);
+			user.setUpdateTimestamp(currentTimestamp);
+			
 			if (usersMapper.sqlCreateUserInsert(user) != 0) {
-				roleMapper.sqlCreateRoleDetailInsert(1,
-						usersMapper.sqlGetUserByUsernameSelect(user.getUsername()).getUserId());
+//				roleMapper.sqlCreateRoleDetailInsert(1,
+//						usersMapper.sqlGetUserByUsernameSelect(user.getUsername()).getUserId());
 				return true;
 			}
+		}
 		return false;
 	}
 
@@ -122,20 +137,6 @@ public class UsersService {
 		}
 		return false;
 
-//				// check if roleId=4 (customer), delete record department_detail
-//				usersMapper.sqlDeleteDepartmentDetailDelete(userFull.getUserId());
-//			} else {
-//				// check if roleId!=4 (employee/manager/admin), add record department_detail
-//				if ((usersMapper.sqlSelectDepartmentDetailSelect(userFull.getUserId(),
-//						userFull.getDepartmentId())) == 0)
-//					usersMapper.sqlInsertDepartmentDetailInsert(1, userFull.getDepartmentId(), userFull.getUserId());
-//			}
-//			// update record in table user & role_detail
-//			usersMapper.sqlUpdateRoleDetailUpdate(userFull.getUserId(), userFull.getRoleId());
-//			usersMapper.sqlUpdateUserUpdate(newUser);
-//			return true;
-//		}
-//		return false;
 	}
 
 	/*

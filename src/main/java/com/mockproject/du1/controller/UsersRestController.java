@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mockproject.du1.common.DataUtil;
 import com.mockproject.du1.model.MailOfUser;
 import com.mockproject.du1.model.Users;
 import com.mockproject.du1.model.UsersFull;
@@ -48,11 +49,7 @@ public class UsersRestController {
 
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
-		user.setRegisteredDate(java.time.LocalDate.now().toString());
-		user.setEndDate(java.time.LocalDate.now().toString());
-		user.setSeniority(0);
-		user.setIsActivated(1);
+	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {		
 		if (usersService.registerNewCustomer(user)) {
 			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
 		} else {
