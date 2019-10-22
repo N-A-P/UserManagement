@@ -2,10 +2,6 @@ package com.mockproject.du1.model;
 
 import lombok.Builder;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Embedded;
-
 @lombok.Data
 @Builder
 public class Campaign {

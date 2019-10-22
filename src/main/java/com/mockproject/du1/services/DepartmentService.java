@@ -251,7 +251,6 @@ public class DepartmentService {
 			HttpSession session = request.getSession(false);
 			usernameLogin = (String) session.getAttribute("usernameLogin");
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 
 		try {

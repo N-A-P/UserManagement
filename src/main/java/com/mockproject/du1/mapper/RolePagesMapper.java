@@ -8,5 +8,5 @@ public interface RolePagesMapper {
 	/**
 	 * 
 	 */
-	List<RolePages> sqlGetAllRolePagesSelect();
+	List<RolePages> sqlGetRolePagesByRoleIdSelect(int roleId);
 }

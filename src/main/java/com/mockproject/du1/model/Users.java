@@ -1,9 +1,5 @@
 package com.mockproject.du1.model;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Embedded;
-
 /**
  * Users Model
  */

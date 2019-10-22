@@ -2,108 +2,119 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mockproject.du1.mapper.RolePagesMapper">
-	<!--Get List All RolePagesPages Result Map -->
-	<resultMap id="GetRolePagesResultMap"
-		type="com.mockproject.du1.model.RolePagesPages">
-		<result property="rolePagesId" column="role_page_id" />
-		<result property="roleId" column="role_id" />
-		<result property="pagesId" column="page_id" />
-		<result property="updateBy" column="updated_by" />
-		<result property="createTimestamp" column="created_timestamp" />
-		<result property="updateTimestamp" column="updated_timestamp" />
+    <!--Get List All RolePagesPages Result Map -->
+    <resultMap id="GetRolePagesResultMap"
+        type="com.mockproject.du1.model.RolePages">
+        <result property="rolePagesId" column="role_page_id" />
+        <result property="roleId" column="role_id" />
+        <result property="pagesId" column="page_id" />
+        <result property="updateBy" column="updated_by" />
+        <result property="createTimestamp" column="created_timestamp" />
+        <result property="updateTimestamp" column="updated_timestamp" />
 
-	</resultMap>
+    </resultMap>
 
-	<!--Get List All RolePages Query -->
-	<select id="sqlGetAllRolePagesSelect" resultMap="GetRolePagesResultMap">
-		SELECT role_page_id,
-		role_id, page_id, updated_by, created_timestamp, updated_timestamp
-		FROM public.role_page
+    <!--Get List RolePages Query -->
+    <select id="sqlGetRolePagesByRoleIdSelect"
+        resultMap="GetRolePagesResultMap" parameterType="Integer">
+        SELECT role_page_id,
+        role_id, page_id, updated_by, created_timestamp,
+        updated_timestamp
+        FROM public.role_page
+        <if test="roleId != 0 ">
+            role_id = #{role_id}
+        </if>
 
-	</select>
+    </select>
 
-	<!--Get RolePagesPages By Id Query -->
-	<select id="sqlGetRolePagesByIdSelect" resultMap="GetRolePagesResultMap">
-		
-		SELECT role_page_id,
-		role_id, page_id, updated_by, created_timestamp, updated_timestamp
-		FROM public.role_page WHERE role_id = #{roleId}
+    <!-- Check Role Pages Exist -->
+    <select id="sqlGetRolePagesByIdSelect"
+        resultMap="GetRolePagesResultMap">
 
-	</select>
+        SELECT COUNT(*)
+        FROM public.role_page
+        WHERE role_id
+        = #{roleId}
+        AND page_id =#{page_id}
 
-	<!--Get RolePagesPages By Name Or Code Query -->
-	<select id="sqlGetRolePagesByNameOrCodeSelect"
-		resultMap="GetRolePagesResultMap">
-		<bind name="_roleCode" value="'%' + extractCondition + '%'" />
-		<bind name="_roleName" value="'%' + extractCondition + '%'" />
-		SELECT role_page_id,
-		role_id, page_id, updated_by, created_timestamp, updated_timestamp
-		FROM public.role_page WHERE role_code LIKE #{_roleCode} OR
-		role_name LIKE #{_roleName}
+    </select>
 
-	</select>
+    <!--Get RolePagesPages By Name Or Code Query -->
+    <select id="sqlGetRolePagesByNameOrCodeSelect"
+        resultMap="GetRolePagesResultMap">
+        <bind name="_roleCode" value="'%' + extractCondition + '%'" />
+        <bind name="_roleName" value="'%' + extractCondition + '%'" />
+        SELECT role_page_id,
+        role_id, page_id, updated_by, created_timestamp,
+        updated_timestamp
+        FROM public.role_page WHERE role_code LIKE
+        #{_roleCode} OR
+        role_name LIKE #{_roleName}
 
-	<!--Get Count role_page: Check duplicate role_page name -->
-	<select id="sqlCountRolePagesByNameSelect" resultType="Long"
-		parameterType="String">
+    </select>
 
-		SELECT
-		COUNT(*)
-		FROM
-		public.role_page
-		WHERE
-		public.role_page.role_name
-		= #{roleName}
+    <!--Get Count role_page: Check duplicate role_page name -->
+    <select id="sqlCountRolePagesByNameSelect" resultType="Long"
+        parameterType="String">
 
-	</select>
+        SELECT
+        COUNT(*)
+        FROM
+        public.role_page
+        WHERE
+        public.role_page.role_name
+        = #{roleName}
 
-	<!--Get Count role_page: Check duplicate role_page code -->
-	<select id="sqlCountRolePagesByCodeSelect" resultType="Long"
-		parameterType="String">
+    </select>
 
-		SELECT
-		COUNT(*)
-		FROM
-		public.role_page
-		WHERE
-		public.role_page.role_code
-		= #{roleCode}
+    <!--Get Count role_page: Check duplicate role_page code -->
+    <select id="sqlCountRolePagesByCodeSelect" resultType="Long"
+        parameterType="String">
 
-	</select>
+        SELECT
+        COUNT(*)
+        FROM
+        public.role_page
+        WHERE
+        public.role_page.role_code
+        = #{roleCode}
 
-	<update id="sqlEditRolePagesInfoUpdate"
-		parameterType="com.mockproject.du1.model.RolePagesPages">
+    </select>
 
-		UPDATE public.role_page
-		SET role_name =
-		#{roleName},
-		role_code =
-		#{roleCode},
-		updated_by=#{updateBy},
-		updated_timestamp
-		=#{updateTimestamp}::timestamp without time zone
-		WHERE
-		role_id =
-		#{roleId}
-	</update>
+    <update id="sqlEditRolePagesInfoUpdate"
+        parameterType="com.mockproject.du1.model.RolePagesPages">
 
-	<!--Insert role_page Information -->
-	<insert id="sqlRolePagesInsert"
-		parameterType="com.mockproject.du1.model.RolePagesPages">
-		INSERT INTO public.role_page
-		(role_name,role_code,updated_by,created_timestamp,updated_timestamp)
-		VALUES
-		(#{roleName},#{roleCode},#{updateBy},#{createTimestamp}::timestamp
-		without time zone,#{updateTimestamp}::timestamp without time zone)
-	</insert>
+        UPDATE public.role_page
+        SET role_name =
+        #{roleName},
+        role_code =
+        #{roleCode},
+        updated_by=#{updateBy},
+        updated_timestamp
+        =#{updateTimestamp}::timestamp without time zone
+        WHERE
+        role_id =
+        #{roleId}
+    </update>
 
-	<!--Insert new record into Table User_RolePages -->
-	<insert id="sqlCreateRolePagesDetailInsert" parameterType="Integer">
-		INSERT INTO
-		public.role_detail
-		(role_id,user_id)
-		VALUES
-		(#{roleId},#{userId})
-	</insert>
+    <!--Insert role_page Information -->
+    <insert id="sqlRolePagesInsert"
+        parameterType="com.mockproject.du1.model.RolePagesPages">
+        INSERT INTO public.role_page
+        (role_name,role_code,updated_by,created_timestamp,updated_timestamp)
+        VALUES
+        (#{roleName},#{roleCode},#{updateBy},#{createTimestamp}::timestamp
+        without time zone,#{updateTimestamp}::timestamp without time zone)
+    </insert>
+
+    <!--Insert new record into Table User_RolePages -->
+    <insert id="sqlCreateRolePagesDetailInsert"
+        parameterType="Integer">
+        INSERT INTO
+        public.role_detail
+        (role_id,user_id)
+        VALUES
+        (#{roleId},#{userId})
+    </insert>
 
 </mapper>

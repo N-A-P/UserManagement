@@ -1,19 +1,15 @@
 package com.mockproject.du1.services;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-
 import com.mockproject.du1.common.DataUtil;
 import com.mockproject.du1.mapper.PagesMapper;
 import com.mockproject.du1.model.Pages;
@@ -89,7 +85,7 @@ public class PagesService {
 	/** 
 	 * 
 	 */
-	public int editPagesInfoUpdate(Pages page) throws SQLException {
+	public int editPagesInfoUpdate(Pages page) {
 
 		try {
 			HttpSession session = request.getSession(false);
@@ -129,7 +125,7 @@ public class PagesService {
 	/**
 	 * 
 	 */
-	public int addNewPages(Pages page) throws DuplicateKeyException, SQLException {
+	public int addNewPages(Pages page) throws DuplicateKeyException {
 		try {
 			HttpSession session = request.getSession(false);
 			usernameLogin = (String) session.getAttribute("usernameLogin");

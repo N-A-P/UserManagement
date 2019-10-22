@@ -2,8 +2,6 @@ package com.mockproject.du1.model;
 
 import lombok.Builder;
 
-import javax.persistence.Embedded;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @lombok.Data

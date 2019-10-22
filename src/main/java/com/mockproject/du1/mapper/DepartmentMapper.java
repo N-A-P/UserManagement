@@ -25,7 +25,7 @@ public interface DepartmentMapper {
 	 *
 	 * @return Department
 	 */
-	Department sqlGetDepartmentByIdSelect(int department_id);
+	Department sqlGetDepartmentByIdSelect(int departmentId);
 
 	/**
 	 * Get Max Department
@@ -53,7 +53,7 @@ public interface DepartmentMapper {
 	 *
 	 * @return List Employee Of Department
 	 */
-	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("department_id") int department_id,
+	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("departmentId") int departmentId,
 			@Param("statusUserDepartment") int statusUserDepartment, @Param("statusDepartment") int statusDepartment,
 			@Param("statusUser") int statusUser, int action);
 

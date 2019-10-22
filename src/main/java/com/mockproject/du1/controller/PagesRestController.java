@@ -103,8 +103,8 @@ public class PagesRestController {
 				return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 			}
 
-		} catch (SQLException e) {
-			return new ResponseEntity<String>("SQL Error Code: " + e.getErrorCode(), HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("SQL Error Code: " + ((SQLException) e).getErrorCode(), HttpStatus.BAD_REQUEST);
 		}
 
 	}

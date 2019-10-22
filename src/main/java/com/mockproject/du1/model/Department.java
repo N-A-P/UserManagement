@@ -1,8 +1,5 @@
 package com.mockproject.du1.model;
 
-import javax.persistence.Embedded;
-import java.time.LocalDateTime;
-
 /*
  * Department Model
  */
