@@ -3,7 +3,6 @@ package com.mockproject.du1.model;
 import lombok.Builder;
 
 @lombok.Data
-@Builder
 public class RolePages {
 	/**
 	 * Role Pages Id

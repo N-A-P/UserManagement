@@ -23,17 +23,17 @@ public class EmployeeOfDepartment {
 	 */
 	private int seniorlity;
 	/**
-	 * User Role Id
+	 * User RolePagesPages Id
 	 */
-	private int userRoleId;
+	private int userRolePagesId;
 	/**
-	 * Role Id
+	 * RolePagesPages Id
 	 */
-	private int roleId;
+	private int role_page_pageId;
 	/**
-	 * Role Name
+	 * RolePagesPages Name
 	 */
-	private String roleName;
+	private String role_page_pageName;
 	/**
 	 * User Department Id
 	 */

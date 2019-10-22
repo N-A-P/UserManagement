@@ -141,7 +141,7 @@ CREATE TABLE role
 (
 	role_id bigint DEFAULT nextval('role_id_seq') NOT NULL UNIQUE,
 	role_code varchar(13) NOT NULL,
-	role_name varchar(50) NOT NULL,
+	role_name varchar(15) NOT NULL,
 	updated_by varchar(50),
 	created_timestamp timestamp with time zone,
 	updated_timestamp timestamp with time zone,

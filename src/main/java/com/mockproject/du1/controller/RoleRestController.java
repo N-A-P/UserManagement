@@ -56,7 +56,7 @@ public class RoleRestController {
 	/**
 	 * Search Role by Name or Code
 	 */
-	@RequestMapping(value = "/getRoleByNameOrCodeSelect", method = RequestMethod.GET)
+	@RequestMapping(value = "/getRoleByNameOrCodeSelect/{extractCondition}", method = RequestMethod.GET)
 	public ResponseEntity<List<Role>> getRoleByNameOrCodeSelect(@Valid @PathVariable String extractCondition) {
 		List<Role> roles = roleService.getRoleByNameOrCodeSelect(extractCondition);
 		try {
