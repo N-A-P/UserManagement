@@ -2,6 +2,8 @@ package com.mockproject.du1.model;
 
 import lombok.Builder;
 
+import javax.persistence.Embedded;
+
 @lombok.Data
 @Builder
 public class Campaign {
@@ -34,16 +36,12 @@ public class Campaign {
 	 */
 	private int emailTemplateId;
 	/**
-	 * Update By
+	 * updateInfo
 	 */
 	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
 	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
 	private String updateTimestamp;
+
+
 
 }

@@ -1,5 +1,8 @@
 package com.mockproject.du1.model;
 
+import javax.persistence.Embedded;
+import java.time.LocalDateTime;
+
 /*
  * Department Detail Model
  */
@@ -29,17 +32,9 @@ public class UserDepartment {
 	 * Leave Date
 	 */
 	private String leaveDate;
-	/**
-	 * Update By
-	 */
+
 	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
 	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
 	private String updateTimestamp;
 
 

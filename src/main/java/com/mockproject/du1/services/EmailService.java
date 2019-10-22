@@ -1,8 +1,10 @@
 package com.mockproject.du1.services;
 
+import com.mockproject.du1.common.DataUtil;
+import com.mockproject.du1.mapper.CampaignCustomerMapper;
+import com.mockproject.du1.mapper.CampaignMapper;
 import com.mockproject.du1.mapper.CustomerMapper;
-import com.mockproject.du1.mapper.EmailMapper;
-import com.mockproject.du1.mapper.MailHistoryMapper;
+import com.mockproject.du1.mapper.EmailTemplateMapper;
 import com.mockproject.du1.model.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -19,7 +21,10 @@ import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -28,129 +33,225 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.util.Assert;
 
+import static com.mockproject.du1.common.DataUtil.notNull;
+
 @Service
 public class EmailService {
-	@Autowired
-	EmailMapper emailMapper;
-	@Autowired
-	MailHistoryMapper mailHistoryMapper;
-	@Autowired
-	CustomerMapper customerMapper;
+    @Autowired
+    EmailTemplateMapper emailMapper;
+    @Autowired
+    CampaignCustomerMapper mailHistoryMapper;
+    @Autowired
+    CustomerMapper customerMapper;
+    @Autowired
+    CampaignMapper campaignMapper;
 
-	public boolean sendEmailToAll(List<Users> recipientList, String emailHeader, String emailBodyText) {
-		if (recipientList != null) {
-			try {
-				EmailTemplate email = EmailTemplate.builder().title(emailBodyText).body(emailHeader).build();
-				emailMapper.sqlCreateEmailInsert(email);
+    public boolean sendEmailToAll(List<Customer> Customers, int sendEmailUserId, int campaignId) {
+        if (Customers != null) {
+            try {
 
-				for (Users user : recipientList) {
-					sendEmail(user, emailHeader, emailBodyText, email.getEmaiTemplateId());
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				return false;
-			}
-			return true;
-		}
-		return false;
-	}
+                EmailTemplate email = emailMapper.sqlGetEmailTemplateSelectByCampaintId(campaignId);
+                LocalDate localDate = LocalDate.now();
+                Date date = new Date(localDate.atStartOfDay(ZoneId.of("America/New_York")).toEpochSecond() * 1000);
+                for (Customer customer : Customers) {
+                    sendEmail(customer, email.getTitle(), email.getBody(), campaignId, date, sendEmailUserId);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
 
-	private void sendEmail(Users recipient, String emailHeader, String emailBodyText, int emailId) throws IOException {
+    private void sendEmail(Customer customer, String emailHeader, String emailBodyText, int campaignId, Date sendTime, int sendUserId) throws IOException {
 
-		Mail mail = prepareMail(recipient, emailHeader, emailBodyText);
+        Mail mail = prepareMail(customer, emailHeader, emailBodyText);
 
-		Request request = new Request();
-		request.setMethod(Method.POST);
-		request.setEndpoint("mail/send");
-		request.setBody(mail.build());
-		SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
-		Response response = sg.api(request);
-		mailHistoryMapper.sqlInsertMailHistoryl(CampaignCustomer.builder().campaignId(emailId)
-				.customerId(recipient.getUserId()).sendTime(new java.util.Date()).build());
+        Request request = new Request();
+        request.setMethod(Method.POST);
+        request.setEndpoint("mail/send");
+        request.setBody(mail.build());
+//        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
+//        Response response = sg.api(request);
+        mailHistoryMapper.sqlInsertMailHistoryl(CampaignCustomer.builder()
+                .sendTime(sendTime)
+                .userId(sendUserId)
+                .campaignId(campaignId)
+                .customerId(customer.getCustomerId())
+                .build());
 
-	}
+    }
 
-	private Mail prepareMail(Users recipient, String emailHeader, String emailBodyText) {
-		// customized email content with user first name, last name
-		final String signature = "Best Regards, \n My Bank Application.";
-		StringBuilder finalText = new StringBuilder();
-		finalText.append("Dear " + recipient.getFirstName() + " " + recipient.getLastName() + "," + "\n");
-		finalText.append(emailBodyText + "\n");
-		finalText.append(signature);
-		Email fromEmail = new Email("moneydontsleep8888@gmail.com");
-		Email toEmail = new Email(recipient.getEmail());
-		if (!isValid(recipient.getEmail())) {
-			throw new IllegalArgumentException("email inValid");
-		}
-		Content content = new Content("text/plain", finalText.toString());
-		Mail mail = new Mail(fromEmail, emailHeader, toEmail, content);
-		return mail;
-	}
+    private Mail prepareMail(Customer customer, String emailHeader, String emailBodyText) {
+        // customized email content with user first name, last name
+        final String signature = "Best Regards, \n My Bank Application.";
+        StringBuilder finalText = new StringBuilder();
+        finalText.append("Dear " + customer.getFirstName() + " " + customer.getLastName() + "," + "\n");
+        finalText.append(emailBodyText + "\n");
+        finalText.append(signature);
+        Email fromEmail = new Email("moneydontsleep8888@gmail.com");
+        Email toEmail = new Email(customer.getCustomerEmail());
+        if (!isValid(customer.getCustomerEmail())) {
+            throw new IllegalArgumentException("email inValid");
+        }
+        Content content = new Content("text/plain", finalText.toString());
+        Mail mail = new Mail(fromEmail, emailHeader, toEmail, content);
+        return mail;
+    }
 
-	public List<String> coverExcellFileToArray(byte[] file) throws IOException {
-		List<String> error = new ArrayList<>();
-		try {
-			int rowCount = 0;
-			InputStream is = new ByteArrayInputStream(file);
-			XSSFWorkbook workbook = new XSSFWorkbook(is);
-			XSSFSheet sheet = workbook.getSheetAt(0);
-			Iterator<Row> rowIterator = sheet.iterator();
-			while (rowIterator.hasNext()) {
-				Row row = rowIterator.next();
-				Iterator<Cell> cellIterator = row.cellIterator();
-				try {
-					Assert.notNull(row.getCell(0), "error null email in row : " + rowCount);
-					String email = row.getCell(0).getStringCellValue();
-					if (!isValid(row.getCell(0).getStringCellValue())) {
-						throw new IllegalArgumentException("email inValid in row : " + rowCount);
-					}
-					Assert.notNull(row.getCell(1), "error null name in row : " + rowCount);
-					String name = row.getCell(1).getStringCellValue();
-					Customer customer = customerMapper.sqlGetCustomerByEmailSelect(email);
-					Assert.isNull(customer, "Customer Exit in row : " + rowCount);
-					customer = Customer.builder().customerEmail(email).firstName(name).build();
-					customerMapper.sqlCreateCustomerInsert(customer);
-					error.add("add success customer :" + customer.getFirstName());
-				} catch (Exception e) {
-					error.add(e.getMessage());
-				}
+    public XSSFWorkbook coverExcellFileToArray(byte[] file) throws IOException {
+        List<String> error = new ArrayList<>();
+        try {
+            Boolean nonErrorCustomer = true;
+            int rowCount = 1;
+            String email = null;
+            InputStream is = new ByteArrayInputStream(file);
+            XSSFWorkbook workbook = new XSSFWorkbook(is);
+            XSSFSheet sheet = workbook.getSheetAt(1);
+            Iterator<Row> rowIterator = sheet.iterator();
+            rowIterator.next();
+            rowIterator.next();
+            while (rowIterator.hasNext()) {
+                Row row = rowIterator.next();
+                Iterator<Cell> cellIterator = row.cellIterator();
+                String errorCause = "";
+                try {
+                    if (!notNull(row.getCell(2))) {
+                        errorCause += "error[" + rowCount + ",2] null email";
+                        nonErrorCustomer = false;
+                    } else {
+                        email = row.getCell(2).getStringCellValue();
+                        if (!isValid(row.getCell(2).getStringCellValue())) {
+                            errorCause += "error[" + rowCount + ",2] email inValid";
+                            nonErrorCustomer = false;
+                        } else {
+                            Customer customer = customerMapper.sqlGetCustomerByEmailSelect(email);
+                            if (notNull(customer)) {
+                                errorCause += "error[" + rowCount + ",2] email Exit";
+                                nonErrorCustomer = false;
+                            }
+                        }
+                    }
+                    String firstName = "";
+                    String LastName = "";
+                    if (!notNull(row.getCell(3))) {
+                        errorCause += "error[" + rowCount + ",3] null name";
+                        nonErrorCustomer = false;
+                    } else {
+                        firstName = row.getCell(3).getStringCellValue();
+                    }
+                    if (!notNull(row.getCell(4))) {
+                        errorCause += "error[" + rowCount + ",4] null name";
+                        nonErrorCustomer = false;
+                    } else {
+                        LastName = row.getCell(4).getStringCellValue();
+                    }
 
-				rowCount++;
+                    Customer customer = Customer.builder()
+                            .customerEmail(email)
+                            .firstName(firstName)
+                            .lastName(LastName)
+                            .dob(row.getCell(5).getStringCellValue() == "" ? null : row.getCell(5).getStringCellValue())
+                            .address(row.getCell(6).getStringCellValue())
+                            .company(row.getCell(7).getStringCellValue())
+                            .build();
+                    if (nonErrorCustomer) {
+                        customerMapper.sqlCreateCustomerInsert(customer);
+                        errorCause = "success";
+                    }
+                    row.createCell(8);
+                    row.getCell(8).setCellValue(errorCause);
+                } catch (Exception e) {
+                    error.add(e.getMessage());
+                }
+                rowCount++;
+            }
 
-			}
 
-			return error;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
+            return workbook;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	public boolean isValid(String email) {
-		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." + "[a-zA-Z0-9_+&*-]+)*@" + "(?:[a-zA-Z0-9-]+\\.)+[a-z"
-				+ "A-Z]{2,7}$";
+    public boolean isValid(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
 
-		Pattern pat = Pattern.compile(emailRegex);
-		if (email == null)
-			return false;
-		return pat.matcher(email).matches();
-	}
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
+    }
 
-	public EmailTemplate getEmailById(int emailId) {
-		return emailMapper.sqlGetEmailSelectById(emailId);
+    public EmailTemplate getEmailById(int emailId) {
+        return emailMapper.sqlGetEmailSelectById(emailId);
 
-	}
+    }
 
-	public String editTopic(EmailTemplate email) {
+    public String editTopic(EmailTemplate email) {
 
-		if (emailMapper.sqlGetEmailSelectById(email.getEmaiTemplateId()) == null) {
-			return "email doesnt exit";
-		}
-		emailMapper.sqlEmailUpdate(email);
-		return "success";
-	}
+        if (emailMapper.sqlGetEmailSelectById(email.getEmaiTemplateId()) == null) {
+            return "email doesnt exit";
+        }
+        emailMapper.sqlEmailUpdate(email);
+        return "success";
+    }
+    public String addTopic(EmailTemplate email) {
 
-	public List<EmailTemplate> getAllemailContent() {
-		return emailMapper.sqlGetAllEmailSelect();
-	}
+        if (emailMapper.sqlGetEmailSelectById(email.getEmaiTemplateId()) != null) {
+            return "email exit";
+        }
+        emailMapper.sqlEmailUpdate(email);
+        return "success";
+    }
+
+    public String editCampaign(Campaign campaign) {
+        campaignMapper.sqlCampaignInfoUpdate(campaign);
+        return "success";
+    }
+
+    public String addCampaign(Campaign campaign) {
+        campaignMapper.sqlCreateCampaignInsert(campaign);
+        return "success";
+    }
+
+    public List<EmailTemplate> getAllemailContent() {
+        return emailMapper.sqlGetAllEmailTemplateSelect();
+    }
+
+    public List<Customer> getAllCustomer() {
+        return customerMapper.sqlGetAllCustomer();
+    }
+
+    public List<CampaignDetail> getAllCampaignDetail() {
+        List<CampaignDetail> campaignDetails = new ArrayList<>();
+        List<Campaign> campaigns = campaignMapper.sqlGetAllCampain();
+        List<Customer> customers=customerMapper.sqlGetAllCustomer();
+        List<Integer> integers=new ArrayList<>();
+        for (Campaign campaign : campaigns) {
+
+            for(Customer customer:customerMapper.sqlGetCustomerByCampaignAndMaxTime(campaign.getCampaignId())){
+                int check=0;
+               for(Customer customerExit:customers){
+                   if(customerExit.getCustomerId()==customer.getCustomerId()){
+                       check=1;
+                       integers.add(1);
+                   }
+               }
+               if(check==0) integers.add(0);
+            }
+            CampaignDetail campaignDetail = CampaignDetail.builder()
+                    .campaign(campaign)
+                    .customerList(customerMapper.sqlGetCustomerByCampaignAndMaxTime(campaign.getCampaignId())).customerCheck(integers).build();
+            campaignDetails.add(campaignDetail);
+        }
+        return campaignDetails;
+    }
+
 }

@@ -10,14 +10,10 @@ public class MailOfUser {
 	/**
 	 * List User
 	 */
-    List<Users> users;
-    /**
-	 * Email Header
-	 */
-    String emailHeader;
-    /**
-	 * Email Body Text
-	 */
-    String emailBodyText;
+    List<Customer> customers;
+
+    int sendEmailUserId;
+
+    int campaignId;
 
 }

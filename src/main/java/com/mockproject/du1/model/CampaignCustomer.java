@@ -2,6 +2,8 @@ package com.mockproject.du1.model;
 
 import lombok.Builder;
 
+import javax.persistence.Embedded;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @lombok.Data
@@ -15,10 +17,7 @@ public class CampaignCustomer {
 	 * Campaign send Time
 	 */
 	private Date sendTime;
-	/**
-	 * Campaign sendBy
-	 */
-	private int sendBy;
+
 	/**
 	 * Campaign joinDate
 	 */
@@ -31,17 +30,15 @@ public class CampaignCustomer {
 	 * Customer Id
 	 */
 	private int customerId;
+
+	private int userId;
+
 	/**
-	 * Update By
+	 * Update Info
 	 */
 	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
 	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
 	private String updateTimestamp;
+
 
 }

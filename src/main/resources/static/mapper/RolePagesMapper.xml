@@ -50,6 +50,7 @@
 	</delete>
 
 
+<<<<<<< HEAD
 	<!--Insert role_page Information -->
 	<insert id="sqlRolePagesInsert"
 		parameterType="com.mockproject.du1.model.RolePages">
@@ -59,5 +60,70 @@
 		(#{pageId},#{roleId},#{updateBy},#{createTimestamp}::timestamp
 		without time zone,#{updateTimestamp}::timestamp without time zone)
 	</insert>
+=======
+    <!--Get Count role_page: Check duplicate role_page name -->
+    <select id="sqlCountRolePagesByNameSelect" resultType="Long"
+        parameterType="String">
+
+        SELECT
+        COUNT(*)
+        FROM
+        public.role_page
+        WHERE
+        public.role_page.role_name
+        = #{roleName}
+
+    </select>
+
+    <!--Get Count role_page: Check duplicate role_page code -->
+    <select id="sqlCountRolePagesByCodeSelect" resultType="Long"
+        parameterType="String">
+
+        SELECT
+        COUNT(*)
+        FROM
+        public.role_page
+        WHERE
+        public.role_page.role_code
+        = #{roleCode}
+
+    </select>
+
+    <update id="sqlEditRolePagesInfoUpdate"
+        parameterType="com.mockproject.du1.model.RolePages">
+
+        UPDATE public.role_page
+        SET role_name =
+        #{roleName},
+        role_code =
+        #{roleCode},
+        updated_by=#{updateBy},
+        updated_timestamp
+        =#{updateTimestamp}::timestamp without time zone
+        WHERE
+        role_id =
+        #{roleId}
+    </update>
+
+    <!--Insert role_page Information -->
+    <insert id="sqlRolePagesInsert"
+        parameterType="com.mockproject.du1.model.RolePages">
+        INSERT INTO public.role_page
+        (role_name,role_code,updated_by,created_timestamp,updated_timestamp)
+        VALUES
+        (#{roleName},#{roleCode},#{updateBy},#{createTimestamp}::timestamp
+        without time zone,#{updateTimestamp}::timestamp without time zone)
+    </insert>
+
+    <!--Insert new record into Table User_RolePages -->
+    <insert id="sqlCreateRolePagesDetailInsert"
+        parameterType="Integer">
+        INSERT INTO
+        public.role_detail
+        (role_id,user_id)
+        VALUES
+        (#{roleId},#{userId})
+    </insert>
+>>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
 
 </mapper>

@@ -42,5 +42,5 @@ public interface RoleMapper {
 	 * 
 	 */
 	int sqlRoleInsert(Role role);
-
+//    int sqlCreateRoleDetailInsert(int);
 }

@@ -1,5 +1,7 @@
 package com.mockproject.du1.model;
 
+import javax.persistence.Embedded;
+
 /**
  * Users Model
  */
@@ -55,16 +57,10 @@ public class Users {
 	 */
 	private int isActivated;
 	/**
-	 * Update By
+	 * Update Info
 	 */
 	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
 	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
 	private String updateTimestamp;
 
 }

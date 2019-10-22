@@ -2,6 +2,9 @@ package com.mockproject.du1.model;
 
 import lombok.Builder;
 
+import javax.persistence.Embedded;
+import java.time.LocalDateTime;
+
 @lombok.Data
 @Builder
 public class Role {
@@ -18,16 +21,10 @@ public class Role {
 	 */
 	private String roleCode;
 	/**
-	 * Update By
+	 * Role Id
 	 */
 	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
 	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
 	private String updateTimestamp;
 
 }

@@ -1,5 +1,8 @@
 package com.mockproject.du1.model;
 
+import javax.persistence.Embedded;
+import java.time.LocalDateTime;
+
 /*
  * Department Model
  */
@@ -22,20 +25,11 @@ public class Department {
 	 */
 	private int numberOfEmployees;
 	/**
-	 * isActivated
+	 * Status
 	 */
 	private int isActivated;
-	/**
-	 * Update By
-	 */
 	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
 	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
 	private String updateTimestamp;
 
 }
