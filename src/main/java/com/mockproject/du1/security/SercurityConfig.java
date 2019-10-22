@@ -45,7 +45,8 @@ public class SercurityConfig extends WebSecurityConfigurerAdapter {
 
 				// .antMatchers(HttpMethod.GET, "/rest/**").access("hasRole('ROLE_ADMIN') or
 				// hasRole('ROLE_CUSTOMER')")
-				// .antMatchers(HttpMethod.POST, "/rest/**").permitAll()
+				.antMatchers(HttpMethod.GET, "/rest/**").permitAll()
+				.antMatchers(HttpMethod.POST, "/rest/**").permitAll()
 				.antMatchers(HttpMethod.DELETE, "/rest/**").permitAll().and()
 				.addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class)
 				.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler());

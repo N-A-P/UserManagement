@@ -2,7 +2,101 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mockproject.du1.mapper.RoleMapper">
+	<!--Get List All Role Result Map -->
+	<resultMap id="GetRoleResultMap"
+		type="com.mockproject.du1.model.Role">
+		<result property="roleId" column="role_id" />
+		<result property="roleName" column="role_code" />
+		<result property="roleCode" column="role_name" />
+		<result property="updateBy" column="updated_by" />
+		<result property="createTimestamp" column="created_timestamp" />
+		<result property="updateTimestamp" column="updated_timestamp" />
 
+	</resultMap>
+
+	<!--Get List All Role Query -->
+	<select id="sqlGetAllRoleSelect" resultMap="GetRoleResultMap">
+		SELECT role_id,
+		role_code, role_name, updated_by, created_timestamp, updated_timestamp
+		FROM public.role
+
+	</select>
+
+	<!--Get Role By Id Query -->
+	<select id="sqlGetRoleByIdSelect" resultMap="GetRoleResultMap">
+		SELECT role_id,
+		role_code, role_name, updated_by, created_timestamp,
+		updated_timestamp
+		FROM public.role WHERE role_id = #{roleId}
+
+	</select>
+
+	<!--Get Role By Name Or Code Query -->
+	<select id="sqlGetRoleByNameOrCodeSelect"
+		resultMap="GetRoleResultMap">
+		<bind name="_roleCode" value="'%' + extractCondition + '%'" />
+		<bind name="_roleName" value="'%' + extractCondition + '%'" />
+		SELECT role_id,
+		role_code, role_name, updated_by, created_timestamp,
+		updated_timestamp
+		FROM public.role WHERE role_code LIKE #{_roleCode} OR
+		role_name LIKE #{_roleName}
+
+	</select>
+
+	<!--Get Count role: Check duplicate role name -->
+	<select id="sqlCountRoleByNameSelect" resultType="Long"
+		parameterType="String">
+
+		SELECT
+		COUNT(*)
+		FROM
+		public.role
+		WHERE
+		public.role.role_name
+		= #{roleName}
+
+	</select>
+
+	<!--Get Count role: Check duplicate role code -->
+	<select id="sqlCountRoleByCodeSelect" resultType="Long"
+		parameterType="String">
+
+		SELECT
+		COUNT(*)
+		FROM
+		public.role
+		WHERE
+		public.role.role_code
+		= #{roleCode}
+
+	</select>
+
+	<update id="sqlEditRoleInfoUpdate"
+		parameterType="com.mockproject.du1.model.Role">
+
+		UPDATE public.role
+		SET role_name =
+		#{roleName},
+		role_code =
+		#{roleCode},
+		updated_by=#{updateBy},
+		updated_timestamp
+		=#{updateTimestamp}::timestamp without time zone
+		WHERE
+		role_id =
+		#{roleId}
+	</update>
+
+	<!--Insert role Information -->
+	<insert id="sqlRoleInsert"
+		parameterType="com.mockproject.du1.model.Role">
+		INSERT INTO public.role
+		(role_name,role_code,updated_by,created_timestamp,updated_timestamp)
+		VALUES
+		(#{roleName},#{roleCode},#{updateBy},#{createTimestamp}::timestamp
+		without time zone,#{updateTimestamp}::timestamp without time zone)
+	</insert>
 
 	<!--Insert new record into Table User_Role -->
 	<insert id="sqlCreateRoleDetailInsert" parameterType="Integer">

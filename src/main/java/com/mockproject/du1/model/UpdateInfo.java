@@ -3,7 +3,6 @@ package com.mockproject.du1.model;
 import lombok.Builder;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @lombok.Data
 @Builder
@@ -15,11 +14,11 @@ public class UpdateInfo implements Serializable {
 	/**
 	 * Create Timestamp
 	 */
-	private LocalDateTime createTimestamp;
+	private String createTimestamp;
 	/**
 	 * Update Timestamp
 	 */
-	private LocalDateTime updateTimestamp;
+	private String updateTimestamp;
 
 
 

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mockproject.du1.mapper.PagesMapper">
+	<!--Get List All page Result Map -->
+	<resultMap id="GetPagesResultMap"
+		type="com.mockproject.du1.model.Pages">
+		<result property="pagesId" column="page_id" />
+		<result property="pagesName" column="page_name" />
+		<result property="pagesCode" column="page_code" />
+		<result property="pagesUrl" column="url" />
+		<result property="updateBy" column="updated_by" />
+		<result property="createTimestamp" column="created_timestamp" />
+		<result property="updateTimestamp" column="updated_timestamp" />
+
+	</resultMap>
+
+	<!--Get List All Pages Query -->
+	<select id="sqlGetAllPagesSelect" resultMap="GetPagesResultMap">
+		SELECT page_id,
+		page_name, page_code,url, updated_by, created_timestamp,
+		updated_timestamp
+		FROM public.pages
+
+	</select>
+
+	<!--Get Pages By Id Query -->
+	<select id="sqlGetPagesByIdSelect" resultMap="GetPagesResultMap">
+		SELECT page_id,
+		page_name, page_code,url, updated_by, created_timestamp,
+		updated_timestamp
+		FROM public.page WHERE page_id = #{pageId}
+
+	</select>
+
+	<!--Get Pages By Name Or Code Query -->
+	<select id="sqlGetPagesByNameOrCodeSelect"
+		resultMap="GetPagesResultMap">
+		<bind name="_pageCode" value="'%' + extractCondition + '%'" />
+		<bind name="_pageName" value="'%' + extractCondition + '%'" />
+		SELECT page_id,
+		page_name, page_code,url, updated_by,
+		created_timestamp,
+		updated_timestamp
+		FROM public.page WHERE page_code
+		LIKE #{_pageCode} OR
+		page_name LIKE #{_pageName}
+
+	</select>
+
+	<!--Get Count page: Check duplicate page name -->
+	<select id="sqlCountPagesByNameSelect" resultType="Long"
+		parameterType="String">
+
+		SELECT
+		COUNT(*)
+		FROM
+		public.page
+		WHERE
+		public.page.page_name
+		= #{pageName}
+
+	</select>
+
+	<!--Get Count page: Check duplicate page code -->
+	<select id="sqlCountPagesByCodeSelect" resultType="Long"
+		parameterType="String">
+
+		SELECT
+		COUNT(*)
+		FROM
+		public.page
+		WHERE
+		public.page.page_code
+		= #{pageCode}
+
+	</select>
+
+	<update id="sqlEditPagesInfoUpdate"
+		parameterType="com.mockproject.du1.model.Pages">
+
+		UPDATE public.page
+		SET page_name =
+		#{pageName},
+		page_code =
+		#{pageCode},
+		url =
+		#{pagesUrl},
+		updated_by=#{updateBy},
+		updated_timestamp
+		=#{updateTimestamp}::timestamp without time zone
+		WHERE
+		page_id =
+		#{pageId}
+	</update>
+
+	<!--Insert Pages Information -->
+	<insert id="sqlPagesInsert"
+		parameterType="com.mockproject.du1.model.Pages">
+		INSERT INTO public.page
+		(page_name,page_code,url,updated_by,created_timestamp,updated_timestamp)
+		VALUES
+		(#{pageName},#{pageCode},#{pagesUrl},#{updateBy},#{createTimestamp}::timestamp
+		without time zone,#{updateTimestamp}::timestamp without time zone)
+	</insert>
+
+
+
+</mapper>
