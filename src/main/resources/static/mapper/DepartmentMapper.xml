@@ -218,7 +218,8 @@
 	</update>
 
 	<!--Update User Department Status -->
-	<update id="sqlUserDepartmentStatusUpdate">
+	<update id="sqlRemoveEmployeeForDeparmentUpdate"
+		parameterType="com.mockproject.du1.model.UserDeparment">
 
 		UPDATE public.user_department
 		SET is_activated =
@@ -237,7 +238,8 @@
 		INSERT INTO public.department
 		(department_code,department_name,number_of_employee,is_activated,updated_by,created_timestamp,updated_timestamp)
 		VALUES
-		(#{departmentCode},#{departmentName},#{numberOfEmployees},#{isActivated},#{updateBy},#{createTimestamp}::timestamp without time zone,#{updateTimestamp}::timestamp without time zone)
+		(#{departmentCode},#{departmentName},#{numberOfEmployees},#{isActivated},#{updateBy},#{createTimestamp}::timestamp
+		without time zone,#{updateTimestamp}::timestamp without time zone)
 	</insert>
 
 	<!--Insert New Employee For Department -->
@@ -246,7 +248,8 @@
 		INSERT INTO public.user_department
 		(department_id,user_id,stay_or_leave,join_date,leave_date,updated_by,created_timestamp,updated_timestamp)
 		VALUES
-		(#{departmentId},#{userId},#{stayOrLeave},#{joinDate},#{leaveDate},#{updateBy},#{createTimestamp}::timestamp without time zone,#{updateTimestamp}::timestamp without time zone)
+		(#{departmentId},#{userId},#{stayOrLeave},#{joinDate},#{leaveDate},#{updateBy},#{createTimestamp}::timestamp
+		without time zone,#{updateTimestamp}::timestamp without time zone)
 	</insert>
 
 </mapper>
