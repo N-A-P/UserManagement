@@ -117,20 +117,20 @@ public class EmailService {
                 Boolean nonErrorCustomer = true;
                 Row row = rowIterator.next();
                 Iterator<Cell> cellIterator = row.cellIterator();
-                String errorCause = "";
+                String errorCause = "detail:";
                 try {
                     if (!notNull(row.getCell(2))) {
-                        errorCause +=getMessage("emailService.email.null",rowCount);
+                        errorCause+=getMessage("emailService.email.null",rowCount);
                         nonErrorCustomer = false;
                     } else {
                         email = row.getCell(2).getStringCellValue();
                         if (!isValid(row.getCell(2).getStringCellValue())) {
-                            errorCause += "error[" + rowCount + ",2] email inValid";
+                            errorCause+=getMessage("emailService.email.inValid",rowCount);
                             nonErrorCustomer = false;
                         } else {
                             Customer customer = customerMapper.sqlGetCustomerByEmailSelect(email);
                             if (notNull(customer)) {
-                                errorCause += "error[" + rowCount + ",2] email Exit";
+                                errorCause+=getMessage("emailService.email.exit",rowCount);
                                 nonErrorCustomer = false;
                             }
                         }
@@ -139,9 +139,9 @@ public class EmailService {
                     String LastName = "";
                     if (!nonEmpty(row.getCell(3).getStringCellValue())) {
                         if (!nonErrorCustomer) {
-                            errorCause += " And error[" + rowCount + ",3] null name";
+                            errorCause+=" And "+getMessage("emailService.name.null",rowCount,3);
                         } else {
-                            errorCause += "error[" + rowCount + ",3] null name";
+                            errorCause+=getMessage("emailService.name.null",rowCount,3);
                             nonErrorCustomer = false;
                         }
                     } else {
@@ -149,9 +149,9 @@ public class EmailService {
                     }
                     if (!nonEmpty(row.getCell(4).getStringCellValue())) {
                         if (!nonErrorCustomer) {
-                            errorCause += " And error[" + rowCount + ",4] null name";
+                            errorCause+=" And "+getMessage("emailService.name.null",rowCount,4);
                         } else {
-                            errorCause += "error[" + rowCount + ",4] null name";
+                            errorCause+=getMessage("emailService.name.null",rowCount,4);
                             nonErrorCustomer = false;
                         }
                     } else {
@@ -246,7 +246,6 @@ public class EmailService {
         List<Customer> customers = customerMapper.sqlGetAllCustomer();
         List<Integer> integers = new ArrayList<>();
         for (Campaign campaign : campaigns) {
-
             for (Customer customer : customerMapper.sqlGetCustomerByCampaignAndMaxTime(campaign.getCampaignId())) {
                 int check = 0;
                 for (Customer customerExit : customers) {

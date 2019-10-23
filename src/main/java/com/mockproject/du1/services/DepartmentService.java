@@ -248,8 +248,8 @@ public class DepartmentService {
 	 */
 	public int departmentInsert(Department department) throws DuplicateKeyException, SQLException {
 		try {
-			HttpSession session = request.getSession(false);
-			usernameLogin = (String) session.getAttribute("usernameLogin");
+//			HttpSession session = request.getSession(false);
+//			usernameLogin = (String) session.getAttribute("usernameLogin");
 		} catch (Exception e) {
 		}
 
