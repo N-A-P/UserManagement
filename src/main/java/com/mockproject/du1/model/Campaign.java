@@ -31,16 +31,17 @@ public class Campaign {
 	 * Campaign end Date
 	 */
 	private String endDate;
-	/**
-	 * Campaign email Template Id
-	 */
-	private int emailTemplateId;
+
 	/**
 	 * updateInfo
 	 */
 	private String updateBy;
 	private String createTimestamp;
 	private String updateTimestamp;
+	/**
+	 * Campaign email Template Id
+	 */
+	private int emailTemplateId;
 
 
 

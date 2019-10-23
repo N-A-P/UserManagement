@@ -11,8 +11,8 @@
         <result property="title" column="title"/>
         <result property="body" column="body"/>
         <result property="updateBy" column="updated_by"/>
-        <result property="createTimestamp" column="created_timestapm"/>
-        <result property="updateTimestamp" column="updated_timestapm"/>
+        <result property="createTimestamp" column="created_timestamp"/>
+        <result property="updateTimestamp" column="updated_timestamp"/>
 
 
     </resultMap>
@@ -34,8 +34,8 @@
 		email_template_id,
 		title, body,
 		updated_by,
-		created_timestapm,
-		updated_timestapm
+		created_timestamp,
+		updated_timestamp
 		FROM
 		public.email_template
 
@@ -48,8 +48,8 @@
 	    title,
 	    body,
 	    updated_by,
-	    created_timestapm,
-	    updated_timestapm
+	    created_timestamp,
+	    updated_timestamp
 		FROM
 		public.email_template
         WHERE
@@ -67,9 +67,9 @@
 	    b.email_template_id,
 	    b.title,
 	    b.body,
-	    b.created_timestapm,
+	    b.created_timestamp,
 	    b.updated_by,
-	    b.updated_timestapm
+	    b.updated_timestamp
 		FROM
 		public.campaign a inner join public.email_template b
 		on

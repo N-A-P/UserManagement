@@ -85,7 +85,7 @@ public class EmailController {
     }
 
 
-    @RequestMapping(value = "/addCampaignById", method = RequestMethod.POST)
+    @RequestMapping(value = "/addCampaign", method = RequestMethod.POST)
     public ResponseEntity addCampaign(@RequestBody Campaign campaign) {
         if (emailService.addCampaign(campaign).equalsIgnoreCase("success"))
             return new ResponseEntity<String>("success", HttpStatus.OK);

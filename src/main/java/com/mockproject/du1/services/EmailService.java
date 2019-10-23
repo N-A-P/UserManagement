@@ -33,7 +33,9 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.util.Assert;
 
+import static com.mockproject.du1.common.DataUtil.nonEmpty;
 import static com.mockproject.du1.common.DataUtil.notNull;
+import static com.mockproject.du1.common.MessageUtils.getMessage;
 
 @Service
 public class EmailService {
@@ -49,7 +51,6 @@ public class EmailService {
     public boolean sendEmailToAll(List<Customer> Customers, int sendEmailUserId, int campaignId) {
         if (Customers != null) {
             try {
-
                 EmailTemplate email = emailMapper.sqlGetEmailTemplateSelectByCampaintId(campaignId);
                 LocalDate localDate = LocalDate.now();
                 Date date = new Date(localDate.atStartOfDay(ZoneId.of("America/New_York")).toEpochSecond() * 1000);
@@ -104,7 +105,6 @@ public class EmailService {
     public XSSFWorkbook coverExcellFileToArray(byte[] file) throws IOException {
         List<String> error = new ArrayList<>();
         try {
-            Boolean nonErrorCustomer = true;
             int rowCount = 1;
             String email = null;
             InputStream is = new ByteArrayInputStream(file);
@@ -114,12 +114,13 @@ public class EmailService {
             rowIterator.next();
             rowIterator.next();
             while (rowIterator.hasNext()) {
+                Boolean nonErrorCustomer = true;
                 Row row = rowIterator.next();
                 Iterator<Cell> cellIterator = row.cellIterator();
                 String errorCause = "";
                 try {
                     if (!notNull(row.getCell(2))) {
-                        errorCause += "error[" + rowCount + ",2] null email";
+                        errorCause +=getMessage("emailService.email.null",rowCount);
                         nonErrorCustomer = false;
                     } else {
                         email = row.getCell(2).getStringCellValue();
@@ -136,28 +137,37 @@ public class EmailService {
                     }
                     String firstName = "";
                     String LastName = "";
-                    if (!notNull(row.getCell(3))) {
-                        errorCause += "error[" + rowCount + ",3] null name";
-                        nonErrorCustomer = false;
+                    if (!nonEmpty(row.getCell(3).getStringCellValue())) {
+                        if (!nonErrorCustomer) {
+                            errorCause += " And error[" + rowCount + ",3] null name";
+                        } else {
+                            errorCause += "error[" + rowCount + ",3] null name";
+                            nonErrorCustomer = false;
+                        }
                     } else {
                         firstName = row.getCell(3).getStringCellValue();
                     }
-                    if (!notNull(row.getCell(4))) {
-                        errorCause += "error[" + rowCount + ",4] null name";
-                        nonErrorCustomer = false;
+                    if (!nonEmpty(row.getCell(4).getStringCellValue())) {
+                        if (!nonErrorCustomer) {
+                            errorCause += " And error[" + rowCount + ",4] null name";
+                        } else {
+                            errorCause += "error[" + rowCount + ",4] null name";
+                            nonErrorCustomer = false;
+                        }
                     } else {
                         LastName = row.getCell(4).getStringCellValue();
                     }
 
-                    Customer customer = Customer.builder()
-                            .customerEmail(email)
-                            .firstName(firstName)
-                            .lastName(LastName)
-                            .dob(row.getCell(5).getStringCellValue() == "" ? null : row.getCell(5).getStringCellValue())
-                            .address(row.getCell(6).getStringCellValue())
-                            .company(row.getCell(7).getStringCellValue())
-                            .build();
+
                     if (nonErrorCustomer) {
+                        Customer customer = Customer.builder()
+                                .customerEmail(email)
+                                .firstName(firstName)
+                                .lastName(LastName)
+                                .dob(row.getCell(5).getStringCellValue() == "" ? null : row.getCell(5).getStringCellValue())
+                                .address(row.getCell(6).getStringCellValue())
+                                .company(row.getCell(7).getStringCellValue())
+                                .build();
                         customerMapper.sqlCreateCustomerInsert(customer);
                         errorCause = "success";
                     }
@@ -202,6 +212,7 @@ public class EmailService {
         emailMapper.sqlEmailUpdate(email);
         return "success";
     }
+
     public String addTopic(EmailTemplate email) {
 
         if (emailMapper.sqlGetEmailSelectById(email.getEmaiTemplateId()) != null) {
@@ -232,19 +243,19 @@ public class EmailService {
     public List<CampaignDetail> getAllCampaignDetail() {
         List<CampaignDetail> campaignDetails = new ArrayList<>();
         List<Campaign> campaigns = campaignMapper.sqlGetAllCampain();
-        List<Customer> customers=customerMapper.sqlGetAllCustomer();
-        List<Integer> integers=new ArrayList<>();
+        List<Customer> customers = customerMapper.sqlGetAllCustomer();
+        List<Integer> integers = new ArrayList<>();
         for (Campaign campaign : campaigns) {
 
-            for(Customer customer:customerMapper.sqlGetCustomerByCampaignAndMaxTime(campaign.getCampaignId())){
-                int check=0;
-               for(Customer customerExit:customers){
-                   if(customerExit.getCustomerId()==customer.getCustomerId()){
-                       check=1;
-                       integers.add(1);
-                   }
-               }
-               if(check==0) integers.add(0);
+            for (Customer customer : customerMapper.sqlGetCustomerByCampaignAndMaxTime(campaign.getCampaignId())) {
+                int check = 0;
+                for (Customer customerExit : customers) {
+                    if (customerExit.getCustomerId() == customer.getCustomerId()) {
+                        check = 1;
+                        integers.add(1);
+                    }
+                }
+                if (check == 0) integers.add(0);
             }
             CampaignDetail campaignDetail = CampaignDetail.builder()
                     .campaign(campaign)
