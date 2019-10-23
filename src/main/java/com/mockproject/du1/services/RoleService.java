@@ -107,9 +107,9 @@ public class RoleService {
 					// set value for field public.role.updated_by
 					role.setUpdateBy(usernameLogin);
 					// set value for field public.role.created_timestamp
-					role.setCreateTimestamp(DataUtil.getCurrentTimestamp().toString());
+					role.setCreateTimestamp(currentTimestamp);
 					// set value for field public.role.updated_timestamp
-					role.setUpdateTimestamp(DataUtil.getCurrentTimestamp().toString());
+					role.setUpdateTimestamp(currentTimestamp);
 
 					// return result update database query
 					return roleMapper.sqlEditRoleInfoUpdate(role);
