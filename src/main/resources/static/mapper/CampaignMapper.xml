@@ -13,10 +13,10 @@
         <result property="duration" column="duration"/>
         <result property="startDate" column="start_date"/>
         <result property="endDate" column="end_date"/>
-        <result property="emailTemplateId" column="email_template_id"/>
         <result property="updateBy" column="updated_by"/>
         <result property="createTimestamp" column="created_timestamp"/>
         <result property="updateTimestamp" column="updated_timestamp"/>
+        <result property="emailTemplateId" column="email_template_id"/>
 
     </resultMap>
 
@@ -36,8 +36,8 @@
 		 start_date,
 		 end_date,
 		 updated_by,
-		 created_timestapm,
-		 updated_timestapm,
+		 created_timestamp,
+		 updated_timestamp,
 		 email_template_id
         FROM public.campaign;
 	</select>
@@ -51,8 +51,8 @@
         start_date=#{startDate},
         end_date=#{endDate},
         updated_by=#{updateBy},
-        created_timestapm=#{createTimestamp},
-        updated_timestapm=#{updateTimestamp},
+        created_timestamp=#{createTimestamp},
+        updated_timestamp=#{updateTimestamp},
         email_template_id=#{emailTemplateId}
         WHERE campaign_id=#{campaignId};
 

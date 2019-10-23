@@ -60,30 +60,34 @@
 	    dob,
 	    email,
 	    is_activated,
-        address,
-	    company,
 	    updated_by,
         created_timestamp,
-        updated_timestamp
+        updated_timestamp,
+        address,
+	    company
 		FROM
 		public.customer
 	</select>
     <select id="sqlGetCustomerByCampaignAndMaxTime"
             resultMap="GetCustomerResultMap" parameterType="int">
-	select c.customer_id,
+	select
+	 c.customer_id,
 	 c.first_name,
 	 c.last_name,
-	 c.dob, c.email,
-	 c.address, c.company,
-	 c.is_activated, c.updated_by,
+	 c.dob,
+	 c.email,
+	 c.is_activated,
+	 c.updated_by,
 	 c.created_timestamp,
-	 c.updated_timestamp
+	 c.updated_timestamp,
+	 c.address,
+	 c.company
 	  from
 	  campaign a inner join campaign_customer b
 	  on a.campaign_id=b.campaign_id
 	  inner join customer c on c.customer_id=b.customer_id
 	  where
-	  b.send_date=(select max(send_date) from campaign_customer d where d.campaign_id=a.campaign_id)
+	  b.sent_date=(select max(sent_date) from campaign_customer d where d.campaign_id=a.campaign_id)
 	  and a.campaign_id=#{CampaignId}
 
 	</select>

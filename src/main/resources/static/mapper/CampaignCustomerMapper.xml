@@ -9,7 +9,7 @@
 	<resultMap id="GetMailHistoryResultMap"
 		type="com.mockproject.du1.model.CampaignCustomer">
 		<result property="campaignCustomerId" column="campaign_customer_id" />
-		<result property="sendTime" column="send_time" />
+		<result property="sendTime" column="sent_date" />
 		<result property="joinDate" column="join_date" />
 		<result property="updateBy" column="updated_by" />
 		<result property="createTimestamp" column="created_timestamp" />
@@ -22,7 +22,7 @@
 
 	<insert id="sqlInsertMailHistoryl" parameterType="com.mockproject.du1.model.CampaignCustomer">
 		INSERT INTO public.campaign_customer
-		(send_time,user_id,customer_id,campaign_id)
+		(sent_date,user_id,customer_id,campaign_id)
 		VALUES
 		(#{sendTime},#{userId},#{customerId},#{campaignId})
 	</insert>
@@ -31,7 +31,7 @@
 		SELECT
 		 campaign_customer_id,
 		 join_date,
-	     sent_time,
+	     sent_date,
 		 updated_by,
 		 created_timestapm,
 		 updated_timestapm,
