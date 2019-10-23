@@ -19,21 +19,21 @@ public class EmployeeOfDepartment {
 	 */
 	private String email;
 	/**
-	 * User Seniorlity
+	 * User seniority
 	 */
-	private int seniorlity;
+	private int seniority;
 	/**
-	 * User RolePagesPages Id
+	 * User Role Id
 	 */
-	private int userRolePagesId;
+	private int userRoleId;
 	/**
-	 * RolePagesPages Id
+	 * Role Id
 	 */
-	private int role_page_pageId;
+	private int roleId;
 	/**
-	 * RolePagesPages Name
+	 * Role Name
 	 */
-	private String role_page_pageName;
+	private String roleName;
 	/**
 	 * User Department Id
 	 */
