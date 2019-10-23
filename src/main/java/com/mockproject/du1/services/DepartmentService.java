@@ -295,7 +295,8 @@ public class DepartmentService {
 
 			for (EmployeeOfDepartment employeeOfDepartment : listEmployeeOfDepartment) {
 				try {
-					if (departmentMapper.sqlNewEmployeeForDeparmentInsert(employeeOfDepartment, STATUS_STAY) == 0) {
+					if (departmentMapper.sqlNewEmployeeForDeparmentInsert(employeeOfDepartment, STATUS_STAY,
+							STATUS_STAY) == 0) {
 						listRecordError.add(employeeOfDepartment);
 					}
 				} catch (DuplicateKeyException e) {

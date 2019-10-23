@@ -168,12 +168,12 @@
 
 		WHERE
 		<if test="action == 1">
-			e.department_id NOT IN (#{department_id})
+			e.department_id NOT IN (#{EmployeeOfDepartment.departmentId})
 			AND
 			d.stay_or_leave IN (0,1)
 		</if>
 		<if test="action == 2">
-			e.department_id = #{department_id}
+			e.department_id = #{EmployeeOfDepartment.departmentId}
 			AND d.stay_or_leave =
 			#{statusUserDepartment}
 		</if>
