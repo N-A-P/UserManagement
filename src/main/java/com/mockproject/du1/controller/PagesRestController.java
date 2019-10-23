@@ -134,12 +134,9 @@ public class PagesRestController {
 		} catch (DuplicateKeyException e) {
 			return new ResponseEntity<String>("Duplicated Key!!! Database rollback!!! Adding new Pages failed!!!",
 					HttpStatus.BAD_REQUEST);
-<<<<<<< HEAD
 		} catch (Exception e) {
 			return new ResponseEntity<String>("SQL Error Code: " + ((SQLException) e).getErrorCode(),
 					HttpStatus.BAD_REQUEST);
-=======
->>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
 		}
 
 	}

@@ -89,21 +89,22 @@ public class RoleRestController {
 	public ResponseEntity<String> updateRoleInfomation(@Valid @RequestBody Role role) {
 
 		try {
+			int checkUpdateSuccess = roleService.editRoleInfoUpdate(role);
 
-			if (roleService.editRoleInfoUpdate(role) == CONSTANT_CHECK_DUPLICATED_CODE) {
+			if (checkUpdateSuccess == CONSTANT_CHECK_DUPLICATED_CODE) {
 				return new ResponseEntity<String>("Duplicated Role code!!! Please Check!!!", HttpStatus.BAD_REQUEST);
 
-			} else if (roleService.editRoleInfoUpdate(role) == CONSTANT_CHECK_DUPLICATED_NAME) {
+			} else if (checkUpdateSuccess == CONSTANT_CHECK_DUPLICATED_NAME) {
 				return new ResponseEntity<String>("Duplicated Role name!!! Please Check!!!", HttpStatus.BAD_REQUEST);
 
-			} else if (roleService.editRoleInfoUpdate(role) == 0) {
+			} else if (checkUpdateSuccess == 0) {
 				return new ResponseEntity<String>("Database rollback!!! Modify Role failed!!!", HttpStatus.BAD_REQUEST);
 			} else {
 				return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 			}
 
-		} catch (SQLException e) {
-			return new ResponseEntity<String>("SQL Error Code: " + e.getErrorCode(), HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("SQL Error Code: " + ((SQLException) e).getErrorCode(), HttpStatus.BAD_REQUEST);
 		}
 
 	}
@@ -115,6 +116,7 @@ public class RoleRestController {
 	public ResponseEntity<String> insertRole(@Valid @RequestBody Role role) {
 
 		try {
+
 			int checkInsertSuccess = roleService.addNewRole(role);
 
 			if (checkInsertSuccess == CONSTANT_CHECK_DUPLICATED_CODE) {
@@ -132,8 +134,8 @@ public class RoleRestController {
 		} catch (DuplicateKeyException e) {
 			return new ResponseEntity<String>("Duplicated Key!!! Database rollback!!! Adding new Role failed!!!",
 					HttpStatus.BAD_REQUEST);
-		} catch (SQLException e) {
-			return new ResponseEntity<String>("SQL Error Code: " + e.getErrorCode(), HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("SQL Error Code: " + ((SQLException) e).getErrorCode(), HttpStatus.BAD_REQUEST);
 		}
 
 	}
