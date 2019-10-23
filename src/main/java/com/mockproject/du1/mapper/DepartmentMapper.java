@@ -88,6 +88,6 @@ public interface DepartmentMapper {
 	 *
 	 */
 	int sqlNewEmployeeForDeparmentInsert(@Param("EmployeeOfDepartment") EmployeeOfDepartment employeeOfDepartment,
-			@Param("status") int status);
+			@Param("statusDepartment") int statusDepartment, @Param("statusUser") int statusUser);
 
 }
