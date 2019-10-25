@@ -39,5 +39,15 @@
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/ttthuong1/.m2/repository/org/postgresql/postgresql/42.2.6/postgresql-42.2.6.jar" sourcepath="C:/Users/ttthuong1/.m2/repository/org/postgresql/postgresql/42.2.6/postgresql-42.2.6-sources.jar">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+			<attribute name="test" value="true"/>
+			<attribute name="maven.groupId" value="org.postgresql"/>
+			<attribute name="maven.artifactId" value="postgresql"/>
+			<attribute name="maven.version" value="42.2.6"/>
+			<attribute name="maven.scope" value="runtime"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

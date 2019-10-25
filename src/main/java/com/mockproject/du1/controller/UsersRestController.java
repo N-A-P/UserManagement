@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mockproject.du1.model.MailOfUser;
+import com.mockproject.du1.common.CustomException;
+import com.mockproject.du1.common.ValidateException;
 import com.mockproject.du1.model.Users;
 import com.mockproject.du1.model.UsersFull;
 import com.mockproject.du1.services.EmailService;
@@ -37,40 +38,35 @@ public class UsersRestController {
 		return new ResponseEntity<List<Users>>(usersService.getAllUser(), HttpStatus.OK);
 	}
 
-
-
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
-		user.setRegisteredDate(java.time.LocalDate.now().toString());
-		user.setEndDate(java.time.LocalDate.now().toString());
-		user.setSeniority(0);
-		user.setIsActivated(1);
-		if (usersService.registerNewCustomer(user)) {
-			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+		try {
+			if (usersService.registerNewCustomer(user)) {
+				return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
+			} else {
+				return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+			}
+		} catch (CustomException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);
+		} catch (ValidateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);
 		}
 	}
-
-	/* ---------------- SEND EMAIL TO LIST OF USERS ------------------------ */
-//	@RequestMapping(value = "/email", method = RequestMethod.POST)
-//	public ResponseEntity<List<Users>> coverExcel(@RequestBody File file) throws IOException {
-//		List<String> emails = emailService.coverExcellFileToArray(file);
-//		List<Users> users = new ArrayList<>();
-//		users = usersService.getUsersListByEmails(emails);
-//		return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
-//	}
 
 	/* ---------------- LOGIN ------------------------ */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";
 		HttpStatus httpStatus = null;
-		
+
 		try {
 			if (usersService.checkLogin(user)) {
-				Users userToCheck=usersService.getUserByUsername(user.getUsername());
+				Users userToCheck = usersService.getUserByUsername(user.getUsername());
 				if (userToCheck.getIsActivated() == 1) {
 					result = jwtService.generateTokenLogin(user.getUsername());
 					httpStatus = HttpStatus.OK;

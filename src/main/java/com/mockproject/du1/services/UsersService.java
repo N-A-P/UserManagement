@@ -1,13 +1,19 @@
 package com.mockproject.du1.services;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import com.mockproject.du1.common.CustomException;
+import com.mockproject.du1.common.EmailValidate;
+import com.mockproject.du1.common.ValidateException;
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
 import com.mockproject.du1.model.Users;
@@ -16,6 +22,7 @@ import com.mockproject.du1.model.UsersFull;
 @Service
 public class UsersService {
 
+	private String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 	@Autowired
 	private UsersMapper usersMapper;
 	@Autowired
@@ -81,13 +88,21 @@ public class UsersService {
 	 * ---------------- ADD NEW USER TO TABLE USER, ROLE_DETAIL
 	 * ------------------------
 	 */
-	public boolean registerNewCustomer(Users user) {
-		if (((getUserByUsername(user.getUsername())) == null) && ((getUserByEmail(user.getEmail())) == null))
-			if (usersMapper.sqlCreateUserInsert(user) != 0) {
-//				roleMapper.sqlCreateRoleDetailInsert(1,usersMapper.sqlGetUserByUsernameSelect(user.getUsername()).getUserId());
+	public boolean registerNewCustomer(Users user) throws CustomException, ValidateException {
+		if (EmailValidate.isEmail(user.getEmail())) {
+			try {
+				user.setRegisteredDate(java.time.LocalDate.now().toString());
+				user.setSeniority(0);
+				user.setIsActivated(0);
+				user.setCreateTimestamp(currentTimestamp);
+				usersMapper.sqlCreateUserInsert(user);
 				return true;
+			} catch (DuplicateKeyException e) {
+				throw new CustomException("Email or Username existed!");
 			}
-		return false;
+		} else {
+			throw new ValidateException("Email format incorrect");
+		}
 	}
 
 	/*
