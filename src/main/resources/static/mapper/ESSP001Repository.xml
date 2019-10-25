@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+    "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="jp.co.jip.itrade.ap.repository.ESSP001Repository">
+
+	<!--会員役割ＩＤ用リストデータ取得 -->
+	<resultMap id="SBCT505ResultMap"
+		type="jp.co.jip.itrade.ap.model.common.SBCT505">
+		<result property="kaiinYakuwariId" column="会員役割ＩＤ" />
+		<result property="kaiinYakuwarMei" column="会員役割名" />
+	</resultMap>
+
+	<!--会員役割ＩＤ用リストデータ取得 -->
+	<select id="sqlSBCT505Select" resultMap="SBCT505ResultMap"
+		parameterType="Integer">
+
+		SELECT
+		SBCT505.会員役割ＩＤ,
+		SBCT505.会員役割名
+		FROM
+		SBCT505
+		WHERE
+		SBCT505.会員コード = #{kaiinCd}
+		WITHOUT LOCK NOWAIT
+	</select>
+
+	<!--入力可能部店方法用リストデータ取得 -->
+	<resultMap id="EBCT208ResultMap"
+		type="jp.co.jip.itrade.ap.model.app.ESSP001EBCT208">
+		<result property="code" column="コード" />
+		<result property="name" column="コード名称" />
+	</resultMap>
+
+	<!--入力可能部店方法用リストデータ取得 -->
+	<select id="sqlEBCT208Select" resultMap="EBCT208ResultMap">
+
+		SELECT
+		EBCT208.コード,
+		EBCT208.コード名称
+		FROM
+		EBCT208
+		WHERE
+		EBCT208.コードテーブル =
+		'INPUT-BUTEN-HOHO'
+
+	</select>
+
+	<!--許可部店用リストデータ取得 -->
+	<resultMap id="STMT403ResultMap"
+		type="jp.co.jip.itrade.ap.model.common.STMT403">
+		<result property="butenCd" column="部店コード" />
+		<result property="butenMei" column="部店名" />
+	</resultMap>
+
+	<!--許可部店用リストデータ取得 -->
+	<select id="sqlSTMT403Select" resultMap="STMT403ResultMap"
+		parameterType="Integer">
+
+		SELECT
+		STMT403.部店コード,
+		STMT403.部店名
+		FROM
+		STMT403
+		WHERE
+		STMT403.会員コード = #{kaiinCd}
+
+		WITHOUT LOCK NOWAIT
+	</select>
+
+	<!--許可扱者用リストデータ取得 -->
+	<resultMap id="STMT421ResultMap"
+		type="jp.co.jip.itrade.ap.model.common.STMT421">
+		<result property="butenCd" column="部店コード" />
+		<result property="atsukaiCd" column="扱者コード" />
+		<result property="atsukaiMei" column="扱者名" />
+	</resultMap>
+
+	<!--許可扱者用リストデータ取得 -->
+	<select id="sqlSTMT421Select" resultMap="STMT421ResultMap"
+		parameterType="Integer">
+
+		SELECT
+		STMT421.部店コード,
+		STMT421.扱者コード,
+		STMT421.扱者名
+		FROM
+		STMT421
+		WHERE
+		STMT421.会員コード = #{kaiinCd}
+
+		WITHOUT LOCK NOWAIT
+	</select>
+
+	<!--ユーザ情報件数取得 -->
+	<select id="sqlETMT016SelectCount" resultType="Long"
+		parameterType="jp.co.jip.itrade.ap.model.app.ESSP001SearchCondition">
+
+		SELECT
+		COUNT(*)
+		FROM (
+		SELECT DISTINCT
+		ETMT016.ユーザコード,
+		ETMT016.ユーザ名,
+		ETMT016.部店コード,
+		STMT403.部店名,
+		ETMT016.扱者コード,
+		STMT421.扱者名,
+		ETMT016.入力可能部店方法,
+		EBCT208.コード名称,
+		STMT424.データ入力許可区分
+		FROM
+		ETMT016
+
+		INNER JOIN EBCT208 ON
+		EBCT208.コードテーブル = 'INPUT-BUTEN-HOHO'
+		AND
+		CAST(ETMT016.入力可能部店方法 AS
+		CHAR(1)) = EBCT208.コード
+
+		INNER JOIN
+		STMT403 ON
+		ETMT016.会員コード =
+		STMT403.会員コード
+		AND ETMT016.部店コード = STMT403.部店コード
+
+		INNER JOIN STMT421 ON
+		ETMT016.会員コード = STMT421.会員コード
+		AND ETMT016.部店コード = STMT421.部店コード
+		AND
+		ETMT016.扱者コード =
+		STMT421.扱者コード
+
+		LEFT JOIN STMT424 ON
+		ETMT016.会員コード =
+		STMT424.会員コード
+		AND ETMT016.ユーザコード = STMT424.ユーザコード
+
+		LEFT JOIN 
+		(SELECT
+		SBCT510.会員コード,
+		SBCT510.ユーザコード,
+		MIN(SBCT510.部店コード) AS MIN_部店コード,
+		COUNT(*) AS TOTAL_部店コード
+		FROM SBCT510
+		GROUP BY
+		SBCT510.会員コード,
+		SBCT510.ユーザコード) 特定部店コード_参照 ON
+
+		特定部店コード_参照.会員コード = ETMT016.会員コード
+		AND 特定部店コード_参照.ユーザコード = ETMT016.ユーザコード
+
+		LEFT JOIN 
+		(SELECT
+		SBCT506.会員コード,
+		SBCT506.ユーザコード,
+		MIN(SBCT506.会員役割ＩＤ) AS MIN_会員役割ＩＤ,
+		COUNT(*) AS TOTAL_会員役割ＩＤ
+		FROM SBCT506
+		GROUP BY
+		SBCT506.会員コード,
+		SBCT506.ユーザコード) 会員役割ＩＤ_参照 ON
+
+		会員役割ＩＤ_参照.会員コード = ETMT016.会員コード
+		AND
+		会員役割ＩＤ_参照.ユーザコード = ETMT016.ユーザコード
+
+		WHERE
+
+		ETMT016.会員コード =
+		#{kaiinCd}
+		<if test="butenCheck">
+
+			AND ETMT016.部店コード = #{butenCd}
+		</if>
+
+		<if test="atsukaiCheck">
+
+			AND ETMT016.扱者コード = #{atsukaiCd}
+		</if>
+
+		AND ETMT016.削除日 IS NULL )
+
+		WITHOUT LOCK NOWAIT
+
+	</select>
+
+	<!--ユーザ情報取得 -->
+	<resultMap id="UserInfoResultMap"
+		type="jp.co.jip.itrade.ap.model.app.ESSP001UserInfo">
+		<result property="userCd" column="ユーザコード" />
+		<result property="userMei" column="ユーザ名" />
+		<result property="butenCd" column="部店コード" />
+		<result property="butenMei" column="部店名" />
+		<result property="atsukaiCd" column="扱者コード" />
+		<result property="atsukaiMei" column="扱者名" />
+		<result property="inputKanoButenHoho" column="入力可能部店方法" />
+		<result property="inputKanoButenHohoMei" column="入力可能部店方法名称" />
+		<result property="inputKyokaKbn" column="データ入力許可区分" />
+		<result property="tokuteiButen" column="最小_部店コード" />
+		<result property="kaiinYakuId" column="最小_会員役割ＩＤ" />
+		<result property="tokuteiButenCount" column="件数_部店コード" />
+		<result property="kaiinYakuIdCount" column="件数_会員役割ＩＤ" />
+		<result property="koshinYmdTime016" column="更新日時１" />
+		<result property="koshinYmdTime424" column="更新日時２" />
+	</resultMap>
+
+	<select id="sqlETMT016Select" resultMap="UserInfoResultMap"
+		parameterType="jp.co.jip.itrade.ap.model.app.ESSP001SearchCondition">
+
+		SELECT
+		ETMT016.ユーザコード AS ユーザコード,
+		ETMT016.ユーザ名 AS ユーザ名,
+		ETMT016.部店コード AS
+		部店コード,
+		STMT403.部店名 AS 部店名,
+		ETMT016.扱者コード AS
+		扱者コード,
+		STMT421.扱者名 AS 扱者名,
+		ETMT016.入力可能部店方法 AS 入力可能部店方法,
+		EBCT208.コード名称 AS 入力可能部店方法名称,
+		STMT424.データ入力許可区分 AS データ入力許可区分,
+		ETMT016.更新日時 AS 更新日時１,
+		STMT424.更新日時 AS
+		更新日時２,
+		特定部店コード_参照.MIN_部店コード AS 最小_部店コード,
+		会員役割ＩＤ_参照.MIN_会員役割ＩＤ AS
+		最小_会員役割ＩＤ,
+		COALESCE(特定部店コード_参照.TOTAL_部店コード,0) AS 件数_部店コード,
+		COALESCE(会員役割ＩＤ_参照.TOTAL_会員役割ＩＤ,0) AS 件数_会員役割ＩＤ
+		FROM
+		ETMT016
+
+		INNER JOIN
+		EBCT208
+		ON
+		EBCT208.コードテーブル = 'INPUT-BUTEN-HOHO'
+		AND
+		CAST(ETMT016.入力可能部店方法
+		AS CHAR(1)) = EBCT208.コード
+
+		INNER JOIN STMT403
+		ON
+		ETMT016.会員コード =
+		STMT403.会員コード
+		AND ETMT016.部店コード = STMT403.部店コード
+
+		INNER JOIN STMT421
+		ON
+		ETMT016.会員コード = STMT421.会員コード
+		AND
+		ETMT016.部店コード = STMT421.部店コード
+		AND
+		ETMT016.扱者コード = STMT421.扱者コード
+
+		LEFT JOIN STMT424 ON
+		ETMT016.会員コード =
+		STMT424.会員コード
+		AND
+		ETMT016.ユーザコード = STMT424.ユーザコード
+
+		LEFT JOIN (SELECT
+		SBCT510.会員コード,
+		SBCT510.ユーザコード,
+		MIN(SBCT510.部店コード) AS MIN_部店コード,
+		COUNT(*)
+		AS
+		TOTAL_部店コード
+		FROM
+		SBCT510
+		GROUP BY
+		SBCT510.会員コード,
+		SBCT510.ユーザコード)
+		特定部店コード_参照 ON
+
+		特定部店コード_参照.会員コード = ETMT016.会員コード
+		AND
+		特定部店コード_参照.ユーザコード =
+		ETMT016.ユーザコード
+
+		LEFT JOIN (SELECT
+		SBCT506.会員コード,
+		SBCT506.ユーザコード,
+		MIN(SBCT506.会員役割ＩＤ) AS MIN_会員役割ＩＤ,
+		COUNT(*) AS TOTAL_会員役割ＩＤ
+		FROM
+		SBCT506
+		GROUP BY
+		SBCT506.会員コード,
+		SBCT506.ユーザコード) 会員役割ＩＤ_参照 ON
+
+		会員役割ＩＤ_参照.会員コード =
+		ETMT016.会員コード
+		AND
+		会員役割ＩＤ_参照.ユーザコード =
+		ETMT016.ユーザコード
+
+		WHERE
+
+		ETMT016.会員コード =
+		#{kaiinCd}
+		<if test="butenCheck">
+
+			AND ETMT016.部店コード = #{butenCd}
+		</if>
+
+		<if test="atsukaiCheck">
+
+			AND ETMT016.扱者コード = #{atsukaiCd}
+		</if>
+		GROUP BY
+		ETMT016.ユーザコード,
+		ETMT016.ユーザ名,
+		ETMT016.部店コード,
+		STMT403.部店名,
+		ETMT016.扱者コード,
+		STMT421.扱者名,
+		ETMT016.入力可能部店方法,
+		EBCT208.コード名称,
+		STMT424.データ入力許可区分,
+		ETMT016.更新日時,
+		STMT424.更新日時,
+		会員役割ＩＤ_参照.total_会員役割ＩＤ,
+		特定部店コード_参照.TOTAL_部店コード,
+		特定部店コード_参照.MIN_部店コード,
+		会員役割ＩＤ_参照.MIN_会員役割ＩＤ
+
+		LIMIT
+		600
+
+		WITHOUT LOCK
+		NOWAIT
+
+	</select>
+
+	<!--会員役割ＩＤ取得 -->
+	<resultMap id="SBCT506ResultMap"
+		type="jp.co.jip.itrade.ap.model.common.SBCT506">
+		<id property="kaiinYakuwariId" column="会員役割ＩＤ" />
+	</resultMap>
+
+	<!--会員役割ＩＤ取得 -->
+	<select id="sqlSBCT506Select" resultMap="SBCT506ResultMap"
+		parameterType="jp.co.jip.itrade.ap.model.common.SBCT506Key">
+
+		SELECT
+		SBCT506.会員役割ＩＤ
+		FROM
+		SBCT506
+		WHERE
+		SBCT506.会員コード
+		=
+		#{kaiinCd}
+		AND SBCT506.ユーザコード = #{userCd}
+
+		WITHOUT LOCK NOWAIT
+	</select>
+
+	<!--特定部店取得 -->
+	<resultMap id="SBCT510ResultMap"
+		type="jp.co.jip.itrade.ap.model.common.SBCT510">
+		<id property="butenCd" column="部店コード" />
+	</resultMap>
+
+	<!--特定部店取得 -->
+	<select id="sqlSBCT510Select" resultMap="SBCT510ResultMap"
+		parameterType="jp.co.jip.itrade.ap.model.common.SBCT510Key">
+
+		SELECT
+		SBCT510.部店コード
+		FROM
+		SBCT510
+		WHERE
+		SBCT510.会員コード =
+		#{kaiinCd}
+		AND SBCT510.ユーザコード = #{userCd}
+
+		WITHOUT LOCK NOWAIT
+	</select>
+
+	<!--許可部店・扱者コード取得 -->
+	<resultMap id="STMT423ResultMap"
+		type="jp.co.jip.itrade.ap.model.common.STMT423">
+		<id property="butenCd" column="部店コード" />
+		<id property="atsukaiCd" column="扱者コード" />
+	</resultMap>
+
+	<select id="sqlSTMT423Select" resultMap="STMT423ResultMap"
+		parameterType="jp.co.jip.itrade.ap.model.common.STMT423Key">
+
+		SELECT
+		STMT423.部店コード,
+		STMT423.扱者コード
+		FROM
+		STMT423
+		WHERE
+		STMT423.会員コード = #{kaiinCd}
+		AND STMT423.ユーザコード = #{userCd}
+
+		WITHOUT
+		LOCK
+		NOWAIT
+
+	</select>
+
+	<!--ユーザ情報変更（営業支援ユーザ） -->
+	<update id="sqlETMT016Update">
+		UPDATE ETMT016
+		SET
+		ユーザコード = #{ETMT016.userCd},
+		更新年月日 =
+		#{ETMT016.koshinYmd},
+		<if test="resetFlg">
+			ログインパスワード = #{ETMT016.pswd},
+		</if>
+		所属部署 = #{ETMT016.shozokuBuMei},
+		機能権限 = #{ETMT016.kengenId},
+		部店コード
+		=
+		#{ETMT016.butenCd},
+		扱者コード = #{ETMT016.atsukaiCd},
+		入力可能部店方法 =
+		#{ETMT016.inputButenHoho},
+		ユーザＩＤ = #{ETMT016.userId},
+		端末ＩＤ =
+		#{ETMT016.terminalId},
+		プログラムＩＤ = #{ETMT016.programId},
+		更新日時 =
+		#{ETMT016.koshinYmdTime}
+		WHERE
+		会員コード = #{ETMT016.kaiinCd}
+		AND
+		ユーザコード =
+		#{ETMT016.userCd}
+	</update>
+
+	<!--ユーザ情報変更（営業支援ユーザ） -->
+	<update id="sqlETMT016Update2"
+		parameterType="jp.co.jip.itrade.ap.model.common.ETMT016">
+        <![CDATA[
+            UPDATE  ETMT016
+            SET
+                    削除日  =  #{sakujoYmd},
+                    ユーザＩＤ  =  #{userId},
+                    端末ＩＤ  =  #{terminalId},
+                    プログラムＩＤ  =  #{programId},
+                    更新日時  =  #{koshinYmdTime}
+            WHERE
+                    会員コード = #{kaiinCd}
+               AND  ユーザコード  =  #{userCd}
+
+        ]]>
+	</update>
+
+	<!--ユーザ情報変更（営業支援ユーザ） -->
+	<update id="sqlSTMT424Update">
+            <![CDATA[
+            UPDATE  STMT424
+            SET
+                 ユーザコード = #{STMT424.userCd},
+                 データ入力許可区分  =  #{STMT424.dataInKyakaKbn},
+                 ユーザＩＤ  =  #{STMT424.userId},
+                 端末ＩＤ  =  #{STMT424.terminalId},
+                 プログラムＩＤ  =  #{STMT424.programId},
+                 更新日時  =  #{STMT424.koshinYmdTime}
+            WHERE
+                                会員コード = #{STMT424.kaiinCd}
+            AND  ユーザコード  =  #{STMT424.userCd}
+            ]]>
+	</update>
+
+	<!--ユーザ情報削除（ユーザ役割） -->
+	<delete id="sqlSBCT506Delete"
+		parameterType="jp.co.jip.itrade.ap.model.common.SBCT506Key">
+        <![CDATA[
+            DELETE FROM
+                SBCT506
+            WHERE
+                    SBCT506.会員コード  =  #{kaiinCd}
+                AND SBCT506.ユーザコード  =  #{userCd}
+        ]]>
+	</delete>
+
+	<!--ユーザ情報削除（入力可能部店） -->
+	<delete id="sqlSBCT510Delete"
+		parameterType="jp.co.jip.itrade.ap.model.common.SBCT510Key">
+        <![CDATA[
+            DELETE FROM
+                SBCT510
+            WHERE
+                    SBCT510.会員コード  =  #{kaiinCd}
+                AND SBCT510.ユーザコード  =  #{userCd}
+        ]]>
+	</delete>
+
+	<!--ユーザ情報削除（入力者セキュリティ） -->
+	<delete id="sqlSTMT423Delete"
+		parameterType="jp.co.jip.itrade.ap.model.common.STMT423Key">
+        <![CDATA[
+            DELETE FROM
+                STMT423
+            WHERE
+                    STMT423.会員コード  =  #{kaiinCd}
+                AND STMT423.ユーザコード  =  #{userCd}
+        ]]>
+	</delete>
+
+	<!--参照範囲条件WKのデータを取得 -->
+	<resultMap id="ReferRangeDataResultMap"
+		type="jp.co.jip.itrade.ap.model.app.ESSP001ReferRangeData">
+		<result property="kaiinCd" column="会員コード" />
+		<result property="userCd" column="ユーザコード" />
+		<result property="inputKanoButenHoho" column="入力可能部店方法" />
+		<result property="butenCd1" column="部店コード１" />
+		<result property="butenCd2" column="部店コード２" />
+		<result property="atsukaiCd" column="扱者コード" />
+		<result property="inputDataKyokaKbn" column="データ入力許可区分" />
+	</resultMap>
+
+	<!--参照範囲条件WKのデータを取得 -->
+	<select id="sqlETMT016Select2"
+		resultMap="ReferRangeDataResultMap">
+		<bind name="inputDataKyokaKbn1" value="1" />
+		<bind name="inputDataKyokaKbn2" value="2" />
+		<bind name="inputDataKyokaKbn3" value="3" />
+		<bind name="inputDataKyokaKbn4" value="4" />
+        <![CDATA[
+
+            SELECT
+                  ETMT016.会員コード         AS 会員コード,
+                  ETMT016.ユーザコード       AS ユーザコード,
+                  ETMT016.入力可能部店方法   AS 入力可能部店方法,
+                  ETMT016.部店コード         AS 部店コード１,
+                  0                          AS 部店コード２,
+                  STMT423.扱者コード         AS 扱者コード,
+                  STMT424.データ入力許可区分 AS データ入力許可区分
+            FROM
+                  ETMT016
+
+            INNER JOIN  STMT423 ON
+
+                  ETMT016.会員コード   =  STMT423.会員コード
+            AND   ETMT016.ユーザコード =  STMT423.ユーザコード
+            AND   ETMT016.部店コード   =  STMT423.部店コード
+
+            LEFT  JOIN STMT424 ON
+
+                  ETMT016.会員コード   =  STMT424.会員コード
+            AND   ETMT016.ユーザコード =  STMT424.ユーザコード
+
+
+            WHERE
+                  ETMT016.会員コード   = #{kaiinCd}
+            AND   ETMT016.ユーザコード  =  #{userCd}
+            AND   ETMT016.入力可能部店方法  =  #{inputDataKyokaKbn1}
+            AND   (STMT424.データ入力許可区分 IS NULL
+            OR     STMT424.データ入力許可区分 != 2)
+
+
+            UNION
+
+            SELECT
+                  ETMT016.会員コード         AS 会員コード,
+                  ETMT016.ユーザコード       AS ユーザコード,
+                  ETMT016.入力可能部店方法   AS 入力可能部店方法,
+                  SBCT510.部店コード         AS 部店コード１,
+                  0                          AS 部店コード２,
+                  STMT423.扱者コード         AS 扱者コード,
+                  STMT424.データ入力許可区分 AS データ入力許可区分
+            FROM
+                  ETMT016
+
+            INNER JOIN SBCT510 ON
+                  ETMT016.会員コード   =  SBCT510.会員コード
+            AND   ETMT016.ユーザコード =  SBCT510.ユーザコード
+
+            INNER JOIN STMT423 ON
+
+                  ETMT016.会員コード   =  STMT423.会員コード
+            AND   ETMT016.ユーザコード =  STMT423.ユーザコード
+            AND   ETMT016.部店コード   =  STMT423.部店コード
+
+            LEFT  JOIN STMT424 ON
+                  ETMT016.会員コード   =  STMT424.会員コード
+            AND   ETMT016.ユーザコード =  STMT424.ユーザコード
+
+            WHERE
+                  ETMT016.会員コード   = #{kaiinCd}
+            AND   ETMT016.ユーザコード  =  #{userCd}
+            AND   ETMT016.入力可能部店方法  =  #{inputDataKyokaKbn2}
+            AND   (STMT424.データ入力許可区分 IS NULL
+            OR     STMT424.データ入力許可区分 != 2)
+
+            UNION
+
+            SELECT
+                  ETMT016.会員コード         AS 会員コード,
+                  ETMT016.ユーザコード       AS ユーザコード,
+                  ETMT016.入力可能部店方法   AS 入力可能部店方法,
+                  999                        AS 部店コード１,
+                  0                          AS 部店コード２,
+                  999                        AS 扱者コード,
+                  0                          AS データ入力許可区分
+            FROM
+                  ETMT016
+
+            WHERE
+                  ETMT016.会員コード   = #{kaiinCd}
+            AND   ETMT016.ユーザコード  =  #{userCd}
+            AND   ETMT016.入力可能部店方法  =  #{inputDataKyokaKbn3}
+
+            UNION
+
+            SELECT
+                  ETMT016.会員コード         AS 会員コード,
+                  ETMT016.ユーザコード       AS ユーザコード,
+                  ETMT016.入力可能部店方法   AS 入力可能部店方法,
+                  STMT403.部店コード         AS 部店コード１,
+                  STMT423.部店コード         AS 部店コード２,
+                  STMT423.扱者コード         AS 扱者コード,
+                  STMT424.データ入力許可区分 AS データ入力許可区分
+            FROM
+                  ETMT016
+
+            INNER JOIN STMT403 ON
+                  ETMT016.会員コード   =  STMT403.会員コード
+
+            INNER JOIN STMT423 ON
+
+                  ETMT016.会員コード   =  STMT423.会員コード
+            AND   ETMT016.ユーザコード =  STMT423.ユーザコード
+            AND   ETMT016.部店コード   =  STMT423.部店コード
+
+            LEFT  JOIN STMT424 ON
+                  ETMT016.会員コード   =  STMT424.会員コード
+            AND   ETMT016.ユーザコード =  STMT424.ユーザコード
+
+            WHERE
+                  ETMT016.会員コード   = #{kaiinCd}
+            AND   ETMT016.ユーザコード  =  #{userCd}
+            AND   ETMT016.入力可能部店方法  =  #{inputDataKyokaKbn4}
+            AND   (STMT424.データ入力許可区分 IS NULL
+            OR     STMT424.データ入力許可区分 != 2)
+
+        ]]>
+	</select>
+
+	<!--参照範囲条件WKのデータを取得 -->
+	<resultMap id="sqlESST007_WKSelectResultMap"
+		type="jp.co.jip.itrade.ap.model.common.ESST002">
+		<result property="kaiinCd" column="会員コード" />
+		<result property="userCd" column="ユーザコード" />
+		<result property="butenCd" column="部店コード" />
+		<result property="atsukaiCd" column="扱者コード" />
+	</resultMap>
+
+	<!--参照範囲条件WKのデータを取得 -->
+	<select id="sqlESST007WKSelect"
+		resultMap="sqlESST007_WKSelectResultMap">
+		<bind name="CONSTANT-999" value="999" />
+        <![CDATA[
+
+            SELECT
+                  ESST007_WK.会員コード         AS 会員コード,
+                  ESST007_WK.ユーザコード       AS ユーザコード,
+                  ESST007_WK.部店コード         AS 部店コード,
+                  ESST007_WK.扱者コード         AS 扱者コード
+            FROM
+                  ESST007_WK
+
+            WHERE
+                  ESST007_WK.会員コード        =  #{kaiinCd}
+            AND   ESST007_WK.ユーザコード      =  #{userCd}
+            AND   ESST007_WK.部店コード       !=  #{CONSTANT-999}
+            AND   ESST007_WK.扱者コード       !=  #{CONSTANT-999}
+
+            UNION
+
+            SELECT
+                  ESST007_WK.会員コード         AS 会員コード,
+                  ESST007_WK.ユーザコード       AS ユーザコード,
+                  ESST007_WK.部店コード         AS 部店コード,
+                  STMT421.扱者コード            AS 扱者コード
+            FROM
+                  ESST007_WK
+
+            INNER JOIN STMT421 ON
+                  ESST007_WK.会員コード        =  STMT421.会員コード
+            AND   ESST007_WK.部店コード        =  STMT421.部店コード
+
+            WHERE
+                  ESST007_WK.会員コード        =  #{kaiinCd}
+            AND   ESST007_WK.ユーザコード      =  #{userCd}
+            AND   ESST007_WK.部店コード       !=  #{CONSTANT-999}
+            AND   ESST007_WK.扱者コード        =  #{CONSTANT-999}
+
+            UNION
+
+            SELECT
+                  ESST007_WK.会員コード         AS 会員コード,
+                  ESST007_WK.ユーザコード       AS ユーザコード,
+                  STMT403.部店コード            AS 部店コード,
+                  STMT421.扱者コード            AS 扱者コード
+            FROM
+                  ESST007_WK
+
+            INNER JOIN STMT403 ON
+                  ESST007_WK.会員コード        =  STMT403.会員コード
+
+            INNER JOIN STMT421 ON
+                  ESST007_WK.会員コード        =  STMT421.会員コード
+            AND   ESST007_WK.部店コード        =  STMT421.部店コード
+
+            WHERE
+                  ESST007_WK.会員コード        =  #{kaiinCd}
+            AND   ESST007_WK.ユーザコード      =  #{userCd}
+            AND   ESST007_WK.部店コード        =  #{CONSTANT-999}
+            AND   ESST007_WK.扱者コード        =  #{CONSTANT-999}
+
+        ]]>
+	</select>
+
+	<!--ユーザ参照範囲削除 -->
+	<delete id="sqlESST002Delete"
+		parameterType="jp.co.jip.itrade.ap.model.common.ESST002Key">
+    <![CDATA[
+        DELETE FROM
+            ESST002
+        WHERE
+                会員コード  =  #{kaiinCd}
+            AND ユーザコード  =  #{userCd}
+    ]]>
+	</delete>
+
+	<!--参照範囲条件削除 -->
+	<delete id="sqlESST007WKDelete"
+		parameterType="jp.co.jip.itrade.ap.model.common.ESST007_WKKey">
+    <![CDATA[
+        DELETE FROM
+            ESST007_WK
+        WHERE
+                会員コード  =  #{kaiinCd}
+            AND ユーザコード  =  #{userCd}
+
+    ]]>
+	</delete>
+
+</mapper>

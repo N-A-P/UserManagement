@@ -46,6 +46,10 @@ public class EmployeeOfDepartment {
 	 * Department Name
 	 */
 	private String departmentName;
+	/**
+	 * cOUNT
+	 */
+	private int count;
 	
 
 }

@@ -126,6 +126,7 @@
 		<result property="userDepartmentId" column="user_department_id" />
 		<result property="departmentId" column="department_id" />
 		<result property="departmentName" column="department_name" />
+		<result property="departmentName" column="COUNT_RECORD" />
 	</resultMap>
 
 	<select id="sqlGetListEmployeeOfDepartmentByStatus"
@@ -145,17 +146,20 @@
 		c.role_name AS role_name,
 		COALESCE(d.user_department_id,-1) AS user_department_id,
 		e.department_id AS department_id,
-		e.department_name AS department_name
+		e.department_name AS department_name,
+		COUNT(*) AS COUNT_RECORD
 
 		FROM public.users a
 
 		INNER JOIN
-		public.user_role b
+		public.user_role
+		b
 		ON a.user_id =
 		b.user_id
 
 		INNER JOIN public.role c
-		ON c.role_id = b.role_id
+		ON c.role_id =
+		b.role_id
 
 		INNER JOIN
 		public.user_department d
@@ -166,11 +170,17 @@
 		ON
 		e.department_id = d.department_id
 
+
 		WHERE
 		<if test="action == 1">
-			e.department_id NOT IN (#{departmentId})
+			(e.department_id = #{departmentId}
 			AND
-			d.stay_or_leave IN (0,1)
+			d.stay_or_leave = 0)
+			OR
+			(e.department_id NOT IN (#{departmentId})
+			AND
+			d.stay_or_leave IN
+			(0,1))
 		</if>
 		<if test="action == 2">
 			e.department_id = #{departmentId}
@@ -180,6 +190,11 @@
 		AND e.is_activated = #{statusDepartment}
 		AND a.is_activated =
 		#{statusUser}
+
+		GROUP BY a.user_id,
+		b.user_role_id,
+		c.role_id,
+		user_department_id
 
 	</select>
 
