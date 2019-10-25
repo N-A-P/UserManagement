@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.EmployeeOfDepartment;
 import com.mockproject.du1.services.DepartmentService;
+
 import javax.validation.Valid;
 
 @RestController
@@ -133,7 +134,7 @@ public class DepartmentRestController {
 
 		try {
 			int checkUpdateSuccess = departmentService.departmentInfoUpdate(department);
-			
+
 			if (checkUpdateSuccess == CONSTANT_CHECK_DUPLICATED_CODE) {
 				return new ResponseEntity<String>("Duplicated Department code!!! Please Check!!!",
 						HttpStatus.BAD_REQUEST);
@@ -243,7 +244,7 @@ public class DepartmentRestController {
 	@PostMapping(value = "/removeEmployeeFromDepartment")
 	public ResponseEntity<String> removeEmployeeFromDepartment(
 			@Valid @RequestBody EmployeeOfDepartment employeeOfDepartment) {
-		if (departmentService.removeEmployeeFromDepartment(employeeOfDepartment.getUserDepartmentId()) != 0) {
+		if (departmentService.removeEmployeeFromDepartment(employeeOfDepartment) != 0) {
 			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 		} else {
 			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);

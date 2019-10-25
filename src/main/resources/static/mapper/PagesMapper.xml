@@ -29,7 +29,7 @@
 		SELECT page_id,
 		page_name, page_code,url, updated_by, created_timestamp,
 		updated_timestamp
-		FROM public.page WHERE page_id = #{pageId}
+		FROM public.pages WHERE page_id = #{pagesId}
 
 	</select>
 
@@ -42,9 +42,9 @@
 		page_name, page_code,url, updated_by,
 		created_timestamp,
 		updated_timestamp
-		FROM public.page WHERE page_code
-		LIKE #{_pageCode} OR
-		page_name LIKE #{_pageName}
+		FROM public.pages WHERE page_code
+		ILIKE #{_pageCode} OR
+		page_name ILIKE #{_pageName}
 
 	</select>
 
@@ -55,10 +55,10 @@
 		SELECT
 		COUNT(*)
 		FROM
-		public.page
+		public.pages
 		WHERE
-		public.page.page_name
-		= #{pageName}
+		public.pages.page_name
+		= #{pagesName}
 
 	</select>
 
@@ -69,21 +69,21 @@
 		SELECT
 		COUNT(*)
 		FROM
-		public.page
+		public.pages
 		WHERE
-		public.page.page_code
-		= #{pageCode}
+		public.pages.page_code
+		= #{pagesCode}
 
 	</select>
 
 	<update id="sqlEditPagesInfoUpdate"
 		parameterType="com.mockproject.du1.model.Pages">
 
-		UPDATE public.page
+		UPDATE public.pages
 		SET page_name =
-		#{pageName},
+		#{pagesName},
 		page_code =
-		#{pageCode},
+		#{pagesCode},
 		url =
 		#{pagesUrl},
 		updated_by=#{updateBy},
@@ -91,16 +91,16 @@
 		=#{updateTimestamp}::timestamp without time zone
 		WHERE
 		page_id =
-		#{pageId}
+		#{pagesId}
 	</update>
 
 	<!--Insert Pages Information -->
 	<insert id="sqlPagesInsert"
 		parameterType="com.mockproject.du1.model.Pages">
-		INSERT INTO public.page
+		INSERT INTO public.pages
 		(page_name,page_code,url,updated_by,created_timestamp,updated_timestamp)
 		VALUES
-		(#{pageName},#{pageCode},#{pagesUrl},#{updateBy},#{createTimestamp}::timestamp
+		(#{pagesName},#{pagesCode},#{pagesUrl},#{updateBy},#{createTimestamp}::timestamp
 		without time zone,#{updateTimestamp}::timestamp without time zone)
 	</insert>
 
