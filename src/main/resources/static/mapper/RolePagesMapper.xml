@@ -4,7 +4,7 @@
 <mapper namespace="com.mockproject.du1.mapper.RolePagesMapper">
 	<!--Get List All RolePagesPages Result Map -->
 	<resultMap id="GetRolePagesResultMap"
-		type="com.mockproject.du1.model.RolePagesPages">
+		type="com.mockproject.du1.model.RolePages">
 		<result property="rolePagesId" column="role_page_id" />
 		<result property="roleId" column="role_id" />
 		<result property="pagesId" column="page_id" />
@@ -72,7 +72,7 @@
 	</select>
 
 	<update id="sqlEditRolePagesInfoUpdate"
-		parameterType="com.mockproject.du1.model.RolePagesPages">
+		parameterType="com.mockproject.du1.model.RolePages">
 
 		UPDATE public.role_page
 		SET role_name =
@@ -89,7 +89,7 @@
 
 	<!--Insert role_page Information -->
 	<insert id="sqlRolePagesInsert"
-		parameterType="com.mockproject.du1.model.RolePagesPages">
+		parameterType="com.mockproject.du1.model.RolePages">
 		INSERT INTO public.role_page
 		(role_name,role_code,updated_by,created_timestamp,updated_timestamp)
 		VALUES

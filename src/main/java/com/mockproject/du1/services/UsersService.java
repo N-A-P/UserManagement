@@ -10,7 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import com.mockproject.du1.common.DataUtil;
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
 import com.mockproject.du1.model.Users;
