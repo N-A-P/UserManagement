@@ -1,9 +1,13 @@
 package com.mockproject.du1.controller;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.postgresql.util.PSQLException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mockproject.du1.common.DataUtil;
 import com.mockproject.du1.model.MailOfUser;
 import com.mockproject.du1.model.Users;
 import com.mockproject.du1.model.UsersFull;
@@ -25,12 +28,25 @@ import com.mockproject.du1.services.UsersService;
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/rest")
 public class UsersRestController {
+	/**
+	 * 
+	 */
 	@Autowired
 	private JwtService jwtService;
+	/**
+	 * 
+	 */
 	@Autowired
 	private UsersService usersService;
+	/**
+	 * 
+	 */
 	@Autowired
-	EmailService emailService;
+	private EmailService emailService;
+	/**
+	 * 
+	 */
+	Logger log = LoggerFactory.getLogger(UsersRestController.class);
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -40,7 +56,8 @@ public class UsersRestController {
 
 	@RequestMapping(value = "/sendMail", method = RequestMethod.GET)
 	public ResponseEntity<String> sendMail(@RequestBody MailOfUser mailOfUser) {
-		if(emailService.sendEmailToAll(mailOfUser.getUsers(), mailOfUser.getEmailHeader(), mailOfUser.getEmailBodyText())){
+		if (emailService.sendEmailToAll(mailOfUser.getUsers(), mailOfUser.getEmailHeader(),
+				mailOfUser.getEmailBodyText())) {
 			return new ResponseEntity<String>("ERROR", HttpStatus.BAD_REQUEST);
 
 		}
@@ -49,32 +66,45 @@ public class UsersRestController {
 
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {		
-		if (usersService.registerNewCustomer(user)) {
-			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
+	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
+		if (usersService.isValidEmail(user.getEmail())) {
+			try {
+				usersService.registerNewCustomer(user);
+				return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
+			} catch (Exception e) {
+				if (e.getCause().toString().contains("org.postgresql.util.PSQLException")) {
+					log.error(e.getMessage());
+					return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+				} else {
+					log.error(e.getMessage());
+					return new ResponseEntity<String>("SERVER ERROR!", HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
 		} else {
-			return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+			log.warn("Invalid email format");
+			return new ResponseEntity<String>("Invalid email format!", HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	/* ---------------- SEND EMAIL TO LIST OF USERS ------------------------ */
-//	@RequestMapping(value = "/email", method = RequestMethod.POST)
-//	public ResponseEntity<List<Users>> coverExcel(@RequestBody File file) throws IOException {
-//		List<String> emails = emailService.coverExcellFileToArray(file);
-//		List<Users> users = new ArrayList<>();
-//		users = usersService.getUsersListByEmails(emails);
-//		return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
-//	}
+	// @RequestMapping(value = "/email", method = RequestMethod.POST)
+	// public ResponseEntity<List<Users>> coverExcel(@RequestBody File file) throws
+	// IOException {
+	// List<String> emails = emailService.coverExcellFileToArray(file);
+	// List<Users> users = new ArrayList<>();
+	// users = usersService.getUsersListByEmails(emails);
+	// return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
+	// }
 
 	/* ---------------- LOGIN ------------------------ */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";
 		HttpStatus httpStatus = null;
-		
+
 		try {
 			if (usersService.checkLogin(user)) {
-				Users userToCheck=usersService.getUserByUsername(user.getUsername());
+				Users userToCheck = usersService.getUserByUsername(user.getUsername());
 				if (userToCheck.getIsActivated() == 1) {
 					result = jwtService.generateTokenLogin(user.getUsername());
 					httpStatus = HttpStatus.OK;
