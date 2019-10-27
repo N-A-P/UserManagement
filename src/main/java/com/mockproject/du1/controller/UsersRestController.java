@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mockproject.du1.common.CustomException;
-import com.mockproject.du1.common.ValidateException;
+import com.mockproject.du1.exception.CustomException;
+import com.mockproject.du1.exception.ValidateException;
 import com.mockproject.du1.model.Users;
 import com.mockproject.du1.model.UsersFull;
 import com.mockproject.du1.services.EmailService;
@@ -48,10 +48,6 @@ public class UsersRestController {
 				return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
 			}
 		} catch (CustomException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);
-		} catch (ValidateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);

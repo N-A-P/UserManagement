@@ -11,9 +11,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import com.mockproject.du1.common.CustomException;
 import com.mockproject.du1.common.EmailValidate;
-import com.mockproject.du1.common.ValidateException;
+import com.mockproject.du1.exception.CustomException;
+import com.mockproject.du1.exception.ValidateException;
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
 import com.mockproject.du1.model.Users;
@@ -88,7 +88,7 @@ public class UsersService {
 	 * ---------------- ADD NEW USER TO TABLE USER, ROLE_DETAIL
 	 * ------------------------
 	 */
-	public boolean registerNewCustomer(Users user) throws CustomException, ValidateException {
+	public boolean registerNewCustomer(Users user) throws CustomException {
 		if (EmailValidate.isEmail(user.getEmail())) {
 			try {
 				user.setRegisteredDate(java.time.LocalDate.now().toString());
@@ -101,7 +101,7 @@ public class UsersService {
 				throw new CustomException("Email or Username existed!");
 			}
 		} else {
-			throw new ValidateException("Email format incorrect");
+			throw new CustomException("Email format incorrect");
 		}
 	}
 

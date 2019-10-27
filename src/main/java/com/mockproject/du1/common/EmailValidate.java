@@ -2,9 +2,9 @@ package com.mockproject.du1.common;
 
 public class EmailValidate {
 
-	private static final String pattern = "/^(([^<>()[\\]\\\\.,;:\\s@\"]+(\\.[^<>()[\\]\\\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$/";
+	private static final String pattern = "(^[a-z0-9_]{3,16})@(([a-z]+\\.)([a-z]+))+$";
 
 	public static boolean isEmail(String email) {
-		return DataUtil.matchByPattern(email, pattern);
+		return DataUtil.matchByPattern(email,pattern );
 	}
 }
