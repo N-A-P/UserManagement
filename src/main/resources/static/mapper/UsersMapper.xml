@@ -23,7 +23,34 @@
 		<result property="createTimestamp" column="created_timestamp" />
 		<result property="updateTimestamp" column="updated_timestamp" />
 	</resultMap>
-
+	<resultMap id="GetUserFullResultMap"
+		type="com.mockproject.du1.model.UsersFull">
+		<result property="userId" column="user_id" />
+		<result property="firstName" column="first_name" />
+		<result property="lastName" column="last_name" />
+		<result property="dob" column="dob" />
+		<result property="email" column="email" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="startDate" column="registered_date" />
+		<result property="tenure" column="seniority" />
+		<result property="status" column="is_activated" />
+		<collection property="listDepartment"
+			resultMap="GetDepartResultMap" />
+		<collection property="listRole"
+			resultMap="GetRoleResultMap" />
+	</resultMap>
+	<resultMap id="GetDepartResultMap"
+		type="com.mockproject.du1.model.Department">
+		<result property="departmentId" column="department_id" />
+		<result property="departmentName" column="department_name" />
+		<result property="endDate" column="leave_date" />
+	</resultMap>
+	<resultMap id="GetRoleResultMap"
+		type="com.mockproject.du1.model.Department">
+		<result property="departmentId" column="department_id" />
+		<result property="departmentName" column="department_name" />
+	</resultMap>
 	<!--Get List Data UserFull Information -->
 	<!--<resultMap id="GetUserFullResultMap" type="com.mockproject.du1.model.UsersFull"> 
 		<result property="userId" column="user_id" /> <result property="firstName" 
@@ -51,17 +78,28 @@
 	</select>
 
 	<!--Get List Data User Information -->
-	<select id="sqlGetAllUserSelect" resultMap="GetUserResultMap">
+	<select id="sqlGetAllUserFullSelect"
+		resultMap="GetUserFullResultMap">
 		SELECT
-		user_id,
-		first_name, last_name, dob, email, username, password,
-		registered_date,activated_date,
-		seniority, is_activated,
-		updated_by,created_timestamp,updated_timestamp
+		users.user_id,
+		users.email,
+		users.dob,
+		users.registered_date,
+		department.department_id,
+		department.department_name,
+		rolee.role_id,
+		rolee.role_name,
+		user_department.leave_date
 		FROM
-		public.users
-		WHERE
-		is_activated = 1
+		users left join user_department on
+		users.user_id = user_department.user_id
+		left join department ON
+		department.department_id =
+		user_department.department_id
+		left join
+		user_role ON users.user_id = user_role.user_id left join rolee
+		on
+		user_role.role_id = rolee.role_id
 	</select>
 
 	<!--Get List Data User Information By Username -->
@@ -69,7 +107,8 @@
 		resultMap="GetUserResultMap" parameterType="String">
 		SELECT
 		user_id,
-		first_name, last_name, dob, email, username, password,
+		first_name,
+		last_name, dob, email, username, password,
 		registered_date,activated_date,
 		seniority, is_activated,
 		updated_by,created_timestamp,updated_timestamp
@@ -100,9 +139,11 @@
 		parameterType="String">
 		SELECT
 		user_id,
-		first_name, last_name, dob, email, username, password,
+		first_name, last_name, dob, email,
+		username, password,
 		registered_date,activated_date,
-		seniority, is_activated,
+		seniority,
+		is_activated,
 		updated_by,created_timestamp,updated_timestamp
 		FROM
 		public.users
@@ -144,7 +185,8 @@
 		TO_DATE(#{registeredDate},'YYYY-MM-DD'),
 		#{seniority},
 		#{isActivated},
-		#{createTimestamp}::timestamp without time zone)
+		#{createTimestamp}::timestamp without time
+		zone)
 	</insert>
 
 	<!--Insert new record into Table department_detail -->
@@ -164,9 +206,12 @@
 		parameterType="com.mockproject.du1.model.Users">
 		UPDATE public.users
 		SET
-		first_name=#{firstName},last_name=#{lastName},email=#{email},username=#{username},password=#{password},dob=TO_DATE(#{dob},'YYYY-MM-DD')
+		first_name=#{firstName},last_name=#{lastName},username
+		=#{username},email=#{email},password=#{password},dob=TO_DATE(#{dob},'YYYY-MM-DD'),updated_by=#{updateBy},
+		updated_timestamp
+		=#{updateTimestamp}::timestamp without time zone
 		WHERE
-		user_id=#{userId}
+		user_id= #{userId}
 	</update>
 
 	<!--Update record in Table role_detail -->

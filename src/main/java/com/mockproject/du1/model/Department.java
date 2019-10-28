@@ -24,6 +24,12 @@ public class Department {
 	 * Number Of Employees
 	 */
 	private int numberOfEmployees;
+
+	/**
+	 * end date
+	 */
+	private String endDate;
+	
 	/**
 	 * Status
 	 */

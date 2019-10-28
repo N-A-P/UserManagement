@@ -22,7 +22,7 @@ public interface UsersMapper {
 	 *
 	 * @return Users
 	 */
-	List<Users> sqlGetAllUserSelect();
+	//List<UsersFull> sqlGetAllUserSelect();
 
 	/**
 	 * Get All UserFull

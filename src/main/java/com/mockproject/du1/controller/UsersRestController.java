@@ -3,10 +3,15 @@ package com.mockproject.du1.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mockproject.du1.exception.CustomException;
-import com.mockproject.du1.exception.ValidateException;
 import com.mockproject.du1.model.Users;
 import com.mockproject.du1.model.UsersFull;
 import com.mockproject.du1.services.EmailService;
@@ -34,19 +38,16 @@ public class UsersRestController {
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public ResponseEntity<List<Users>> getAllUser() {
-		return new ResponseEntity<List<Users>>(usersService.getAllUser(), HttpStatus.OK);
+	public ResponseEntity<List<UsersFull>> getAllUser() {
+		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(), HttpStatus.OK);
 	}
 
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
 		try {
-			if (usersService.registerNewCustomer(user)) {
-				return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
-			} else {
-				return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
-			}
+			usersService.registerNewCustomer(user);
+			return new ResponseEntity<String>("Created!", HttpStatus.OK);
 		} catch (CustomException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -89,11 +90,19 @@ public class UsersRestController {
 
 	/* ---------------- USER MANAGEMENT POST REQUEST ------------------------ */
 	@RequestMapping(value = "/user-management", method = RequestMethod.POST)
-	public ResponseEntity<String> editUserManagement(HttpServletRequest request, @RequestBody UsersFull userFull) {
-		if (usersService.updateUserInfo(userFull))
-			return new ResponseEntity<String>("Edit SUCCESS!", HttpStatus.CREATED);
-		else
-			return new ResponseEntity<String>("Email Existed!", HttpStatus.BAD_REQUEST);
+
+	public ResponseEntity<String> editUserManagement(HttpServletRequest request, @RequestBody Users user) {
+		try {
+			HttpSession session = request.getSession();
+			String userName = (String) session.getAttribute("usernameLogin");
+			user.setUpdateBy(userName);
+			usersService.updateUserInfo(user);
+			return new ResponseEntity<String>("Update!", HttpStatus.OK);
+		} catch (CustomException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/* ---------------- DELETE USER ------------------------ */
