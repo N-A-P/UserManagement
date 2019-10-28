@@ -250,4 +250,18 @@ public class DepartmentRestController {
 			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
 		}
 	}
+	
+	/**
+	 *
+	 */
+	@PostMapping(value = "/updateNumberOfEmployee")
+	public ResponseEntity<String> updateNumberOfEmployee(
+			@Valid @RequestBody EmployeeOfDepartment employeeOfDepartment) {
+		if(departmentService.updateNumberOfEmployee(employeeOfDepartment)!=0) {
+			return new ResponseEntity<String>("Update Success!!!", HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Update Failded!!!", HttpStatus.BAD_REQUEST);
+		}
+
+	}
 }

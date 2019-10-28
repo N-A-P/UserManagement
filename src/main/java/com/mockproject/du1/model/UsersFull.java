@@ -5,9 +5,6 @@ package com.mockproject.du1.model;
  * UsersFull Model
  */
 
-import javax.persistence.Embedded;
-import java.time.LocalDateTime;
-
 @lombok.Data
 public class UsersFull {
 	/**

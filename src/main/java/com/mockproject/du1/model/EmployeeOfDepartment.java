@@ -47,9 +47,9 @@ public class EmployeeOfDepartment {
 	 */
 	private String departmentName;
 	/**
-	 * cOUNT
+	 * Number Of Employees
 	 */
-	private int count;
+	private int numberOfEmployees;
 	
 
 }

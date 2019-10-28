@@ -82,11 +82,24 @@ public interface DepartmentMapper {
 	 *
 	 */
 	int sqlDepartmentInsert(Department department);
+	
+	/**
+	 * Insert New Employee For Deparment
+	 *
+	 */
+	
+	long sqlCheckExistUserDepartmentSelect(UserDepartment userDepartment);
 
 	/**
 	 * Insert New Employee For Deparment
 	 *
 	 */
 	int sqlNewEmployeeForDeparmentInsert(UserDepartment userDepartment);
+	
+	/**
+	 * Insert New Employee For Deparment
+	 *
+	 */
+	int sqlDepartmentNumberOfEmployeeUpdate(Department department);
 
 }

@@ -302,6 +302,7 @@ public class DepartmentService {
 
 			for (EmployeeOfDepartment employeeOfDepartment : listEmployeeOfDepartment) {
 				try {
+
 					userDepartment.setUserId(employeeOfDepartment.getUserId());
 					userDepartment.setDepartmentId(employeeOfDepartment.getDepartmentId());
 					userDepartment.setJoinDate(currentTimestamp);
@@ -310,9 +311,18 @@ public class DepartmentService {
 					userDepartment.setUpdateBy(usernameLogin);
 					userDepartment.setCreateTimestamp(currentTimestamp);
 					userDepartment.setUpdateTimestamp(currentTimestamp);
-					if (departmentMapper.sqlNewEmployeeForDeparmentInsert(userDepartment) == 0) {
+
+					if (departmentMapper.sqlCheckExistUserDepartmentSelect(userDepartment) == 0) {
+
+						if (departmentMapper.sqlNewEmployeeForDeparmentInsert(userDepartment) == 0) {
+
+							listRecordError.add(employeeOfDepartment);
+
+						}
+					} else {
 						listRecordError.add(employeeOfDepartment);
 					}
+
 				} catch (DuplicateKeyException e) {
 					listRecordError.add(employeeOfDepartment);
 				}
@@ -321,5 +331,23 @@ public class DepartmentService {
 			logger.error(e.getMessage());
 		}
 		return listRecordError;
+	}
+
+	/**
+	 * 
+	 */
+	public int updateNumberOfEmployee(EmployeeOfDepartment employeeOfDepartment) {
+		try {
+			Department department = new Department();
+			department.setNumberOfEmployees(employeeOfDepartment.getNumberOfEmployees());
+			department.setDepartmentId(employeeOfDepartment.getDepartmentId());
+			department.setUpdateBy(usernameLogin);
+			department.setUpdateTimestamp(currentTimestamp);
+			return departmentMapper.sqlDepartmentNumberOfEmployeeUpdate(department);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return 0;
+		}
+
 	}
 }
