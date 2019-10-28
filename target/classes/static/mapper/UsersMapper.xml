@@ -69,7 +69,8 @@
 		resultMap="GetUserResultMap" parameterType="String">
 		SELECT
 		user_id,
-		first_name, last_name, dob, email, username, password,
+		first_name,
+		last_name, dob, email, username, password,
 		registered_date,activated_date,
 		seniority, is_activated,
 		updated_by,created_timestamp,updated_timestamp
@@ -100,9 +101,11 @@
 		parameterType="String">
 		SELECT
 		user_id,
-		first_name, last_name, dob, email, username, password,
+		first_name, last_name, dob, email,
+		username, password,
 		registered_date,activated_date,
-		seniority, is_activated,
+		seniority,
+		is_activated,
 		updated_by,created_timestamp,updated_timestamp
 		FROM
 		public.users
@@ -130,22 +133,33 @@
 		department_id=#{departmentId}
 	</select>
 
-	<!-- =========== INSERT =============== -->
+	<!--Search user list -->
+	<select id="sqlSelectSearchSelect" resultMap="GetUserResultMap" parameterType="String">
+	 <bind name="pattern" value="'%' + #{toSearch} + '%'" />
+		SELECT
+		user_id,first_name,last_name,dob,email,username,users.password,registered_date,activated_date,seniority,
+		is_activated,updated_by,created_timestamp,updated_timestamp		
+		FROM PUBLIC.USERS
+		WHERE (first_name LIKE #{pattern}) 
+	</select>
 
+	<!-- =========== INSERT =============== -->
 
 	<!--Insert new record into Table User -->
 	<insert id="sqlCreateUserInsert"
 		parameterType="com.mockproject.du1.model.Users">
 		INSERT INTO public.users
-		(first_name, last_name, dob, email, username, password, 
-		registered_date, activated_date, seniority, is_activated, updated_by, 
+		(first_name, last_name, dob,
+		email, username, password,
+		registered_date, activated_date, seniority, is_activated, updated_by,
 		created_timestamp, updated_timestamp)
 		VALUES
 		(#{firstName},#{lastName},TO_DATE(#{dob},'YYYY-MM-DD'),
 		#{email},#{username},#{password},
 		TO_DATE(#{registeredDate},'YYYY-MM-DD'),
 		TO_DATE(#{activatedDate},'YYYY-MM-DD'),
-		#{seniority},0,#{updateBy},#{createTimestamp}::timestamp without time zone,#{updateTimestamp}::timestamp without time zone)
+		#{seniority},0,#{updateBy},#{createTimestamp}::timestamp without time
+		zone,#{updateTimestamp}::timestamp without time zone)
 	</insert>
 
 	<!--Insert new record into Table department_detail -->
@@ -153,9 +167,12 @@
 		parameterType="Integer">
 		INSERT INTO public.department_detail
 		(status,department_id,user_id)
-		VALUES
+		VALUES 
 		(#{status},#{departmentId},#{userId})
 	</insert>
+
+	<!--insert record into Tables  user_role, user_department -->
+
 
 	<!-- =========== UPDATE =============== -->
 
@@ -165,48 +182,75 @@
 		parameterType="com.mockproject.du1.model.Users">
 		UPDATE public.users
 		SET
-		first_name=#{firstName},last_name=#{lastName},email=#{email},username=#{username},password=#{password},dob=TO_DATE(#{dob},'YYYY-MM-DD')
+		first_name=#{firstName},last_name=#{lastName},email=#{email},username=#{username},password=#{password},dob=TO_DATE(#{dob},'YYYY-MM-DD'),
+		registered_date=TO_DATE(#{registeredDate},'YYYY-MM-DD'), activated_date=TO_DATE(#{activatedDate},'YYYY-MM-DD'),
+		seniority=#{seniority},is_activated=#{isActivated}, updated_by=#{updatedBy}, created_timestamp=#{createdTimestamp}, updated_timestamp=#{updatedTimestamp}
 		WHERE
 		user_id=#{userId}
 	</update>
 
-	<!--Update record in Table role_detail -->
-	<update id="sqlUpdateRoleDetailUpdate" parameterType="Integer">
+	<!--Update record in Table user_role -->
+	<update id="sqlUpdateUserRoleUpdate" parameterType="com.mockproject.du1.model.UserRole">
 		UPDATE
 		public.role_detail
-		SET role_id=#{roleId}
+		SET join_date=(#{joinDate},'YYYY-MM-DD'),
+		leave_date=(#{leaveDate},'YYYY-MM-DD'),
+		updated_by=#{updatedBy},
+		created_timestamp=#{createdTimestamp}, updated_timestamp=#{updatedTimestamp},
+		role_id=#{roleId}
 		WHERE
 		user_id=#{userId}
 	</update>
 
-	<!--Update record in Table department_detail -->
-	<update id="sqlUpdateDepartmentDetailUpdate"
-		parameterType="Integer">
+	<!--Update record in Table user_department -->
+	<update id="sqlUpdateUserDepartmentUpdate" parameterType="com.mockproject.du1.model.UserDepartment">
 		UPDATE
-		public.department_detail
-		SET status=#{userStatus}
+		public.user_department
+		SET join_date=(#{joinDate},'YYYY-MM-DD'),
+		leave_date=(#{leaveDate},'YYYY-MM-DD'),
+		stay_or_leave=#{stayOrLeave},
+		updated_by=#{updatedBy},
+		created_timestamp=#{createdTimestamp}, updated_timestamp=#{updatedTimestamp},
+		role_id=#{roleId}
 		WHERE
 		user_id=#{userId}
 	</update>
 
 	<!--Update record in Table department_detail -->
-	<update id="sqlDeleteUserUpdate" parameterType="Integer">
+	<update id="sqlDeleteUserUpdate" parameterType="com.mockproject.du1.model.Users">
 		UPDATE
 		public.users
-		SET status=0
+		SET activated_date=#{activatedDate}
+		is_activated=#{}
 		WHERE
 		user_id=#{userId}
 	</update>
 
+	<!--Update record in Tables users-->
+	<update id="sqlActivateUserUpdate" parameterType="Integer">
+		UPDATE
+		public.users
+		SET activated_date=#{activatedDate},
+		is_activated=#{isActivated},
+		updated_by=#{updatedBy},
+		updated_timestamp=#{updatedTimestamp}
+		WHERE
+		user_id=#{userId};
+		
+ 		INSERT INTO public.user_role
+ 		(join_date,leave_date,updated_by,created_timestamp,updated_timestamp)
+ 		VALUES
+ 		(#{joinDate},#{leaveDate},#{updatedBy},#{createdTimestamp},#{updatedTimestamp});
+ 		
+ 		
+	</update>
 
 
 	<!-- =========== DELETE =============== -->
 	<!--Delete records in Table department_detail -->
 	<delete id="sqlDeleteDepartmentDetailDelete"
 		parameterType="Integer">
-		DELETE FROM public.department_detail
-		WHERE
-		user_id=#{userId}
+
 	</delete>
 
 

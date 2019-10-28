@@ -6,7 +6,6 @@ import javax.persistence.Embedded;
 import java.time.LocalDateTime;
 
 @lombok.Data
-@Builder
 public class UserRole {
 	/**
 	 * User Role Id

@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +17,8 @@ import org.springframework.stereotype.Service;
 
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
+import com.mockproject.du1.model.UserDepartment;
+import com.mockproject.du1.model.UserRole;
 import com.mockproject.du1.model.Users;
 import com.mockproject.du1.model.UsersFull;
 
@@ -155,6 +156,50 @@ public class UsersService {
 			return true;
 		return false;
 
+	}
+
+	/*
+	 * ---------------- SEARCH ALL USER
+	 * ------------------------
+	 */
+	public List<Users> getSearchResult(String toSearch){
+		return usersMapper.sqlSelectSearchSelect(toSearch);
+	}
+	
+	/*
+	 * ---------------- ACTIVATE-DEACTIVATE USER
+	 * ------------------------
+	 */
+	public int activateDeactivate(Users user) {
+		if (user.getIsActivated()==1) return deactivateUser(user);
+		if (user.getIsActivated()==0) return activateUser(user);
+		return -1;
+	}
+	
+	/*
+	 * ---------------- ACTIVATE USER
+	 * ------------------------
+	 */
+	private int activateUser(Users user) {
+		UserRole updatedUserRole=new UserRole();
+		//setters
+		
+		UserDepartment userDepartment=new UserDepartment();
+		//setters
+		return 0;
+	}
+
+	/*
+	 * ---------------- DEACTIVATE USER
+	 * ------------------------
+	 */
+	private int deactivateUser(Users user) {
+		UserRole updatedUserRole=new UserRole();
+		//setters
+		
+		UserDepartment userDepartment=new UserDepartment();
+		//setters
+		return 0;
 	}
 
 }

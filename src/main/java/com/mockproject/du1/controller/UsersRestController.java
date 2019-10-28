@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -145,6 +144,12 @@ public class UsersRestController {
 			return new ResponseEntity<String>("Remove User SUCCESS!", HttpStatus.OK);
 		else
 			return new ResponseEntity<String>("Remove User ERROR", HttpStatus.BAD_REQUEST);
+	}
+	
+	/* ---------------- SEARCH IN USER LIST ------------------------ */
+	@RequestMapping(value = "/user-management/search", method = RequestMethod.POST)
+	public ResponseEntity<List<Users>> getSearchResult(HttpServletRequest request, @RequestBody String toSearch) {
+		return new ResponseEntity<List<Users>>(usersService.getSearchResult(toSearch), HttpStatus.OK);
 	}
 
 }

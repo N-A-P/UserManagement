@@ -108,5 +108,18 @@ public interface UsersMapper {
 	 */
 	int sqlDeleteUserUpdate(Integer userId);
 
+	/**
+	 * Get All User by Search id
+	 *
+	 * @return 0 or 1 if Select query success or not
+	 */
+	List<Users> sqlSelectSearchSelect(String toSearch);
+
+	/**
+	 * Update users, user_role, user_department
+	 *
+	 * @return 0 or 1 if Update query success or not
+	 */
+	int sqlActivateUserUpdate(int userId);
 
 }
