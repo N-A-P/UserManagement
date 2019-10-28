@@ -10,4 +10,6 @@ public interface CampaignMapper {
     int sqlCreateCampaignInsert(Campaign campaign);
     List<Campaign> sqlGetAllCampain();
     int sqlCampaignInfoUpdate(Campaign campaign);
+    Campaign sqlGetCampainById(Campaign campaign);
+
 }

@@ -31,6 +31,12 @@ public class EmailController {
             return new ResponseEntity<String>("Success", HttpStatus.OK);
         return new ResponseEntity("Failen", HttpStatus.BAD_REQUEST);
     }
+    @RequestMapping(value = "/send-campaign", method = RequestMethod.POST)
+    public ResponseEntity sendCampaign(@RequestBody List<MailOfUser> mailOfUsers) {
+        if (emailService.sendListCampaign(mailOfUsers))
+            return new ResponseEntity<String>("Success", HttpStatus.OK);
+        return new ResponseEntity("Failen", HttpStatus.BAD_REQUEST);
+    }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public MailOfUser sendMail() {
@@ -39,7 +45,7 @@ public class EmailController {
         return MailOfUser.builder().campaignId(1).sendEmailUserId(1).customers(customers).build();
     }
 
-    @RequestMapping(value = "/coverExcel", method = RequestMethod.POST)
+    @RequestMapping(value = "/cover-excel-to-DB", method = RequestMethod.POST)
     public byte[] coverExcel(@RequestBody MultipartFile file) throws IOException {
         XSSFWorkbook workbook = emailService.coverExcellFileToArray(file.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
@@ -47,6 +53,14 @@ public class EmailController {
         workbook.write(outputStream);
         outputStream.write(bytes);
         return bytes;
+    }
+    @RequestMapping(value = "/cover-excel-to-FE", method = RequestMethod.POST)
+    public ResponseEntity coverExcelToFE(@RequestBody MultipartFile file) throws IOException {
+        List<Customer> customers=emailService.coverExcellFileToArrayList(file.getBytes());
+     if(customers!=null){
+         return new ResponseEntity<List<Customer>>(customers, HttpStatus.OK);
+     }
+        return new ResponseEntity<String>("Enter the correct Excel file format", HttpStatus.OK);
     }
 
     @RequestMapping(value = "/coverExcel/test", method = RequestMethod.POST)
@@ -57,6 +71,14 @@ public class EmailController {
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
         System.out.println("Created file: " + file.getAbsolutePath());
+    }
+    @RequestMapping(value = "/coverExceltoFE/test", method = RequestMethod.POST)
+    public ResponseEntity coverExcelToFETest(@RequestBody byte[] bytes) throws IOException {
+        List<Customer> customers=emailService.coverExcellFileToArrayList(bytes);
+        if(customers!=null){
+            return new ResponseEntity<List<Customer>>(customers, HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("Enter the correct Excel file format", HttpStatus.OK);
     }
 
     @RequestMapping(value = "/getAllEmailContent", method = RequestMethod.GET)
@@ -79,6 +101,12 @@ public class EmailController {
     @RequestMapping(value = "/editCampaign", method = RequestMethod.POST)
     public ResponseEntity editCampaign(@RequestBody Campaign campaign) {
         if (emailService.editCampaign(campaign).equalsIgnoreCase("success"))
+            return new ResponseEntity<String>("success", HttpStatus.OK);
+        return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
+    }
+    @RequestMapping(value = "/edit-email-template-campaign", method = RequestMethod.POST)
+    public ResponseEntity editEmailTemplateCampaign(@RequestBody Campaign campaign) {
+        if (emailService.editEmailTemplateCampaign(campaign).equalsIgnoreCase("success"))
             return new ResponseEntity<String>("success", HttpStatus.OK);
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }

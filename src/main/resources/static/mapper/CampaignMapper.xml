@@ -41,6 +41,16 @@
 		 email_template_id
         FROM public.campaign;
 	</select>
+    <update id="sqlGetCampainById"
+            parameterType="com.mockproject.du1.model.Campaign">
+
+		UPDATE public.campaign
+        SET
+        email_template_id=#{emailTemplateId}
+        WHERE campaign_id=#{campaignId};
+
+	</update>
+
     <update id="sqlCampaignInfoUpdate"
             parameterType="com.mockproject.du1.model.Campaign">
 

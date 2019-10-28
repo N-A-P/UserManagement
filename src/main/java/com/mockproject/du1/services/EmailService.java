@@ -68,6 +68,15 @@ public class EmailService {
         }
         return false;
     }
+    public boolean sendListCampaign(List<MailOfUser> mailOfUsers) {
+        if (mailOfUsers != null) {
+       for(MailOfUser mailOfUser:mailOfUsers){
+           if(!sendEmailToAll(mailOfUser.getCustomers(), mailOfUser.getSendEmailUserId(), mailOfUser.getCampaignId())) return false;
+       }
+            return true;
+        }
+        return false;
+    }
 
     private void sendEmail(Customer customer, String emailHeader, String emailBodyText, int campaignId, Date sendTime, int sendUserId) throws IOException {
 
@@ -237,6 +246,10 @@ public class EmailService {
         campaignMapper.sqlCampaignInfoUpdate(campaign);
         return "success";
     }
+    public String editEmailTemplateCampaign(Campaign campaign) {
+        campaignMapper.sqlCampaignInfoUpdate(campaign);
+        return "success";
+    }
 
     public String addCampaign(Campaign campaign) {
         campaignMapper.sqlCreateCampaignInsert(campaign);
@@ -263,6 +276,53 @@ public class EmailService {
             campaignDetails.add(campaignDetail);
         }
         return campaignDetails;
+    }
+    public List<Customer> coverExcellFileToArrayList(byte[] file) throws IOException {
+        List<Customer> customers = new ArrayList<>();
+        try {
+            int rowCount = 1;
+            String email = null;
+            InputStream is = new ByteArrayInputStream(file);
+
+            XSSFWorkbook workbook = new XSSFWorkbook(is);
+            XSSFSheet sheet = workbook.getSheetAt(1);
+            Iterator<Row> rowIterator = sheet.iterator();
+            rowIterator.next();
+            rowIterator.next();
+
+            while (rowIterator.hasNext()) {
+
+                try {
+                    Boolean nonErrorCustomer = true;
+                    Row row = rowIterator.next();
+                    Iterator<Cell> cellIterator = row.cellIterator();
+                    email = row.getCell(2).getStringCellValue();
+                    String firstName = row.getCell(3).getStringCellValue();
+                    String LastName = row.getCell(4).getStringCellValue();
+                    Customer customer = Customer.builder()
+                            .customerEmail(email)
+                            .firstName(firstName)
+                            .lastName(LastName)
+                            .dob(row.getCell(5).getStringCellValue() == "" ? null : row.getCell(5).getStringCellValue())
+                            .address(row.getCell(6).getStringCellValue())
+                            .createTimestamp(currentTimestamp)
+                            .updateTimestamp(currentTimestamp)
+                            .company(row.getCell(7).getStringCellValue())
+                            .build();
+                    customers.add(customer);
+                }catch (Exception e){
+
+                }
+
+
+
+            }
+
+          return customers;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

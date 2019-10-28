@@ -115,7 +115,6 @@ public class DepartmentRestController {
 		try {
 			if (departments != null && !departments.isEmpty()) {
 				return new ResponseEntity<List<EmployeeOfDepartment>>(departments, HttpStatus.OK);
-
 			}
 		} catch (Exception e) {
 			ResponseEntity.status(HttpStatus.NOT_FOUND);
