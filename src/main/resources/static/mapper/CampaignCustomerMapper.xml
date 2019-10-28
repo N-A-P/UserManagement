@@ -4,45 +4,49 @@
 <mapper namespace="com.mockproject.du1.mapper.CampaignCustomerMapper">
 
 
+    <!--Get List Data User Information -->
+    <resultMap id="GetMailHistoryResultMap"
+               type="com.mockproject.du1.model.CampaignCustomer">
+        <result property="campaignCustomerId" column="campaign_customer_id"/>
+        <result property="sendTime" column="sent_date"/>
+        <result property="joinDate" column="join_date"/>
+        <result property="updateBy" column="updated_by"/>
+        <result property="createTimestamp" column="created_timestamp"/>
+        <result property="updateTimestamp" column="updated_timestamp"/>
+        <result property="campaignId" column="campaign_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="customerId" column="customer_id"/>
+        <result property="updateBy" column="updated_by"/>
+        <result property="createTimestamp" column="created_timestamp"/>
+        <result property="updateTimestamp" column="updated_timestamp"/>
 
-	<!--Get List Data User Information -->
-	<resultMap id="GetMailHistoryResultMap"
-		type="com.mockproject.du1.model.CampaignCustomer">
-		<result property="campaignCustomerId" column="campaign_customer_id" />
-		<result property="sendTime" column="sent_date" />
-		<result property="joinDate" column="join_date" />
-		<result property="updateBy" column="updated_by" />
-		<result property="createTimestamp" column="created_timestamp" />
-		<result property="updateTimestamp" column="updated_timestamp" />
-		<result property="campaignId" column="campaign_id" />
-		<result property="userId" column="user_id" />
-		<result property="customerId" column="customer_id" />
-	</resultMap>
+    </resultMap>
 
 
-	<insert id="sqlInsertMailHistoryl" parameterType="com.mockproject.du1.model.CampaignCustomer">
+    <insert id="sqlInsertMailHistoryl" parameterType="com.mockproject.du1.model.CampaignCustomer">
 		INSERT INTO public.campaign_customer
-		(sent_date,user_id,customer_id,campaign_id)
+		(sent_date,user_id,customer_id,campaign_id,updated_by,created_timestamp,updated_timestamp)
 		VALUES
-		(#{sendTime},#{userId},#{customerId},#{campaignId})
+		(#{sendTime},#{userId},#{customerId},#{campaignId},#{updateBy},#{createTimestamp}::timestamp without time zone,#{updateTimestamp}::timestamp without time zone)
 	</insert>
-	<select id="sqlGetAllMailHistorySelect"
-			resultMap="GetMailHistoryResultMap">
+
+    <select id="sqlGetAllMailHistorySelect"
+            resultMap="GetMailHistoryResultMap">
 		SELECT
 		 campaign_customer_id,
 		 join_date,
 	     sent_date,
-		 updated_by,
-		 created_timestapm,
-		 updated_timestapm,
 		 campaign_id,
 		 user_id,
-		 customer_id
+		 customer_id,
+		 updated_by,
+		 created_timestapm,
+		 updated_timestapm
          FROM public.campaign_customer;
 
 	</select>
-	<select id="sqlGetMailHistorySelectByEmail"
-			resultMap="GetMailHistoryResultMap" parameterType="String">
+    <select id="sqlGetMailHistorySelectByEmail"
+            resultMap="GetMailHistoryResultMap" parameterType="String">
 		SELECT
 		count(*)
 		FROM

@@ -32,10 +32,12 @@ public class EmailController {
         return new ResponseEntity("Failen", HttpStatus.BAD_REQUEST);
     }
 
-//    @RequestMapping(value = "/test", method = RequestMethod.GET)
-//    public MailOfUser sendMail() {
-//        return MailOfUser.builder().campaignId(1).sendEmailUserId(1).customers(List.of(Customer.builder().customerId(13).customerEmail("admin123@gmail.com").build())).build();
-//    }
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public MailOfUser sendMail() {
+        List<Customer> customers=new ArrayList<>();
+        customers.add(Customer.builder().customerId(13).customerEmail("admin123@gmail.com").build());
+        return MailOfUser.builder().campaignId(1).sendEmailUserId(1).customers(customers).build();
+    }
 
     @RequestMapping(value = "/coverExcel", method = RequestMethod.POST)
     public byte[] coverExcel(@RequestBody MultipartFile file) throws IOException {
@@ -45,7 +47,6 @@ public class EmailController {
         workbook.write(outputStream);
         outputStream.write(bytes);
         return bytes;
-
     }
 
     @RequestMapping(value = "/coverExcel/test", method = RequestMethod.POST)
@@ -53,7 +54,6 @@ public class EmailController {
         XSSFWorkbook workbook = emailService.coverExcellFileToArray(bytes);
         File file = new File("C:/employee.xlsx");
         file.getParentFile().mkdirs();
-
         FileOutputStream outFile = new FileOutputStream(file);
         workbook.write(outFile);
         System.out.println("Created file: " + file.getAbsolutePath());
@@ -76,15 +76,12 @@ public class EmailController {
             return new ResponseEntity<String>("success", HttpStatus.OK);
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }
-
     @RequestMapping(value = "/editCampaign", method = RequestMethod.POST)
     public ResponseEntity editCampaign(@RequestBody Campaign campaign) {
         if (emailService.editCampaign(campaign).equalsIgnoreCase("success"))
             return new ResponseEntity<String>("success", HttpStatus.OK);
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }
-
-
     @RequestMapping(value = "/addCampaign", method = RequestMethod.POST)
     public ResponseEntity addCampaign(@RequestBody Campaign campaign) {
         if (emailService.addCampaign(campaign).equalsIgnoreCase("success"))

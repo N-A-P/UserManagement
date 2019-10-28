@@ -24,7 +24,7 @@
     <insert id="sqlCreateCampaignInsert" parameterType="com.mockproject.du1.model.Campaign">
     INSERT INTO public.campaign
     (title, description, duration, start_date, end_date, updated_by, created_timestamp, updated_timestamp,email_template_id)
-    VALUES(#{title}, #{description}, #{duration}, #{startDate}, #{endDate}, #{updateBy}, #{createTimestamp}, #{updateTimestamp},#{emailTemplateId});
+    VALUES(#{title}, #{description}, #{duration}, #{startDate}, #{endDate}, #{updateBy}, #{createTimestamp}::timestamp without time zone, #{updateTimestamp}::timestamp without time zone,#{emailTemplateId});
 	</insert>
 
     <select id="sqlGetAllCampain"
@@ -51,8 +51,8 @@
         start_date=#{startDate},
         end_date=#{endDate},
         updated_by=#{updateBy},
-        created_timestamp=#{createTimestamp},
-        updated_timestamp=#{updateTimestamp},
+        created_timestamp=#{createTimestamp}::timestamp without time zone,
+        updated_timestamp=#{updateTimestamp}::timestamp without time zone,
         email_template_id=#{emailTemplateId}
         WHERE campaign_id=#{campaignId};
 

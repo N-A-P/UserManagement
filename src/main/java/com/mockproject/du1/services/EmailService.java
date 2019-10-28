@@ -21,7 +21,9 @@ import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +41,7 @@ import static com.mockproject.du1.common.MessageUtils.getMessage;
 
 @Service
 public class EmailService {
+    String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
     @Autowired
     EmailTemplateMapper emailMapper;
     @Autowired
@@ -79,6 +82,8 @@ public class EmailService {
         mailHistoryMapper.sqlInsertMailHistoryl(CampaignCustomer.builder()
                 .sendTime(sendTime)
                 .userId(sendUserId)
+                .createTimestamp(currentTimestamp)
+                .updateTimestamp(currentTimestamp)
                 .campaignId(campaignId)
                 .customerId(customer.getCustomerId())
                 .build());
@@ -108,11 +113,15 @@ public class EmailService {
             int rowCount = 1;
             String email = null;
             InputStream is = new ByteArrayInputStream(file);
+
             XSSFWorkbook workbook = new XSSFWorkbook(is);
             XSSFSheet sheet = workbook.getSheetAt(1);
+            sheet.getRow(1).createCell(8);
+            sheet.getRow(1).getCell(8).setCellValue("Message");
             Iterator<Row> rowIterator = sheet.iterator();
             rowIterator.next();
             rowIterator.next();
+
             while (rowIterator.hasNext()) {
                 Boolean nonErrorCustomer = true;
                 Row row = rowIterator.next();
@@ -166,6 +175,8 @@ public class EmailService {
                                 .lastName(LastName)
                                 .dob(row.getCell(5).getStringCellValue() == "" ? null : row.getCell(5).getStringCellValue())
                                 .address(row.getCell(6).getStringCellValue())
+                                .createTimestamp(currentTimestamp)
+                                .updateTimestamp(currentTimestamp)
                                 .company(row.getCell(7).getStringCellValue())
                                 .build();
                         customerMapper.sqlCreateCustomerInsert(customer);
@@ -246,19 +257,9 @@ public class EmailService {
         List<Customer> customers = customerMapper.sqlGetAllCustomer();
         List<Integer> integers = new ArrayList<>();
         for (Campaign campaign : campaigns) {
-            for (Customer customer : customerMapper.sqlGetCustomerByCampaignAndMaxTime(campaign.getCampaignId())) {
-                int check = 0;
-                for (Customer customerExit : customers) {
-                    if (customerExit.getCustomerId() == customer.getCustomerId()) {
-                        check = 1;
-                        integers.add(1);
-                    }
-                }
-                if (check == 0) integers.add(0);
-            }
             CampaignDetail campaignDetail = CampaignDetail.builder()
                     .campaign(campaign)
-                    .customerList(customerMapper.sqlGetCustomerByCampaignAndMaxTime(campaign.getCampaignId())).customerCheck(integers).build();
+                    .customerList(customers).customerCheck(customerMapper.sqlGetCustomerByCampaignAndMaxTime(campaign.getCampaignId())).build();
             campaignDetails.add(campaignDetail);
         }
         return campaignDetails;

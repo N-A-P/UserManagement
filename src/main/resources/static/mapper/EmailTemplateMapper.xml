@@ -13,8 +13,6 @@
         <result property="updateBy" column="updated_by"/>
         <result property="createTimestamp" column="created_timestamp"/>
         <result property="updateTimestamp" column="updated_timestamp"/>
-
-
     </resultMap>
 
 
@@ -23,9 +21,9 @@
             SELECT currval('"email_template_id_seq"')
         </selectKey>
         INSERT INTO public.email_template
-        (title,body)
+        (title,body,updated_by,created_timestamp,updated_timestamp)
         VALUES
-        (#{title},#{body})
+        (#{title},#{body},#{updateBy},#{createTimestamp}::timestamp without time zone,#{updateTimestamp}::timestamp without time zone)
     </insert>
 
     <select id="sqlGetAllEmailTemplateSelect"
@@ -57,7 +55,11 @@
 	</select>
     <update id="sqlEmailUpdate">
 		UPDATE public.email_template
-        SET title=#{title}, body=#{body}
+        SET title=#{title},
+         body=#{body},
+         updated_by=#{updateBy},
+         created_timestamp=#{createTimestamp}::timestamp without time zone,
+         updated_timestamp=#{updateTimestamp}::timestamp without time zone
         WHERE email_template_id=#{emaiTemplateId}
 
 	</update>

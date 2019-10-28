@@ -9,5 +9,5 @@ import java.util.List;
 public class CampaignDetail {
 	Campaign campaign;
 	List<Customer> customerList;
-	List<Integer> customerCheck;
+	List<Customer> customerCheck;
 }

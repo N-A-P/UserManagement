@@ -59,6 +59,7 @@ public class UsersService {
 	public List<GrantedAuthority> getAuthorities(Users user) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		System.out.println(authorities.get(0).getAuthority());
 		return authorities;
 	}
 

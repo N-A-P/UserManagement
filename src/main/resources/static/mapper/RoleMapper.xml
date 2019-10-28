@@ -11,7 +11,6 @@
 		<result property="updateBy" column="updated_by" />
 		<result property="createTimestamp" column="created_timestamp" />
 		<result property="updateTimestamp" column="updated_timestamp" />
-
 	</resultMap>
 
 	<!--Get List All Role Query -->

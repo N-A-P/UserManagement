@@ -26,7 +26,7 @@
 		INSERT INTO public.customer
         (first_name, last_name, dob, email, is_activated, updated_by, created_timestamp, updated_timestamp, address, company)
         VALUES
-        (#{firstName}, #{lastName}, #{dob}, #{customerEmail}, #{isActivated}, #{updateBy}, #{createTimestamp}, #{updateTimestamp}, #{address}, #{company});
+        (#{firstName}, #{lastName}, #{dob}, #{customerEmail}, #{isActivated}, #{updateBy}, #{createTimestamp}::timestamp without time zone, #{updateTimestamp}::timestamp without time zone, #{address}, #{company});
 
 
 
@@ -88,7 +88,7 @@
 	  inner join customer c on c.customer_id=b.customer_id
 	  where
 	  b.sent_date=(select max(sent_date) from campaign_customer d where d.campaign_id=a.campaign_id)
-	  and a.campaign_id=#{CampaignId}
+	  and a.campaign_id=#{CampaignId} group by c.customer_id
 
 	</select>
 
