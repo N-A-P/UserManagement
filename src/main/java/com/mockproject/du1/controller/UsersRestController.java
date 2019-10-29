@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,9 +52,16 @@ public class UsersRestController {
 	Logger log = LoggerFactory.getLogger(UsersRestController.class);
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
-	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public ResponseEntity<List<UsersFull>> getAllUser() {
-		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(), HttpStatus.OK);
+//	@RequestMapping(value = "/users", method = RequestMethod.GET)
+//	public ResponseEntity<List<UsersFull>> getAllUser(@RequestBody(required = false) Users user) {
+//		if (user == null)
+//			return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(null), HttpStatus.OK);
+//		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(user.getIsActivated()), HttpStatus.OK);
+//	}
+	
+	@RequestMapping(value = "/users/{isActivated}", method = RequestMethod.GET)
+	public ResponseEntity<List<UsersFull>> getAllUser(@PathVariable(required = false) Integer isActivated) {
+		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(isActivated), HttpStatus.OK);
 	}
 
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
@@ -108,7 +116,7 @@ public class UsersRestController {
 		try {
 			HttpSession session = request.getSession();
 			String userName = (String) session.getAttribute("usernameLogin");
-			user.setUpdateBy(userName);
+			user.setUpdatedBy(userName);
 			usersService.updateUserInfo(user);
 			return new ResponseEntity<String>("Update!", HttpStatus.OK);
 		} catch (CustomException e) {

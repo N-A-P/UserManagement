@@ -28,7 +28,7 @@ public interface UsersMapper {
 	 * Get All UserFull
 	 *
 	 */
-	List<UsersFull> sqlGetAllUserFullSelect();
+	List<UsersFull> sqlGetAllUserFullSelect(@Param("isActivated")Integer isActivated);
 
 	/**
 	 * Get User By Username
