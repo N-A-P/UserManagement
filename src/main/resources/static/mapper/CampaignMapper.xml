@@ -17,7 +17,7 @@
         <result property="createTimestamp" column="created_timestamp"/>
         <result property="updateTimestamp" column="updated_timestamp"/>
         <result property="emailTemplateId" column="email_template_id"/>
-
+        <association property="com.mockproject.du1.model.Customer" column="campaign_id" select="com.example.mapper.TelecomMapper.selectByPrimaryKey" />
     </resultMap>
 
 
@@ -29,7 +29,7 @@
 
     <select id="sqlGetAllCampain"
             resultMap="GetCampaignResultMap" >
-		SELECT campaign_id,
+		SELECT DISTINCT campaign_id,
 		 title,
 		 description,
 		 duration,

@@ -10,5 +10,6 @@ public interface CustomerMapper {
     Customer sqlGetCustomerByEmailSelect(String email);
     List<Customer> sqlGetAllCustomer();
     List<Customer> sqlGetCustomerByCampaignAndMaxTime(int CampaignId);
+    Customer selectByPrimaryKey(int campaign_id);
 
 }
