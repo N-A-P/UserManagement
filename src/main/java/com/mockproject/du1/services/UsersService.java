@@ -1,9 +1,6 @@
 package com.mockproject.du1.services;
 
-<<<<<<< HEAD
 import java.sql.SQLException;
-=======
->>>>>>> refs/remotes/origin/huong_to_merge_later
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
