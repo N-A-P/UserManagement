@@ -6,7 +6,6 @@ import javax.persistence.Embedded;
 import java.time.LocalDateTime;
 
 @lombok.Data
-@Builder
 public class UserRole {
 	/**
 	 * User Role Id
@@ -28,8 +27,17 @@ public class UserRole {
 	 * Leave Date
 	 */
     private String leaveDate;
+    /**
+     * 
+     */
     private String updateBy;
+    /**
+     * 
+     */
     private String createTimestamp;
+    /**
+     * 
+     */
     private String updateTimestamp;
 
 }

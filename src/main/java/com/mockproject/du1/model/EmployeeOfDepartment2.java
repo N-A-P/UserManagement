@@ -3,7 +3,7 @@ package com.mockproject.du1.model;
 import java.util.List;
 
 @lombok.Data
-public class EmployeeOfDepartment {
+public class EmployeeOfDepartment2 {
 	/***
 	 * User Id
 	 */
@@ -41,17 +41,19 @@ public class EmployeeOfDepartment {
 	 */
 	private String activatedDate;
 	/**
+	 * End Date
+	 */
+	private String endDate;
+	/**
 	 * Seniority(Years)
 	 */
 	private int seniority;
+
 	/**
-	 * User Department Id
+	 * IsActivated
 	 */
-	private int userDepartmentId;
-	/**
-	 * User Role Id
-	 */
-	private int userRoleId;
+	private int isActivated;
+
 	/**
 	 * 
 	 */

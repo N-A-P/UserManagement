@@ -299,12 +299,12 @@ public class DepartmentService {
 		List<EmployeeOfDepartment> listRecordError = new ArrayList<EmployeeOfDepartment>();
 		UserDepartment userDepartment = new UserDepartment();
 		try {
-
+			
 			for (EmployeeOfDepartment employeeOfDepartment : listEmployeeOfDepartment) {
 				try {
 
 					userDepartment.setUserId(employeeOfDepartment.getUserId());
-					userDepartment.setDepartmentId(employeeOfDepartment.getDepartmentId());
+					userDepartment.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getDepartmentId());
 					userDepartment.setJoinDate(currentTimestamp);
 					userDepartment.setLeaveDate(null);
 					userDepartment.setStayOrLeave(STATUS_STAY);
@@ -339,8 +339,8 @@ public class DepartmentService {
 	public int updateNumberOfEmployee(EmployeeOfDepartment employeeOfDepartment) {
 		try {
 			Department department = new Department();
-			department.setNumberOfEmployees(employeeOfDepartment.getNumberOfEmployees());
-			department.setDepartmentId(employeeOfDepartment.getDepartmentId());
+			department.setNumberOfEmployees(employeeOfDepartment.getDepartments().get(0).getNumberOfEmployees());
+			department.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getDepartmentId());
 			department.setUpdateBy(usernameLogin);
 			department.setUpdateTimestamp(currentTimestamp);
 			return departmentMapper.sqlDepartmentNumberOfEmployeeUpdate(department);
