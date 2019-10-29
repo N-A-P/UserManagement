@@ -32,17 +32,9 @@ public class UserDepartment {
 	 * Leave Date
 	 */
 	private String leaveDate;
-	/**
-	 * Update By
-	 */
+
 	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
 	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
 	private String updateTimestamp;
 
 

@@ -23,7 +23,34 @@
 		<result property="createTimestamp" column="created_timestamp" />
 		<result property="updateTimestamp" column="updated_timestamp" />
 	</resultMap>
-
+	<resultMap id="GetUserFullResultMap"
+		type="com.mockproject.du1.model.UsersFull">
+		<result property="userId" column="user_id" />
+		<result property="firstName" column="first_name" />
+		<result property="lastName" column="last_name" />
+		<result property="dob" column="dob" />
+		<result property="email" column="email" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="startDate" column="registered_date" />
+		<result property="tenure" column="seniority" />
+		<result property="status" column="is_activated" />
+		<collection property="listDepartment"
+			resultMap="GetDepartResultMap" />
+		<collection property="listRole"
+			resultMap="GetRoleResultMap" />
+	</resultMap>
+	<resultMap id="GetDepartResultMap"
+		type="com.mockproject.du1.model.Department">
+		<result property="departmentId" column="department_id" />
+		<result property="departmentName" column="department_name" />
+		<result property="endDate" column="leave_date" />
+	</resultMap>
+	<resultMap id="GetRoleResultMap"
+		type="com.mockproject.du1.model.Department">
+		<result property="departmentId" column="department_id" />
+		<result property="departmentName" column="department_name" />
+	</resultMap>
 	<!--Get List Data UserFull Information -->
 	<!--<resultMap id="GetUserFullResultMap" type="com.mockproject.du1.model.UsersFull"> 
 		<result property="userId" column="user_id" /> <result property="firstName" 

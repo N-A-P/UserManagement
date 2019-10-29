@@ -4,7 +4,7 @@ import com.mockproject.du1.model.CampaignCustomer;
 
 import java.util.List;
 
-public interface MailHistoryMapper {
+public interface CampaignCustomerMapper {
     List<CampaignCustomer> sqlGetAllMailHistorySelect();
 
     CampaignCustomer sqlGetMailHistorySelectByEmail(String email);

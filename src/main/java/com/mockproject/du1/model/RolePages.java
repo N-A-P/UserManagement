@@ -6,7 +6,6 @@ import javax.persistence.Embedded;
 import java.time.LocalDateTime;
 
 @lombok.Data
-@Builder
 public class RolePages {
 	/**
 	 * Role Pages Id
@@ -21,16 +20,11 @@ public class RolePages {
 	 */
 	private int pagesId;
 	/**
-	 * Update By
+	 * Update Info
 	 */
 	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
 	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
 	private String updateTimestamp;
+
 
 }

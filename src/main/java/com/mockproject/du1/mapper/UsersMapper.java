@@ -10,11 +10,173 @@ import com.mockproject.du1.model.UsersFull;
 public interface UsersMapper {
 
 	/**
+
+	 * Get User Login
+	 *
+	 * @param users
+	 * @return Number Of User
+	 */
+	long sqlCheckLoginSelect(@Param("username") String username, @Param("password") String password);
+
+	/**
+	 * Get All User
+	 *
+	 * @return Users
+	 */
+	//List<UsersFull> sqlGetAllUserSelect();
+
+	/**
+	 * Get All UserFull
+	 *
+	 */
+	List<UsersFull> sqlGetAllUserFullSelect();
+	
+	/**
+	 * Get User Login
+	 *
+	 * @param users
+	 * @return Number Of User
+	 */
+	long sqlCheckLoginSelect(@Param("username") String username, @Param("password") String password);
+
+	/**
+	 * Get All User
+	 *
+	 * @return Users
+	 */
+	//List<UsersFull> sqlGetAllUserSelect();
+
+	/**
+	 * Get All UserFull
+	 *
+	 */
+	List<UsersFull> sqlGetAllUserFullSelect();
+	
+	/**
+	 * Get User Login
+	 *
+	 * @param users
+	 * @return Number Of User
+	 */
+	long sqlCheckLoginSelect(@Param("username") String username, @Param("password") String password);
+
+	/**
+	 * Get All User
+	 *
+	 * @return Users
+	 */
+	//List<UsersFull> sqlGetAllUserSelect();
+
+	/**
+	 * Get All UserFull
+	 *
+	 */
+	List<UsersFull> sqlGetAllUserFullSelect();
+	
+	/**
+	 * Get User Login
+	 *
+	 * @param users
+	 * @return Number Of User
+	 */
+	long sqlCheckLoginSelect(@Param("username") String username, @Param("password") String password);
+
+	/**
+	 * Get All User
+	 *
+	 * @return Users
+	 */
+	//List<UsersFull> sqlGetAllUserSelect();
+
+	/**
+	 * Get All UserFull
+	 *
+	 */
+	List<UsersFull> sqlGetAllUserFullSelect();
+	
+	/**
+	 * Get User Login
+	 *
+	 * @param users
+	 * @return Number Of User
+	 */
+	long sqlCheckLoginSelect(@Param("username") String username, @Param("password") String password);
+
+	/**
+	 * Get All User
+	 *
+	 * @return Users
+	 */
+	//List<UsersFull> sqlGetAllUserSelect();
+
+	/**
+	 * Get All UserFull
+	 *
+	 */
+	List<UsersFull> sqlGetAllUserFullSelect();
+	
+	/**
+	 * Get User Login
+	 *
+	 * @param users
+	 * @return Number Of User
+	 */
+	long sqlCheckLoginSelect(@Param("username") String username, @Param("password") String password);
+
+	/**
+	 * Get All User
+	 *
+	 * @return Users
+	 */
+	//List<UsersFull> sqlGetAllUserSelect();
+
+	/**
+	 * Get All UserFull
+	 *
+	 */
+	List<UsersFull> sqlGetAllUserFullSelect();
+	
+	/**
+	 * Get User Login
+	 *
+	 * @param users
+	 * @return Number Of User
+	 */
+	long sqlCheckLoginSelect(@Param("username") String username, @Param("password") String password);
+
+	/**
+	 * Get All User
+	 *
+	 * @return Users
+	 */
+	//List<UsersFull> sqlGetAllUserSelect();
+
+	/**
+	 * Get All UserFull
+	 *
+	 */
+	List<UsersFull> sqlGetAllUserFullSelect();
+	
+	/**
 	 * Get User By Username
 	 *
 	 * @return User
 	 */
 	Users sqlGetUserByUsernameSelect(@Param("username") String username);
+
+	/**
+	 * Get User By Email
+	 *
+	 * @return User
+	 */
+	Users sqlGetUserByEmailSelect(@Param("email") String email);
+
+	/**
+	 * Get User By Id
+	 *
+	 * @return User
+	 */
+	Users sqlGetUserByIdSelect(@Param("userId") long userId);
 
 	
 	

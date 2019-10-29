@@ -36,7 +36,7 @@ public class DepartmentRestController {
 	/**
 	 * Click button show list department(Active & Inactive)
 	 */
-	@RequestMapping(value = "/getAllListDepartment", method = RequestMethod.GET)
+	@GetMapping(value = "/getAllListDepartment")
 	public ResponseEntity<List<Department>> getAllListDepartment() {
 		List<Department> departments = departmentService.getAllListDepartment();
 		try {
@@ -53,7 +53,7 @@ public class DepartmentRestController {
 	/**
 	 *
 	 */
-	@RequestMapping(value = "/getListDepartmentActive", method = RequestMethod.GET)
+	@GetMapping(value = "/getListDepartmentActive")
 	public ResponseEntity<List<Department>> getListDepartmentActive() {
 		List<Department> departments = departmentService.getListDepartmentActive();
 		try {
@@ -72,7 +72,7 @@ public class DepartmentRestController {
 	 *
 	 * >>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
 	 */
-	@RequestMapping(value = "/getDepartmentById/{departmentId}", method = RequestMethod.GET)
+	@GetMapping(value = "/getDepartmentById/{departmentId}")
 	public ResponseEntity<Department> getDepartmentById(@PathVariable int departmentId) {
 		Department department = departmentService.getDepartmentById(departmentId);
 		try {
@@ -90,7 +90,7 @@ public class DepartmentRestController {
 	/**
 	 *
 	 */
-	@RequestMapping(value = "/getListEmployeeOfDepartment/{departmentId}", method = RequestMethod.GET)
+	@GetMapping(value = "/getListEmployeeOfDepartment/{departmentId}")
 	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeOfDepartment(
 			@PathVariable @Valid int departmentId) {
 		List<EmployeeOfDepartment> departments = departmentService.getListEmployeeOfDepartment(departmentId);
@@ -109,7 +109,7 @@ public class DepartmentRestController {
 	/**
 	 *
 	 */
-	@RequestMapping(value = "/getListEmployeeNotInDepartment/{departmentId}", method = RequestMethod.GET)
+	@GetMapping(value = "/getListEmployeeNotInDepartment/{departmentId}")
 	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeNotInDepartment(@PathVariable int departmentId) {
 		List<EmployeeOfDepartment> departments = departmentService.getListEmployeeNotInDepartment(departmentId);
 		try {
@@ -128,20 +128,21 @@ public class DepartmentRestController {
 	 *
 	 * >>>>>>> branch 'master' of https://github.com/ntgptit/UserManagement
 	 */
-	@RequestMapping(value = "/updateDepartmentInfomation", method = RequestMethod.POST)
+	@PostMapping(value = "/updateDepartmentInfomation")
 	public ResponseEntity<String> updateDepartmentInfomation(@Valid @RequestBody Department department) {
 
 		try {
-
-			if (departmentService.departmentInfoUpdate(department) == CONSTANT_CHECK_DUPLICATED_CODE) {
+			int checkUpdateSuccess = departmentService.departmentInfoUpdate(department);
+			
+			if (checkUpdateSuccess == CONSTANT_CHECK_DUPLICATED_CODE) {
 				return new ResponseEntity<String>("Duplicated Department code!!! Please Check!!!",
 						HttpStatus.BAD_REQUEST);
 
-			} else if (departmentService.departmentInfoUpdate(department) == CONSTANT_CHECK_DUPLICATED_NAME) {
+			} else if (checkUpdateSuccess == CONSTANT_CHECK_DUPLICATED_NAME) {
 				return new ResponseEntity<String>("Duplicated Department name!!! Please Check!!!",
 						HttpStatus.BAD_REQUEST);
 
-			} else if (departmentService.departmentInfoUpdate(department) == 0) {
+			} else if (checkUpdateSuccess == 0) {
 				return new ResponseEntity<String>("Database rollback!!! Modify department failed!!!",
 						HttpStatus.BAD_REQUEST);
 			} else {
@@ -157,7 +158,7 @@ public class DepartmentRestController {
 	/**
 	 *
 	 */
-	@RequestMapping(value = "/activeDepartment", method = RequestMethod.POST)
+	@PostMapping(value = "/activeDepartment")
 	public ResponseEntity<String> activeDepartment(@Valid @RequestBody Department department) {
 
 		try {
@@ -175,7 +176,7 @@ public class DepartmentRestController {
 	/**
 	 *
 	 */
-	@RequestMapping(value = "/inActiveDepartment", method = RequestMethod.POST)
+	@PostMapping(value = "/inActiveDepartment")
 	public ResponseEntity<String> inActiveDepartment(@Valid @RequestBody Department department) {
 		try {
 			if (departmentService.inActiveDepartment(department.getDepartmentId()) != 0) {
@@ -191,7 +192,7 @@ public class DepartmentRestController {
 	/**
 	 *
 	 */
-	@RequestMapping(value = "/insertDepartment", method = RequestMethod.POST)
+	@PostMapping(value = "/insertDepartment")
 	public ResponseEntity<String> insertDepartment(@Valid @RequestBody Department department) {
 
 		try {
@@ -223,7 +224,7 @@ public class DepartmentRestController {
 	/**
 	 *
 	 */
-	@RequestMapping(value = "/addNewEmployeeToDepartment", method = RequestMethod.POST)
+	@PostMapping(value = "/addNewEmployeeToDepartment")
 	public ResponseEntity<List<EmployeeOfDepartment>> addNewEmployeeToDepartment(
 			@Valid @RequestBody List<EmployeeOfDepartment> listEmployeeNotInDepartment) {
 		List<EmployeeOfDepartment> listRecordError = departmentService
@@ -239,7 +240,7 @@ public class DepartmentRestController {
 	/**
 	 *
 	 */
-	@RequestMapping(value = "/removeEmployeeFromDepartment", method = RequestMethod.POST)
+	@PostMapping(value = "/removeEmployeeFromDepartment")
 	public ResponseEntity<String> removeEmployeeFromDepartment(
 			@Valid @RequestBody EmployeeOfDepartment employeeOfDepartment) {
 		if (departmentService.removeEmployeeFromDepartment(employeeOfDepartment.getUserDepartmentId()) != 0) {

@@ -21,16 +21,10 @@ public class Role {
 	 */
 	private String roleCode;
 	/**
-	 * Update By
+	 * Role Id
 	 */
 	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
 	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
 	private String updateTimestamp;
 
 }

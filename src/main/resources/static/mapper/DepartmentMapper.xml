@@ -119,7 +119,7 @@
 		<result property="firstName" column="first_name" />
 		<result property="lastName" column="last_name" />
 		<result property="email" column="email" />
-		<result property="seniorlity" column="seniorlity" />
+		<result property="seniority" column="seniority" />
 		<result property="userRoleId" column="user_role_id" />
 		<result property="roleId" column="role_id" />
 		<result property="roleName" column="role_name" />
@@ -137,7 +137,7 @@
 		a.last_name AS
 		last_name,
 		a.email AS email,
-		a.seniorlity AS seniorlity,
+		a.seniority AS seniority,
 		b.user_role_id
 		AS
 		user_role_id,
@@ -168,12 +168,12 @@
 
 		WHERE
 		<if test="action == 1">
-			e.department_id NOT IN (#{department_id})
+			e.department_id NOT IN (#{departmentId})
 			AND
 			d.stay_or_leave IN (0,1)
 		</if>
 		<if test="action == 2">
-			e.department_id = #{department_id}
+			e.department_id = #{departmentId}
 			AND d.stay_or_leave =
 			#{statusUserDepartment}
 		</if>

@@ -182,9 +182,9 @@ public class DepartmentService {
 					// set value for field public.department.updated_by
 					department.setUpdateBy(usernameLogin);
 					// set value for field public.department.created_timestamp
-					department.setCreateTimestamp(DataUtil.getCurrentTimestamp().toString());
+					department.setCreateTimestamp(currentTimestamp);
 					// set value for field public.department.updated_timestamp
-					department.setUpdateTimestamp(DataUtil.getCurrentTimestamp().toString());
+					department.setUpdateTimestamp(currentTimestamp);
 
 					// return result update database query
 					return departmentMapper.sqlDepartmentInfoUpdate(department);
@@ -248,10 +248,9 @@ public class DepartmentService {
 	 */
 	public int departmentInsert(Department department) throws DuplicateKeyException, SQLException {
 		try {
-			HttpSession session = request.getSession(false);
-			usernameLogin = (String) session.getAttribute("usernameLogin");
+//			HttpSession session = request.getSession(false);
+//			usernameLogin = (String) session.getAttribute("usernameLogin");
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 
 		try {
@@ -296,7 +295,8 @@ public class DepartmentService {
 
 			for (EmployeeOfDepartment employeeOfDepartment : listEmployeeOfDepartment) {
 				try {
-					if (departmentMapper.sqlNewEmployeeForDeparmentInsert(employeeOfDepartment, STATUS_STAY) == 0) {
+					if (departmentMapper.sqlNewEmployeeForDeparmentInsert(employeeOfDepartment, STATUS_STAY,
+							STATUS_STAY) == 0) {
 						listRecordError.add(employeeOfDepartment);
 					}
 				} catch (DuplicateKeyException e) {

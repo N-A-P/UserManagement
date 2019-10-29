@@ -2,8 +2,6 @@ package com.mockproject.du1.model;
 
 import lombok.Builder;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Embedded;
 
 @lombok.Data
@@ -33,21 +31,18 @@ public class Campaign {
 	 * Campaign end Date
 	 */
 	private String endDate;
+
+	/**
+	 * updateInfo
+	 */
+	private String updateBy;
+	private String createTimestamp;
+	private String updateTimestamp;
 	/**
 	 * Campaign email Template Id
 	 */
 	private int emailTemplateId;
-	/**
-	 * Update By
-	 */
-	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
-	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
-	private String updateTimestamp;
+
+
 
 }

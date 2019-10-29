@@ -1,11 +1,13 @@
 package com.mockproject.du1.model;
 
+
 /*
  * UsersFull Model
  */
 
 import javax.persistence.Embedded;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @lombok.Data
 public class UsersFull {
@@ -56,31 +58,15 @@ public class UsersFull {
 	private int status;
 
 	/**
-	 * user Role Id
+	 * list department of Employee
 	 */
-	private int userRoleId;
+	private List<Department> listDepartment;
+	
+	/**
+	 * list role of Employee
+	 */
+	private List<Role> listRole;
 
-	/**
-	 * role id
-	 */
-	private int roleId;
 
-	/**
-	 * department id
-	 */
-	private int departmentId;
-
-	/**
-	 * Update By
-	 */
-	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
-	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
-	private String updateTimestamp;
 
 }

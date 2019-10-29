@@ -39,8 +39,10 @@
 		SELECT role_id,
 		role_code, role_name, updated_by, created_timestamp,
 		updated_timestamp
-		FROM public.role WHERE role_code LIKE #{_roleCode} OR
-		role_name LIKE #{_roleName}
+		FROM public.role WHERE role_code collate
+		SQL_Latin1_General_CP1_CI_AS LIKE #{_roleCode} OR
+		role_name collate
+		SQL_Latin1_General_CP1_CI_AS LIKE #{_roleName}
 
 	</select>
 

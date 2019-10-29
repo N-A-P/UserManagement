@@ -21,16 +21,10 @@ public class EmailTemplate {
 	 */
 	private String body;
 	/**
-	 * Update By
+	 * Update Info
 	 */
-	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
-	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
-	private String updateTimestamp;
+    private String updateBy;
+    private String createTimestamp;
+    private String updateTimestamp;
 
 }

@@ -24,21 +24,18 @@ public class Department {
 	 * Number Of Employees
 	 */
 	private int numberOfEmployees;
+
 	/**
-	 * isActivated
+	 * end date
+	 */
+	private String endDate;
+	
+	/**
+	 * Status
 	 */
 	private int isActivated;
-	/**
-	 * Update By
-	 */
 	private String updateBy;
-	/**
-	 * Create Timestamp
-	 */
 	private String createTimestamp;
-	/**
-	 * Update Timestamp
-	 */
 	private String updateTimestamp;
 
 }

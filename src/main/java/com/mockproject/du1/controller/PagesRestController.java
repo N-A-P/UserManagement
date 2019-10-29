@@ -103,8 +103,9 @@ public class PagesRestController {
 				return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
 			}
 
-		} catch (SQLException e) {
-			return new ResponseEntity<String>("SQL Error Code: " + e.getErrorCode(), HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("SQL Error Code: " + ((SQLException) e).getErrorCode(),
+					HttpStatus.BAD_REQUEST);
 		}
 
 	}
@@ -133,8 +134,9 @@ public class PagesRestController {
 		} catch (DuplicateKeyException e) {
 			return new ResponseEntity<String>("Duplicated Key!!! Database rollback!!! Adding new Pages failed!!!",
 					HttpStatus.BAD_REQUEST);
-		} catch (SQLException e) {
-			return new ResponseEntity<String>("SQL Error Code: " + e.getErrorCode(), HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			return new ResponseEntity<String>("SQL Error Code: " + ((SQLException) e).getErrorCode(),
+					HttpStatus.BAD_REQUEST);
 		}
 
 	}

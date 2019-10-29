@@ -19,9 +19,9 @@ public class EmployeeOfDepartment {
 	 */
 	private String email;
 	/**
-	 * User Seniorlity
+	 * User seniority
 	 */
-	private int seniorlity;
+	private int seniority;
 	/**
 	 * User Role Id
 	 */
