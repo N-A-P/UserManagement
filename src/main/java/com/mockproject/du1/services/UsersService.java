@@ -35,6 +35,7 @@ public class UsersService {
 	private RoleMapper roleMapper;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	HttpServletRequest request = null;
 =======
 	/* ---------------- GET ALL USER LIST ------------------------ */
@@ -44,6 +45,12 @@ public class UsersService {
 >>>>>>> refs/remotes/origin/huong_to_merge_later
 
 	String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+=======
+	/* ---------------- GET ALL USERFULL LIST ------------------------ */
+	public List<UsersFull> getAllUserFull() {
+		return usersMapper.sqlGetAllUserFullSelect();
+	}
+>>>>>>> refs/remotes/origin/huong_to_merge_later
 
 	/* ---------------- GET 1 USER BY USERNAME ------------------------ */
 	public Users getUserByUsername(String username) {
@@ -183,7 +190,7 @@ public class UsersService {
 		} else {
 			throw new CustomException("Email format incorrect");
 		}
-		
+
 	}
 
 	/*
