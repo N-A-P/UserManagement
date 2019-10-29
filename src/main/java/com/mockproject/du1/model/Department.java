@@ -1,8 +1,5 @@
 package com.mockproject.du1.model;
 
-import javax.persistence.Embedded;
-import java.time.LocalDateTime;
-
 /*
  * Department Model
  */
@@ -24,12 +21,6 @@ public class Department {
 	 * Number Of Employees
 	 */
 	private int numberOfEmployees;
-
-	/**
-	 * end date
-	 */
-	private String endDate;
-	
 	/**
 	 * Status
 	 */

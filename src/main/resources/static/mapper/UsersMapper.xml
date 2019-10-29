@@ -35,6 +35,7 @@
 		<result property="startDate" column="registered_date" />
 		<result property="tenure" column="seniority" />
 		<result property="status" column="is_activated" />
+		<result property="endDate" column="activated_date" />
 		<collection property="listDepartment"
 			resultMap="GetDepartResultMap" />
 		<collection property="listRole"
@@ -44,12 +45,11 @@
 		type="com.mockproject.du1.model.Department">
 		<result property="departmentId" column="department_id" />
 		<result property="departmentName" column="department_name" />
-		<result property="endDate" column="leave_date" />
 	</resultMap>
 	<resultMap id="GetRoleResultMap"
-		type="com.mockproject.du1.model.Department">
-		<result property="departmentId" column="department_id" />
-		<result property="departmentName" column="department_name" />
+		type="com.mockproject.du1.model.Role">
+		<result property="roleId" column="role_id" />
+		<result property="roleName" column="role_name" />
 	</resultMap>
 	<!--Get List Data UserFull Information -->
 	<!--<resultMap id="GetUserFullResultMap" type="com.mockproject.du1.model.UsersFull"> 
@@ -82,26 +82,30 @@
 		resultMap="GetUserFullResultMap">
 		SELECT
 		users.user_id,
+		users.first_name,
+		users.last_name,
+		users.is_activated,
 		users.email,
 		users.dob,
 		users.registered_date,
 		department.department_id,
 		department.department_name,
-		rolee.role_id,
-		rolee.role_name,
-		user_department.leave_date
+		role.role_id,
+		role.role_name
 		FROM
-		users left join user_department on
-		users.user_id = user_department.user_id
-		left join department ON
+		users inner join user_department on
+		users.user_id =
+		user_department.user_id
+		inner join department ON
 		department.department_id =
 		user_department.department_id
-		left join
-		user_role ON users.user_id = user_role.user_id left join rolee
+		inner join
+		user_role ON users.user_id = user_role.user_id inner join role
 		on
-		user_role.role_id = rolee.role_id
+		user_role.role_id = role.role_id
+		where 
+		users.is_activated = 1
 	</select>
-
 	<!--Get List Data User Information By Username -->
 	<select id="sqlGetUserByUsernameSelect"
 		resultMap="GetUserResultMap" parameterType="String">

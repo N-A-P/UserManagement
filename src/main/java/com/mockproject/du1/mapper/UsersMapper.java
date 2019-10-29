@@ -18,13 +18,6 @@ public interface UsersMapper {
 	long sqlCheckLoginSelect(@Param("username") String username, @Param("password") String password);
 
 	/**
-	 * Get All User
-	 *
-	 * @return Users
-	 */
-	//List<UsersFull> sqlGetAllUserSelect();
-
-	/**
 	 * Get All UserFull
 	 *
 	 */

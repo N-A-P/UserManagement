@@ -27,11 +27,6 @@ public class UsersService {
 	@Autowired
 	private RoleMapper roleMapper;
 
-	/* ---------------- GET ALL USER LIST ------------------------ */
-//	public List<Users> getAllUser() {
-//		return usersMapper.sqlGetAllUserSelect();
-//	}
-
 	/* ---------------- GET ALL USERFULL LIST ------------------------ */
 	public List<UsersFull> getAllUserFull() {
 		return usersMapper.sqlGetAllUserFullSelect();
@@ -163,7 +158,7 @@ public class UsersService {
 		} else {
 			throw new CustomException("Email format incorrect");
 		}
-		
+
 	}
 
 	/*
