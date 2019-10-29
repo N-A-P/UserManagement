@@ -52,8 +52,8 @@ public class UsersRestController {
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public ResponseEntity<List<UsersFull>> getAllUser(@RequestParam int isActivated) {
-		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(isActivated), HttpStatus.OK);
+	public ResponseEntity<List<UsersFull>> getAllUser() {
+		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(), HttpStatus.OK);
 	}
 
 	/* ---------------- REGISTRATION NEW USER ------------------------ */

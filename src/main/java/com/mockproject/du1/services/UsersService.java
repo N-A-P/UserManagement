@@ -53,8 +53,8 @@ public class UsersService {
 
 	
 	/* ---------------- GET ALL USERFULL LIST ------------------------ */
-	public List<UsersFull> getAllUserFull(int isActivated) {
-		return usersMapper.sqlGetAllUserFullSelect(isActivated);
+	public List<UsersFull> getAllUserFull() {
+		return usersMapper.sqlGetAllUserFullSelect();
 	}
 
 	/* ---------------- GET 1 USER BY USERNAME ------------------------ */
