@@ -10,61 +10,13 @@ import com.mockproject.du1.model.UsersFull;
 public interface UsersMapper {
 
 	/**
-	 * Get User Login
-	 *
-	 * @param users
-	 * @return Number Of User
-	 */
-	long sqlCheckLoginSelect(@Param("username") String username, @Param("password") String password);
-
-	/**
-	 * Get All User
-	 *
-	 * @return Users
-	 */
-	List<Users> sqlGetAllUserSelect();
-
-	/**
-	 * Get All UserFull
-	 *
-	 */
-	List<UsersFull> sqlGetAllUserFullSelect();
-	
-	/**
 	 * Get User By Username
 	 *
 	 * @return User
 	 */
 	Users sqlGetUserByUsernameSelect(@Param("username") String username);
 
-	/**
-	 * Get User By Email
-	 *
-	 * @return User
-	 */
-	Users sqlGetUserByEmailSelect(@Param("email") String email);
-
-	/**
-	 * Get User By Id
-	 *
-	 * @return User
-	 */
-	Users sqlGetUserByIdSelect(@Param("userId") long userId);
-
 	
-	/**
-	 * Add User
-	 *
-	 * @return 0 or 1 if Insert query success or not
-	 */
-	int sqlCreateUserInsert(Users user);
-	
-	/**
-	 * Update User table info
-	 *
-	 * @return 0 or 1 if Update query success or not
-	 */
-	int sqlUpdateUserUpdate(Users user);
 	
 	/**
 	 * Update Role_Detail table info
@@ -101,12 +53,6 @@ public interface UsersMapper {
 	 */
 	int sqlDeleteDepartmentDetailDelete(Integer userId);
 
-	/**
-	 * Update users.status=0 
-	 *
-	 * @return 0 or 1 if Delete query success or not
-	 */
-	int sqlDeleteUserUpdate(Integer userId);
 
 	/**
 	 * Get All User by Search id
