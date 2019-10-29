@@ -30,13 +30,13 @@
             resultMap="GetEmailResultMap">
 		SELECT
 		email_template_id,
-		title, body,
+		title,
+		body,
 		updated_by,
 		created_timestamp,
 		updated_timestamp
 		FROM
 		public.email_template
-
 	</select>
 
     <select id="sqlGetEmailSelectById"

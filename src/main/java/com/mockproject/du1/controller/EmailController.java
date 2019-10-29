@@ -81,24 +81,25 @@ public class EmailController {
         return new ResponseEntity<String>("Enter the correct Excel file format", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/getAllEmailContent", method = RequestMethod.GET)
-    public ResponseEntity getAllEmailTemContent() {
-        return new ResponseEntity<List<EmailTemplate>>(emailService.getAllemailContent(), HttpStatus.OK);
-    }
 
-    @RequestMapping(value = "/editTopic", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/edit-topic", method = RequestMethod.POST)
     public ResponseEntity editTopic(@RequestBody EmailTemplate email) {
         if (emailService.editTopic(email).equalsIgnoreCase("success"))
             return new ResponseEntity<String>("success", HttpStatus.OK);
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }
-    @RequestMapping(value = "/addTopic", method = RequestMethod.POST)
+    @RequestMapping(value = "/add-topic", method = RequestMethod.POST)
     public ResponseEntity addTopic(@RequestBody EmailTemplate email) {
         if (emailService.addTopic(email).equalsIgnoreCase("success"))
             return new ResponseEntity<String>("success", HttpStatus.OK);
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }
-    @RequestMapping(value = "/editCampaign", method = RequestMethod.POST)
+    @RequestMapping(value = "/get-all-topic", method = RequestMethod.GET)
+    public ResponseEntity getAllTopic() {
+            return new ResponseEntity<List<EmailTemplate>>(emailService.getAllTopic(), HttpStatus.OK);
+    }
+    @RequestMapping(value = "/edit-campaign", method = RequestMethod.POST)
     public ResponseEntity editCampaign(@RequestBody Campaign campaign) {
         if (emailService.editCampaign(campaign).equalsIgnoreCase("success"))
             return new ResponseEntity<String>("success", HttpStatus.OK);
@@ -110,7 +111,7 @@ public class EmailController {
             return new ResponseEntity<String>("success", HttpStatus.OK);
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }
-    @RequestMapping(value = "/addCampaign", method = RequestMethod.POST)
+    @RequestMapping(value = "/add-campaign", method = RequestMethod.POST)
     public ResponseEntity addCampaign(@RequestBody Campaign campaign) {
         if (emailService.addCampaign(campaign).equalsIgnoreCase("success"))
             return new ResponseEntity<String>("success", HttpStatus.OK);

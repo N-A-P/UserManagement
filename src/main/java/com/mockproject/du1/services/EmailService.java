@@ -235,10 +235,7 @@ public class EmailService {
 
     public String addTopic(EmailTemplate email) {
 
-        if (emailMapper.sqlGetEmailSelectById(email.getEmaiTemplateId()) != null) {
-            return "email exit";
-        }
-        emailMapper.sqlEmailUpdate(email);
+        emailMapper.sqlCreateEmailInsert(email);
         return "success";
     }
 
@@ -256,7 +253,7 @@ public class EmailService {
         return "success";
     }
 
-    public List<EmailTemplate> getAllemailContent() {
+    public List<EmailTemplate> getAllTopic() {
         return emailMapper.sqlGetAllEmailTemplateSelect();
     }
 
