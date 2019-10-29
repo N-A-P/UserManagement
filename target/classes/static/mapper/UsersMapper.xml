@@ -23,6 +23,7 @@
 		<result property="createTimestamp" column="created_timestamp" />
 		<result property="updateTimestamp" column="updated_timestamp" />
 	</resultMap>
+	
 	<resultMap id="GetUserFullResultMap"
 		type="com.mockproject.du1.model.UsersFull">
 		<result property="userId" column="user_id" />
@@ -41,27 +42,18 @@
 		<collection property="listRole"
 			resultMap="GetRoleResultMap" />
 	</resultMap>
+	
 	<resultMap id="GetDepartResultMap"
 		type="com.mockproject.du1.model.Department">
 		<result property="departmentId" column="department_id" />
 		<result property="departmentName" column="department_name" />
 	</resultMap>
+	
 	<resultMap id="GetRoleResultMap"
 		type="com.mockproject.du1.model.Role">
 		<result property="roleId" column="role_id" />
 		<result property="roleName" column="role_name" />
 	</resultMap>
-	<!--Get List Data UserFull Information -->
-	<!--<resultMap id="GetUserFullResultMap" type="com.mockproject.du1.model.UsersFull"> 
-		<result property="userId" column="user_id" /> <result property="firstName" 
-		column="first_name" /> <result property="lastName" column="last_name" /> 
-		<result property="email" column="email" /> <result property="username" column="username" 
-		/> <result property="password" column="password" /> <result property="dob" 
-		column="dob" /> <result property="startDate" column="start_date" /> <result 
-		property="endDate" column="end_date" /> <result property="tenure" column="tenure" 
-		/> <result property="status" column="status" /> <result property="roleDetailId" 
-		column="role_detail_id" /> <result property="roleId" column="role_id" /> 
-		</resultMap> -->
 
 
 	<!-- =========== SELECT =============== -->
@@ -77,16 +69,10 @@
 		#{password}
 	</select>
 
-	<!--Get List Data User Information -->
-	<select id="sqlGetAllUserSelect" resultMap="GetUserResultMap">
+<!--Get List Data User Information -->
+	<select id="sqlGetAllUserSelect" resultMap="GetUserResultMap"
+		parameterType="Integer">
 		SELECT
-<<<<<<< HEAD
-		user_id,
-		first_name, last_name, dob, email, username, password,
-		registered_date,activated_date,
-		seniority, is_activated,
-		updated_by,created_timestamp,updated_timestamp
-=======
 		users.user_id,
 		users.first_name,
 		users.last_name,
@@ -98,13 +84,8 @@
 		department.department_name,
 		role.role_id,
 		role.role_name
->>>>>>> refs/remotes/origin/huong_to_merge_later
 		FROM
-<<<<<<< HEAD
 		public.users
-		WHERE
-		is_activated = 1
-=======
 		users inner join user_department on
 		users.user_id =
 		user_department.user_id
@@ -115,10 +96,10 @@
 		user_role ON users.user_id = user_role.user_id inner join role
 		on
 		user_role.role_id = role.role_id
-		where 
-		users.is_activated = 1
->>>>>>> refs/remotes/origin/huong_to_merge_later
+		where
+		users.is_activated =#{isActivated}
 	</select>
+
 	<!--Get List Data User Information By Username -->
 	<select id="sqlGetUserByUsernameSelect"
 		resultMap="GetUserResultMap" parameterType="String">
@@ -134,8 +115,8 @@
 		WHERE
 		username = #{username}
 	</select>
-
-	<!--Get List Data User Information By Email -->
+	
+		<!--Get List Data User Information By Email -->
 	<select id="sqlGetUserByEmailSelect"
 		resultMap="GetUserResultMap" parameterType="String">
 		SELECT
@@ -153,7 +134,7 @@
 
 	<!--Get List Data User Information By user_id -->
 	<select id="sqlGetUserByIdSelect" resultMap="GetUserResultMap"
-		parameterType="String">
+		parameterType="Integer">
 		SELECT
 		user_id,
 		first_name, last_name, dob, email,
@@ -167,15 +148,8 @@
 		WHERE
 		user_id= #{userId}
 	</select>
-
-	<!--Get List Data All UserFull Information -->
-	<!--<select id="sqlGetAllUserFullSelect" resultMap="GetUserFullResultMap" 
-		parameterType="String"> SELECT users.user_id,first_name,last_name,email,username,password,dob,start_date,end_date,tenure,status,role_detail_id,role_detail.role_id 
-		FROM public.users INNER JOIN public.role_detail ON users.user_id = role_detail.user_id 
-		INNER JOIN public.role ON role_detail.role_id = role.role_id WHERE users.status=1 
-		</select> -->
-
-	<!--Get number of user_id by department_id and user_id in Table department_detail -->
+	
+		<!--Get number of user_id by department_id and user_id in Table department_detail -->
 	<select id="sqlSelectDepartmentDetailSelect"
 		resultType="Integer" parameterType="Integer">
 		SELECT
@@ -189,16 +163,17 @@
 	</select>
 
 	<!--Search user list -->
-	<select id="sqlSelectSearchSelect" resultMap="GetUserResultMap" parameterType="String">
-	 <bind name="pattern" value="'%' + #{toSearch} + '%'" />
+	<select id="sqlSelectSearchSelect" resultMap="GetUserResultMap"
+		parameterType="String">
+		<bind name="pattern" value="'%' + #{toSearch} + '%'" />
 		SELECT
 		user_id,first_name,last_name,dob,email,username,users.password,registered_date,activated_date,seniority,
-		is_activated,updated_by,created_timestamp,updated_timestamp		
+		is_activated,updated_by,created_timestamp,updated_timestamp
 		FROM PUBLIC.USERS
-		WHERE (first_name LIKE #{pattern}) 
+		WHERE (first_name LIKE #{pattern})
 	</select>
-
-	<!-- =========== INSERT =============== -->
+	
+		<!-- =========== INSERT =============== -->
 
 	<!--Insert new record into Table User -->
 	<insert id="sqlCreateUserInsert"
@@ -206,7 +181,8 @@
 		INSERT INTO public.users
 		(first_name, last_name, dob,
 		email, username, password,
-		registered_date, activated_date, seniority, is_activated, updated_by,
+		registered_date, activated_date, seniority,
+		is_activated, updated_by,
 		created_timestamp, updated_timestamp)
 		VALUES
 		(#{firstName},#{lastName},TO_DATE(#{dob},'YYYY-MM-DD'),
@@ -216,17 +192,8 @@
 		#{seniority},0,#{updateBy},#{createTimestamp}::timestamp without time
 		zone,#{updateTimestamp}::timestamp without time zone)
 	</insert>
-
-	<!--Insert new record into Table department_detail -->
-	<insert id="sqlInsertDepartmentDetailInsert"
-		parameterType="Integer">
-		INSERT INTO public.department_detail
-		(status,department_id,user_id)
-		VALUES 
-		(#{status},#{departmentId},#{userId})
-	</insert>
-
-	<!--insert record into Tables  user_role, user_department -->
+	
+		<!--insert record into Tables user_role, user_department -->
 
 
 	<!-- =========== UPDATE =============== -->
@@ -238,50 +205,60 @@
 		UPDATE public.users
 		SET
 		first_name=#{firstName},last_name=#{lastName},email=#{email},username=#{username},password=#{password},dob=TO_DATE(#{dob},'YYYY-MM-DD'),
-		registered_date=TO_DATE(#{registeredDate},'YYYY-MM-DD'), activated_date=TO_DATE(#{activatedDate},'YYYY-MM-DD'),
-		seniority=#{seniority},is_activated=#{isActivated}, updated_by=#{updatedBy}, created_timestamp=#{createdTimestamp}, updated_timestamp=#{updatedTimestamp}
+		registered_date=TO_DATE(#{registeredDate},'YYYY-MM-DD'),
+		activated_date=TO_DATE(#{activatedDate},'YYYY-MM-DD'),
+		seniority=#{seniority},is_activated=#{isActivated},
+		updated_by=#{updatedBy}, created_timestamp=#{createdTimestamp},
+		updated_timestamp=#{updatedTimestamp}
 		WHERE
 		user_id=#{userId}
 	</update>
-
-	<!--Update record in Table user_role -->
-	<update id="sqlUpdateUserRoleUpdate" parameterType="com.mockproject.du1.model.UserRole">
+	
+		<!--Update record in Table user_role -->
+	<update id="sqlUpdateUserRoleUpdate"
+		parameterType="com.mockproject.du1.model.UserRole">
 		UPDATE
 		public.role_detail
-		SET join_date=(#{joinDate},'YYYY-MM-DD'),
+		SET
+		join_date=(#{joinDate},'YYYY-MM-DD'),
 		leave_date=(#{leaveDate},'YYYY-MM-DD'),
 		updated_by=#{updatedBy},
-		created_timestamp=#{createdTimestamp}, updated_timestamp=#{updatedTimestamp},
+		created_timestamp=#{createdTimestamp},
+		updated_timestamp=#{updatedTimestamp},
 		role_id=#{roleId}
 		WHERE
 		user_id=#{userId}
 	</update>
 
 	<!--Update record in Table user_department -->
-	<update id="sqlUpdateUserDepartmentUpdate" parameterType="com.mockproject.du1.model.UserDepartment">
+	<update id="sqlUpdateUserDepartmentUpdate"
+		parameterType="com.mockproject.du1.model.UserDepartment">
 		UPDATE
 		public.user_department
-		SET join_date=(#{joinDate},'YYYY-MM-DD'),
+		SET
+		join_date=(#{joinDate},'YYYY-MM-DD'),
 		leave_date=(#{leaveDate},'YYYY-MM-DD'),
 		stay_or_leave=#{stayOrLeave},
 		updated_by=#{updatedBy},
-		created_timestamp=#{createdTimestamp}, updated_timestamp=#{updatedTimestamp},
+		created_timestamp=#{createdTimestamp},
+		updated_timestamp=#{updatedTimestamp},
 		role_id=#{roleId}
 		WHERE
 		user_id=#{userId}
 	</update>
 
 	<!--Update record in Table department_detail -->
-	<update id="sqlDeleteUserUpdate" parameterType="com.mockproject.du1.model.Users">
+	<update id="sqlDeleteUserUpdate"
+		parameterType="com.mockproject.du1.model.Users">
 		UPDATE
 		public.users
 		SET activated_date=#{activatedDate}
-		is_activated=#{}
+		is_activated=#{isActivated}
 		WHERE
 		user_id=#{userId}
 	</update>
 
-	<!--Update record in Tables users-->
+	<!--Update record in Tables users -->
 	<update id="sqlActivateUserUpdate" parameterType="Integer">
 		UPDATE
 		public.users
@@ -291,13 +268,13 @@
 		updated_timestamp=#{updatedTimestamp}
 		WHERE
 		user_id=#{userId};
-		
- 		INSERT INTO public.user_role
- 		(join_date,leave_date,updated_by,created_timestamp,updated_timestamp)
- 		VALUES
- 		(#{joinDate},#{leaveDate},#{updatedBy},#{createdTimestamp},#{updatedTimestamp});
- 		
- 		
+
+		INSERT INTO public.user_role
+		(join_date,leave_date,updated_by,created_timestamp,updated_timestamp)
+		VALUES
+		(#{joinDate},#{leaveDate},#{updatedBy},#{createdTimestamp},#{updatedTimestamp});
+
+
 	</update>
 
 
@@ -307,6 +284,5 @@
 		parameterType="Integer">
 
 	</delete>
-
 
 </mapper>

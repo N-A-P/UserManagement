@@ -59,6 +59,8 @@ public class Users {
 	/**
 	 * Update Info
 	 */
+	
+	private String updatedBy;
 	private String updateBy;
 	private String createTimestamp;
 	private String updateTimestamp;
