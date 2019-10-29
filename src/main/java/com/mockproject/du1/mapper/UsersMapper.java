@@ -70,15 +70,36 @@ public interface UsersMapper {
 	 *
 	 * @return 0 or 1 if Update query success or not
 	 */
-	int sqlUpdateDepartmentDetailUpdate(Integer userId, Integer userStatus);
+	int sqlUpdateUserDepartmentUpdate(Integer userId, Integer userStatus);
 
 	/**
-	 * Select record in department_detail
+	 * Select record in user_department
 	 *
-	 * @return List of record
+	 * @return List of user_department_id
 	 */
-	int sqlSelectDepartmentDetailSelect(Integer userId, Integer departmentId);
+	List<Integer> sqlGetUserDepartmentSelect(Integer userId, Integer departmentId);
 
+	/**
+	 * Select record in user_role
+	 *
+	 * @return List of user_role_id
+	 */
+	List<Integer> sqlGetUserRoleSelect(Integer userId, Integer departmentId);
+	
+	/**
+	 * Select count user_id in user_department
+	 *
+	 * @return number of user_id
+	 */
+	int sqlCountUserDepartmentSelect(Integer userId);
+
+	/**
+	 * Select count user_id in user_role
+	 *
+	 * @return numerb of user_id
+	 */
+	int sqlCountUserRoleSelect(Integer userId);
+	
 	/**
 	 * Delete record in department_detail
 	 *

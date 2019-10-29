@@ -52,17 +52,17 @@ public class UsersRestController {
 	Logger log = LoggerFactory.getLogger(UsersRestController.class);
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
-//	@RequestMapping(value = "/users", method = RequestMethod.GET)
-//	public ResponseEntity<List<UsersFull>> getAllUser(@RequestBody(required = false) Users user) {
-//		if (user == null)
-//			return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(null), HttpStatus.OK);
-//		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(user.getIsActivated()), HttpStatus.OK);
-//	}
-	
-	@RequestMapping(value = "/users/{isActivated}", method = RequestMethod.GET)
-	public ResponseEntity<List<UsersFull>> getAllUser(@PathVariable(required = false) Integer isActivated) {
-		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(isActivated), HttpStatus.OK);
+	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	public ResponseEntity<List<UsersFull>> getAllUser(@RequestBody(required = false) Users user) {
+		if (user == null)
+			return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(null), HttpStatus.OK);
+		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(user.getIsActivated()), HttpStatus.OK);
 	}
+	
+//	@RequestMapping(value = "/users/{isActivated}", method = RequestMethod.GET)
+//	public ResponseEntity<List<UsersFull>> getAllUser(@PathVariable(required = false) Integer isActivated) {
+//		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(isActivated), HttpStatus.OK);
+//	}
 
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)

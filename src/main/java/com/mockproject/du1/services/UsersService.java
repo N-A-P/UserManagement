@@ -1,12 +1,9 @@
 package com.mockproject.du1.services;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -91,11 +88,17 @@ public class UsersService {
 	 * ---------------- ACTIVATE USER ------------------------
 	 */
 	private int activateUser(Users user) {
+		//check if user was in department & role
+		if (usersMapper.sqlCountUserDepartmentSelect(user.getUserId())!=0 && usersMapper.sqlCountUserRoleSelect(user.getUserId())!=0) {
+			
+		}
+		
 		UserRole updatedUserRole = new UserRole();
 		// setters
 
 		UserDepartment userDepartment = new UserDepartment();
 		// setters
+		
 		return 0;
 	}
 

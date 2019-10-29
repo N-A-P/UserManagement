@@ -153,18 +153,55 @@
 		user_id= #{userId}
 	</select>
 
-	<!--Get number of user_id by department_id and user_id in Table department_detail -->
-	<select id="sqlSelectDepartmentDetailSelect"
+	<!--Count records user_id in Table user_department -->
+	<select id="sqlCountUserDepartmentSelect"
 		resultType="Integer" parameterType="Integer">
 		SELECT
 		COUNT (*)
 		FROM
-		public.department_detail
+		public.user_department
+		WHERE
+		user_id = #{userId}
+	</select>
+
+	<!--Count records user_id in Table user_role -->
+	<select id="sqlCountUserRoleSelect"
+		resultType="Integer" parameterType="Integer">
+		SELECT
+		COUNT (*)
+		FROM
+		public.user_role
+		WHERE
+		user_id = #{userId}
+	</select>
+
+
+	<!--Get user_department_id by department_id and user_id in Table user_department -->
+	<select id="sqlGetUserDepartmentSelect"
+		resultType="Integer" parameterType="Integer">
+		SELECT
+		user_department_id
+		FROM
+		public.user_department
 		WHERE
 		user_id = #{userId}
 		AND
 		department_id=#{departmentId}
 	</select>
+
+	<!--Get user_role_id by role_id and user_id in Table user_role -->
+	<select id="sqlGetUserRoleSelect"
+		resultType="Integer" parameterType="Integer">
+		SELECT
+		user_role_id
+		FROM
+		public.user_role
+		WHERE
+		user_id = #{userId}
+		AND
+		role_id=#{roleId}
+	</select>
+
 
 	<!--Search user list -->
 	<select id="sqlSelectSearchSelect" resultMap="GetUserResultMap"
@@ -255,19 +292,19 @@
 		user_id=#{userId}
 	</update>
 
-	<!--Update record in Table department_detail -->
-	<update id="sqlDeleteUserUpdate"
-		parameterType="com.mockproject.du1.model.Users">
+	<!--Update record in Table user_department -->
+	<update id="sqlActivateDeactivateUserDepartmentUpdate"
+		parameterType="com.mockproject.du1.model.UserDepartment">
 		UPDATE
-		public.users
-		SET activated_date=#{activatedDate}
+		public.user_department
+		SET leave_date=#{leaveDate},
 		is_activated=#{isActivated}
 		WHERE
 		user_id=#{userId}
 	</update>
 
 	<!--Update record in Tables users -->
-	<update id="sqlActivateUserUpdate" parameterType="Integer">
+	<update id="sqlActivateDeactivateUserUpdate" parameterType="com.mockproject.du1.model.Users">
 		UPDATE
 		public.users
 		SET activated_date=#{activatedDate},
@@ -276,15 +313,8 @@
 		updated_timestamp=#{updatedTimestamp}
 		WHERE
 		user_id=#{userId};
-
-		INSERT
-		INTO public.user_role
-		(join_date,leave_date,updated_by,created_timestamp,updated_timestamp)
-		VALUES
-		(#{joinDate},#{leaveDate},#{updatedBy},#{createdTimestamp},#{updatedTimestamp});
-
-
 	</update>
+	
 
 
 	<!-- =========== DELETE =============== -->
