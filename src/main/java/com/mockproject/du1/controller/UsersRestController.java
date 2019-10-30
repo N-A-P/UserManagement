@@ -1,6 +1,5 @@
 package com.mockproject.du1.controller;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,11 +15,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mockproject.du1.exception.CustomException;
-import com.mockproject.du1.model.MailOfUser;
 import com.mockproject.du1.model.Users;
 import com.mockproject.du1.model.UsersFull;
 import com.mockproject.du1.services.EmailService;
@@ -52,66 +49,63 @@ public class UsersRestController {
 	Logger log = LoggerFactory.getLogger(UsersRestController.class);
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
-	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public ResponseEntity<List<UsersFull>> getAllUser(@RequestBody(required = false) Users user) {
-		if (user == null)
-			return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(null), HttpStatus.OK);
-		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(user.getIsActivated()), HttpStatus.OK);
+	@RequestMapping(value = "/users/list", method = RequestMethod.GET)
+	public ResponseEntity<List<UsersFull>> getAllUser() {
+		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(null), HttpStatus.OK);
 	}
 	
-//	@RequestMapping(value = "/users/{isActivated}", method = RequestMethod.GET)
-//	public ResponseEntity<List<UsersFull>> getAllUser(@PathVariable(required = false) Integer isActivated) {
-//		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(isActivated), HttpStatus.OK);
-//	}
+	/* ---------------- GET ACTIVE/INACTIVE USER LIST ------------------------ */
+	@RequestMapping(value = "/users/list/{isActivated}", method = RequestMethod.GET)
+	public ResponseEntity<List<UsersFull>> getAllUser(@PathVariable int isActivated) {
+		return new ResponseEntity<List<UsersFull>>(usersService.getAllUserFull(isActivated), HttpStatus.OK);
+	}
+
 
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
-	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	@RequestMapping(value = {"/register","/users/add"}, method = RequestMethod.POST)
 	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
 		try {
 			usersService.registerNewCustomer(user);
 			return new ResponseEntity<String>("Created!", HttpStatus.OK);
 		} catch (CustomException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);
 		}
 	}
 
-	/* ---------------- SEARCH IN USER LIST ------------------------ */
-	@RequestMapping(value = "/user-management/search", method = RequestMethod.POST)
-	public ResponseEntity<List<Users>> getSearchResult(HttpServletRequest request, @RequestBody String toSearch) {
-		return new ResponseEntity<List<Users>>(usersService.getSearchResult(toSearch), HttpStatus.OK);
-	}
-
 	/* ---------------- LOGIN ------------------------ */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
-		String result = "";
-		HttpStatus httpStatus = null;
-
-		try {
-			if (usersService.checkLogin(user)) {
-				Users userToCheck = usersService.getUserByUsername(user.getUsername());
-				if (userToCheck.getIsActivated() == 1) {
-					result = jwtService.generateTokenLogin(user.getUsername());
-					httpStatus = HttpStatus.OK;
+		String message;
+		HttpStatus status = null;
+		if (null == user.getUsername() || null == user.getPassword()) {
+			message = "Enter the username and password! ";
+			status = HttpStatus.BAD_REQUEST;
+			return new ResponseEntity<String>(message, status);
+		}
+		Users usertmp = usersService.getUserLogin(user.getUsername());
+		if (null != usertmp) {
+			if (usertmp.getPassword().equals(user.getPassword())) {
+				if (usertmp.getIsActivated() == 1) {
+					message = jwtService.generateTokenLogin(user.getUsername());
+					status = HttpStatus.OK;
 				} else {
-					result = "Account Deactivated";
-					httpStatus = HttpStatus.BAD_REQUEST;
+					message = "User name is locked! ";
+					status = HttpStatus.LOCKED;
 				}
 			} else {
-				result = "Wrong username or password";
-				httpStatus = HttpStatus.BAD_REQUEST;
+				message = "Password incorrect! ";
+				status = HttpStatus.UNAUTHORIZED;
 			}
-		} catch (Exception ex) {
-			result = "Server Error";
-			httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-		}
-		return new ResponseEntity<String>(result, httpStatus);
+		} else {
+			message = "User not exist! ";
+			status = HttpStatus.UNAUTHORIZED;
+		}            
+		return new ResponseEntity<String>(message, status);
 	}
 
 	/* ---------------- EDIT USER ------------------------ */
-	@RequestMapping(value = "/user-management", method = RequestMethod.POST)
+	@RequestMapping(value = "/users/edit", method = RequestMethod.POST)
 	public ResponseEntity<String> editUserManagement(HttpServletRequest request, @RequestBody Users user) {
 		try {
 			HttpSession session = request.getSession();
@@ -120,10 +114,22 @@ public class UsersRestController {
 			usersService.updateUserInfo(user);
 			return new ResponseEntity<String>("Update!", HttpStatus.OK);
 		} catch (CustomException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);
 		}
 	}
 
+	/* ---------------- ACTIVATE/DEACTIVATE USER ------------------------ */
+	@RequestMapping(value = "/users/activate-deactivate-user", method = RequestMethod.POST)
+	public ResponseEntity<String> activateDeactivateUser(HttpServletRequest request, @RequestBody Users user) {
+		try {
+			if (usersService.activateDeactivate(user) == 1)
+				return new ResponseEntity<String>("Success", HttpStatus.OK);
+			else
+				return new ResponseEntity<String>("Failed", HttpStatus.BAD_REQUEST);
+
+		} catch (Exception e) {
+			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+	}
 }

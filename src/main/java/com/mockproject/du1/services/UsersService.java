@@ -6,7 +6,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,6 +20,7 @@ import com.mockproject.du1.common.EmailValidate;
 import com.mockproject.du1.exception.CustomException;
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
+import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.UserDepartment;
 import com.mockproject.du1.model.UserRole;
 import com.mockproject.du1.model.Users;
@@ -24,34 +28,54 @@ import com.mockproject.du1.model.UsersFull;
 
 @Service
 public class UsersService {
-
+	/**
+	 * 
+	 */
 	private String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+	/**
+	 * 
+	 */
 	@Autowired
 	private UsersMapper usersMapper;
+	/**
+	 * 
+	 */
 	@Autowired
 	private RoleMapper roleMapper;
-
+	/**
+	 * 
+	 */
 	HttpServletRequest request = null;
+	/**
+	 * 
+	 */
+	String usernameLogin;
+
+	private static final Logger logger = LoggerFactory.getLogger(UsersService.class);
 
 	/*
 	 * ---------------- CHECK LOGIN USERNAME AND PASSWORD MATCH DB
 	 * ------------------------
 	 */
-	public boolean checkLogin(Users user) {
-		try {
-			if (usersMapper.sqlCheckLoginSelect(user.getUsername(), user.getPassword()) == 1) {
-				return true;
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return false;
+	public Users getUserLogin(String username) {
+		return usersMapper.sqlGetUserLoginSelect(username);
 	}
 
-	
+
 	/* ---------------- GET ALL USERFULL LIST ------------------------ */
 	public List<UsersFull> getAllUserFull(Integer isActivated) {
-		return usersMapper.sqlGetAllUserFullSelect(isActivated);
+		List<UsersFull> result = usersMapper.sqlGetAllUserFullSelect(isActivated);
+
+		// concat all department_code of each UserFull in List<UserFull>
+		for (UsersFull member : result) {
+			if (member.getListDepartment() != null) {
+				StringBuffer sb = new StringBuffer();
+				for (Department department : member.getListDepartment())
+					sb.append(department.getDepartmentCode() + " ");
+				member.setDepartmentCodeAll(sb.toString());
+			}
+		}
+		return result;
 	}
 
 	/* ---------------- GET 1 USER BY USERNAME ------------------------ */
@@ -67,38 +91,59 @@ public class UsersService {
 	}
 
 	/*
-	 * ---------------- SEARCH ALL USER ------------------------
-	 */
-	public List<Users> getSearchResult(String toSearch) {
-		return usersMapper.sqlSelectSearchSelect(toSearch);
-	}
-
-	/*
 	 * ---------------- ACTIVATE-DEACTIVATE USER ------------------------
 	 */
 	public int activateDeactivate(Users user) {
-		if (user.getIsActivated() == 1)
+		if (user.getIsActivated() == 1) {
+			logger.info("Deactivate user id=" + user.getUserId());
 			return deactivateUser(user);
-		if (user.getIsActivated() == 0)
+		}
+		if (user.getIsActivated() == 0) {
+			logger.info("Activate user id=" + user.getUserId());
 			return activateUser(user);
-		return -1;
+		}
+		return 0;
 	}
 
 	/*
 	 * ---------------- ACTIVATE USER ------------------------
 	 */
 	private int activateUser(Users user) {
-		//check if user was in department & role
-		if (usersMapper.sqlCountUserDepartmentSelect(user.getUserId())!=0 && usersMapper.sqlCountUserRoleSelect(user.getUserId())!=0) {
-			
+		try {
+			HttpSession session = request.getSession(false);
+			usernameLogin = (String) session.getAttribute("usernameLogin");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
-		
-		UserRole updatedUserRole = new UserRole();
-		// setters
 
-		UserDepartment userDepartment = new UserDepartment();
-		// setters
-		
+		// check if user was in department & role
+		if (usersMapper.sqlCountUserDepartmentSelect(user.getUserId()) != 0
+				&& usersMapper.sqlCountUserRoleSelect(user.getUserId()) != 0) {
+			// create parameters
+			user.setActivatedDate(java.time.LocalDate.now().toString());
+			user.setIsActivated(1);
+			user.setUpdatedTimestamp(currentTimestamp);
+			user.setUpdatedBy(usernameLogin);
+
+			UserRole updatedUserRole = new UserRole();
+			updatedUserRole.setUserId(user.getUserId());
+			updatedUserRole.setLeaveDate(null);
+			updatedUserRole.setUpdateBy(usernameLogin);
+			updatedUserRole.setUpdateTimestamp(currentTimestamp);
+
+			UserDepartment updatedUserDepartment = new UserDepartment();
+			updatedUserDepartment.setUserId(user.getUserId());
+			updatedUserDepartment.setLeaveDate(null);
+			updatedUserDepartment.setStayOrLeave(1);
+			updatedUserDepartment.setUpdateTimestamp(currentTimestamp);
+			updatedUserDepartment.setUpdateBy(usernameLogin);
+
+			// activate all user with user_id in 3 tables
+			usersMapper.sqlActivateDeactivateUserUpdate(user);
+			usersMapper.sqlActivateDeactivateUserDepartmentUpdate(updatedUserDepartment);
+			usersMapper.sqlActivateDeactivateUserRoleUpdate(updatedUserRole);
+			return 1;
+		}
 		return 0;
 	}
 
@@ -106,22 +151,48 @@ public class UsersService {
 	 * ---------------- DEACTIVATE USER ------------------------
 	 */
 	private int deactivateUser(Users user) {
+		try {
+			HttpSession session = request.getSession(false);
+			usernameLogin = (String) session.getAttribute("usernameLogin");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+
+		// create parameters
+		user.setIsActivated(0);
+		user.setUpdatedTimestamp(currentTimestamp);
+		user.setUpdatedBy(usernameLogin);
+
 		UserRole updatedUserRole = new UserRole();
-		// setters
+		updatedUserRole.setUserId(user.getUserId());
+		updatedUserRole.setLeaveDate(java.time.LocalDate.now().toString());
+		updatedUserRole.setUpdateBy(usernameLogin);
+		updatedUserRole.setUpdateTimestamp(currentTimestamp);
 
-		UserDepartment userDepartment = new UserDepartment();
-		// setters
-		return 0;
+		UserDepartment updatedUserDepartment = new UserDepartment();
+		updatedUserDepartment.setUserId(user.getUserId());
+		updatedUserDepartment.setLeaveDate(java.time.LocalDate.now().toString());
+		updatedUserDepartment.setStayOrLeave(0);
+		updatedUserDepartment.setUpdateTimestamp(currentTimestamp);
+		updatedUserDepartment.setUpdateBy(usernameLogin);
 
+		// activate all user with user_id in 3 tables
+		usersMapper.sqlActivateDeactivateUserUpdate(user);
+		usersMapper.sqlActivateDeactivateUserDepartmentUpdate(updatedUserDepartment);
+		usersMapper.sqlActivateDeactivateUserRoleUpdate(updatedUserRole);
+		return 1;
 	}
 
+	/*
+	 * ---------------- REGISTER USER ------------------------
+	 */
 	public boolean registerNewCustomer(Users user) throws CustomException {
 		if (EmailValidate.isEmail(user.getEmail())) {
 			try {
 				user.setRegisteredDate(java.time.LocalDate.now().toString());
 				user.setSeniority(0);
 				user.setIsActivated(0);
-				user.setCreateTimestamp(currentTimestamp);
+				user.setCreatedTimestamp(currentTimestamp);
 				usersMapper.sqlCreateUserInsert(user);
 				return true;
 			} catch (DuplicateKeyException e) {
@@ -132,12 +203,13 @@ public class UsersService {
 		}
 	}
 
-
-
+	/*
+	 * ---------------- EDIT USER ------------------------
+	 */
 	public boolean updateUserInfo(Users user) throws CustomException {
 		if (EmailValidate.isEmail(user.getEmail())) {
 			try {
-				user.setUpdateTimestamp(currentTimestamp);
+				user.setUpdatedTimestamp(currentTimestamp);
 				usersMapper.sqlUpdateUserUpdate(user);
 				return true;
 			} catch (DuplicateKeyException e) {
@@ -148,6 +220,5 @@ public class UsersService {
 		}
 
 	}
-
 
 }

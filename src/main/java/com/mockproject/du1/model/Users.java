@@ -58,7 +58,7 @@ public class Users {
 	 */
 	
 	private String updatedBy;
-	private String createTimestamp;
-	private String updateTimestamp;
+	private String createdTimestamp;
+	private String updatedTimestamp;
 
 }
