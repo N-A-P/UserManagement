@@ -4,6 +4,8 @@ import lombok.Builder;
 
 import javax.persistence.Embedded;
 import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 @lombok.Data
 @Builder
@@ -27,11 +29,11 @@ public class Campaign {
     /**
      * Campaign start Date
      */
-    private String startDate;
+    private Date startDate;
     /**
      * Campaign end Date
      */
-    private String endDate;
+    private Date endDate;
 
     /**
      * updateInfo

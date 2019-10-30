@@ -21,14 +21,13 @@ import com.sendgrid.Response;
 import com.sendgrid.SendGrid;
 
 import java.io.*;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import org.apache.poi.ss.usermodel.Cell;
@@ -249,8 +248,14 @@ public class EmailService {
     }
 
     public String addCampaign(Campaign campaign) {
-        campaignMapper.sqlCreateCampaignInsert(campaign);
-        return "success";
+        if(campaign.getStartDate().before(campaign.getEndDate())){
+            int getDiff = campaign.getEndDate().getDate() - campaign.getStartDate().getDate();
+            campaign.setDuration(getDiff);
+            campaignMapper.sqlCreateCampaignInsert(campaign);
+            return "success";
+        }
+
+        return "start date mush befor end date";
     }
 
     public List<EmailTemplate> getAllTopic() {
