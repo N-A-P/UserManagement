@@ -7,6 +7,7 @@ import java.util.List;
 import com.mockproject.du1.model.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,15 +45,21 @@ public class EmailController {
         customers.add(Customer.builder().customerId(13).customerEmail("admin123@gmail.com").build());
         return MailOfUser.builder().campaignId(1).sendEmailUserId(1).customers(customers).build();
     }
+    private static final String APPLICATION_MS_WORD_VALUE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
     @RequestMapping(value = "/cover-excel-to-DB", method = RequestMethod.POST)
-    public byte[] coverExcel(@RequestBody MultipartFile file) throws IOException {
+    public ResponseEntity coverExcel(@RequestBody MultipartFile file) throws IOException {
         XSSFWorkbook workbook = emailService.coverExcellFileToArray(file.getBytes());
         OutputStream outputStream = new ByteArrayOutputStream();
-        byte[] bytes = new byte[21000];
+        byte[] content = new byte[21000];
         workbook.write(outputStream);
-        outputStream.write(bytes);
-        return bytes;
+        outputStream.write(content);
+        return ResponseEntity.ok()
+                .contentLength(content.length)
+                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_MS_WORD_VALUE)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "File.docx")
+                             .body(content);
+//        return bytes;
     }
     @RequestMapping(value = "/cover-excel-to-FE", method = RequestMethod.POST)
     public ResponseEntity coverExcelToFE(@RequestBody MultipartFile file) throws IOException {
