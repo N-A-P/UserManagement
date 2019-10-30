@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.HttpServletResponse;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -49,19 +50,15 @@ public class EmailController {
     }
     private static final String APPLICATION_MS_WORD_VALUE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     @RequestMapping(value = "/cover-excel-to-DB", method = RequestMethod.POST)
-    public ResponseEntity coverExcel(@RequestBody MultipartFile file) throws IOException {
+    public byte[] coverExcel(@RequestBody MultipartFile file, HttpServletResponse response) throws IOException {
         XSSFWorkbook workbook = emailService.coverExcellFileToArray(file.getBytes());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         workbook.write(outputStream);
         outputStream.close();
         byte[] content = outputStream.toByteArray();
-
-        return ResponseEntity.ok()
-                .contentLength(content.length)
-//                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_MS_WORD_VALUE)
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "File.docx")
-                .body(content);
-//        return bytes;
+        response.setContentType("application/x-download");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + "test (1).xlsx" + "\"");
+        return content;
     }
     @RequestMapping(value = "/cover-excel-to-FE", method = RequestMethod.POST)
     public ResponseEntity coverExcelToFE(@RequestBody MultipartFile file) throws IOException {
