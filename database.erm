@@ -12,7 +12,7 @@
 	<category_index>0</category_index>
 	<zoom>1.0</zoom>
 	<x>0</x>
-	<y>111</y>
+	<y>0</y>
 	<default_color>
 		<r>128</r>
 		<g>128</g>
@@ -135,7 +135,7 @@
 			</connections>
 			<display>false</display>
 			<creation_date>2019-10-06 16:06:26</creation_date>
-			<updated_date>2019-10-22 17:32:50</updated_date>
+			<updated_date>2019-10-29 15:24:06</updated_date>
 			<model_property>
 				<name>Project Name</name>
 				<value></value>
@@ -1288,7 +1288,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>23</word_id>
+					<word_id>22</word_id>
 					<id>8</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
@@ -3475,7 +3475,7 @@
 					</sequence>
 				</normal_column>
 				<normal_column>
-					<word_id>22</word_id>
+					<word_id>23</word_id>
 					<id>64</id>
 					<description></description>
 					<unique_key_name></unique_key_name>
