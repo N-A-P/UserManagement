@@ -17,6 +17,8 @@ import com.mockproject.du1.services.UsersService;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import javax.servlet.annotation.MultipartConfig;
+
 @RestController
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/email")
@@ -46,19 +48,19 @@ public class EmailController {
         return MailOfUser.builder().campaignId(1).sendEmailUserId(1).customers(customers).build();
     }
     private static final String APPLICATION_MS_WORD_VALUE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-
     @RequestMapping(value = "/cover-excel-to-DB", method = RequestMethod.POST)
     public ResponseEntity coverExcel(@RequestBody MultipartFile file) throws IOException {
         XSSFWorkbook workbook = emailService.coverExcellFileToArray(file.getBytes());
-        OutputStream outputStream = new ByteArrayOutputStream();
-        byte[] content = new byte[21000];
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         workbook.write(outputStream);
-        outputStream.write(content);
+        outputStream.close();
+        byte[] content = outputStream.toByteArray();
+
         return ResponseEntity.ok()
                 .contentLength(content.length)
-                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_MS_WORD_VALUE)
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "File.docx")
-                             .body(content);
+//                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_MS_WORD_VALUE)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "File.docx")
+                .body(content);
 //        return bytes;
     }
     @RequestMapping(value = "/cover-excel-to-FE", method = RequestMethod.POST)
@@ -71,13 +73,18 @@ public class EmailController {
     }
 
     @RequestMapping(value = "/coverExcel/test", method = RequestMethod.POST)
-    public void coverExcelTest(@RequestBody byte[] bytes) throws IOException {
-        XSSFWorkbook workbook = emailService.coverExcellFileToArray(bytes);
-        File file = new File("C:/employee.xlsx");
-        file.getParentFile().mkdirs();
-        FileOutputStream outFile = new FileOutputStream(file);
-        workbook.write(outFile);
-        System.out.println("Created file: " + file.getAbsolutePath());
+    public ResponseEntity coverExcelTest(@RequestParam("file") MultipartFile file) throws IOException {
+        XSSFWorkbook workbook = emailService.coverExcellFileToArray(file.getBytes());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        workbook.write(outputStream);
+        outputStream.close();
+        byte[] content = outputStream.toByteArray();
+
+        return ResponseEntity.ok()
+                .contentLength(content.length)
+//                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_MS_WORD_VALUE)
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "File.docx")
+                .body(content);
     }
     @RequestMapping(value = "/coverExceltoFE/test", method = RequestMethod.POST)
     public ResponseEntity coverExcelToFETest(@RequestBody byte[] bytes) throws IOException {
