@@ -234,7 +234,7 @@ public class DepartmentRestController {
 			return new ResponseEntity<List<EmployeeOfDepartment>>(listRecordError, HttpStatus.CREATED);
 		} else if (!listRecordError.isEmpty() && listRecordError.size() < listEmployeeNotInDepartment.size()) {
 			return new ResponseEntity<List<EmployeeOfDepartment>>(listRecordError, HttpStatus.CREATED);
-		} else { 
+		} else {
 			return new ResponseEntity<List<EmployeeOfDepartment>>(listRecordError, HttpStatus.BAD_REQUEST);
 		}
 
@@ -244,26 +244,31 @@ public class DepartmentRestController {
 	 *
 	 */
 	@PostMapping(value = "/removeEmployeeFromDepartment")
-	public ResponseEntity<String> removeEmployeeFromDepartment(
-			@Valid @RequestBody EmployeeOfDepartment employeeOfDepartment) {
-		if (departmentService.removeEmployeeFromDepartment(employeeOfDepartment) != 0) {
-			return new ResponseEntity<String>("Success!!!", HttpStatus.CREATED);
+	public ResponseEntity<List<EmployeeOfDepartment>> removeEmployeeFromDepartment(
+			@Valid @RequestBody List<EmployeeOfDepartment> listEmployeeInDepartment) {
+		List<EmployeeOfDepartment> listRecordError = departmentService
+				.removeEmployeeFromDeparment(listEmployeeInDepartment);
+
+		if (listRecordError.isEmpty()) {
+			return new ResponseEntity<List<EmployeeOfDepartment>>(listRecordError, HttpStatus.CREATED);
+		} else if (!listRecordError.isEmpty() && listRecordError.size() < listEmployeeInDepartment.size()) {
+			return new ResponseEntity<List<EmployeeOfDepartment>>(listRecordError, HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<String>("Failed!!!", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<List<EmployeeOfDepartment>>(listRecordError, HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	/**
 	 *
 	 */
-	@PostMapping(value = "/updateNumberOfEmployee")
-	public ResponseEntity<String> updateNumberOfEmployee(
-			@Valid @RequestBody EmployeeOfDepartment employeeOfDepartment) {
-		if (departmentService.updateNumberOfEmployee(employeeOfDepartment) != 0) {
-			return new ResponseEntity<String>("Update Success!!!", HttpStatus.CREATED);
-		} else {
-			return new ResponseEntity<String>("Update Failded!!!", HttpStatus.BAD_REQUEST);
-		}
-
-	}
+//	@PostMapping(value = "/updateNumberOfEmployee")
+//	public ResponseEntity<String> updateNumberOfEmployee(
+//			@Valid @RequestBody EmployeeOfDepartment employeeOfDepartment) {
+//		if (departmentService.updateNumberOfEmployee(employeeOfDepartment) != 0) {
+//			return new ResponseEntity<String>("Update Success!!!", HttpStatus.CREATED);
+//		} else {
+//			return new ResponseEntity<String>("Update Failded!!!", HttpStatus.BAD_REQUEST);
+//		}
+//
+//	}
 }

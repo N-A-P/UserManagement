@@ -20,12 +20,15 @@
 	<!--Get List Data Department Information -->
 	<select id="sqlGetAllDepartmentSelect"
 		resultMap="GetDepartmentResultMap">
-
-		SELECT
-		department_id,
-		department_name,
-		department_code,
-		number_of_employee,
+<![CDATA[
+        SELECT
+        department_id,
+        department_name,
+        department_code,
+        CASE
+        WHEN number_of_employee < 0 THEN 0
+        ELSE number_of_employee
+        END AS number_of_employee,
 		is_activated,
 		updated_by,
 		created_timestamp,
@@ -35,22 +38,25 @@
 		ORDER BY
 		department_code,
 		department_name
-
+]]>
 	</select>
 
 	<!--Get List Data Department Information Actived/Inactived -->
 	<select id="sqlGetDepartmentByStatusSelect"
 		resultMap="GetDepartmentResultMap" parameterType="Integer">
-
-		SELECT
-		department_id,
-		department_name,
-		department_code,
-		number_of_employee,
-		is_activated,
-		updated_by,
-		created_timestamp,
-		updated_timestamp
+<![CDATA[
+        SELECT
+        department_id,
+        department_name,
+        department_code,
+        CASE
+        WHEN number_of_employee < 0 THEN 0
+        ELSE number_of_employee
+        END AS number_of_employee,
+        is_activated,
+        updated_by,
+        created_timestamp,
+        updated_timestamp
 		FROM
 		public.department
 		WHERE
@@ -58,27 +64,30 @@
 		ORDER BY
 		department_code,
 		department_name
-
+]]>
 	</select>
 
 	<!--Get List Data Department Information By Id -->
 	<select id="sqlGetDepartmentByIdSelect"
 		resultMap="GetDepartmentResultMap" parameterType="Integer">
-
-		SELECT
-		department_id,
-		department_name,
-		department_code,
-		number_of_employee,
-		is_activated,
-		updated_by,
-		created_timestamp,
-		updated_timestamp
+<![CDATA[
+        SELECT
+        department_id,
+        department_name,
+        department_code,
+        CASE
+        WHEN number_of_employee < 0 THEN 0
+        ELSE number_of_employee
+        END AS number_of_employee,
+        is_activated,
+        updated_by,
+        created_timestamp,
+        updated_timestamp
 		FROM
 		public.department
 		WHERE
 		department_id = #{department_id}
-
+]]>
 
 	</select>
 
@@ -142,12 +151,14 @@
 		type="com.mockproject.du1.model.Department">
 		<result property="departmentId" column="department_id" />
 		<result property="departmentName" column="department_name" />
+		<result property="departmentCode" column="department_code" />
 	</resultMap>
 
 	<resultMap id="GetRoleResultMap"
 		type="com.mockproject.du1.model.Role">
 		<result property="roleId" column="role_id" />
 		<result property="roleName" column="role_name" />
+		<result property="roleCode" column="role_code" />
 	</resultMap>
 
 	<select id="sqlGetListEmployeeOfDepartmentByStatus"
@@ -166,41 +177,44 @@
 		a.activated_date AS
 		activated_date,
 		a.seniority AS seniority,
-		c.role_id AS role_id,
-		c.role_name AS role_name,
-		c.role_name AS role_code,
 		e.department_id AS
 		department_id,
 		e.department_name AS department_name,
 		e.department_code
-		AS department_code
+		AS department_code,
+		c.role_id AS role_id,
+		c.role_name AS role_name,
+		c.role_code AS role_code
+
 		FROM
 		public.users a
-		INNER JOIN public.user_role b ON
-		a.user_id = b.user_id
-		INNER JOIN public.role c ON c.role_id = b.role_id
+		INNER JOIN public.user_role
+		b ON a.user_id = b.user_id
+		INNER JOIN public.role c ON c.role_id =
+		b.role_id
 		INNER JOIN public.user_department d ON a.user_id = d.user_id
-		INNER JOIN
-		public.department e ON e.department_id = d.department_id
+		INNER JOIN public.department e ON e.department_id = d.department_id
 		WHERE
 
 		<if test="action == 1">
-			<!-- ((e.department_id = #{departmentId} AND d.stay_or_leave = 0) OR (e.department_id 
-				NOT IN (#{departmentId}) AND d.stay_or_leave = 1)) -->
 			NOT EXISTS (SELECT 1
 			FROM user_department
 			WHERE
-			user_id = a.user_id
+			user_id =
+			a.user_id
 			AND
 			((department_id = #{departmentId} AND stay_or_leave = 1))
 			)
-
-
 		</if>
 		<if test="action == 2">
-			e.department_id = #{departmentId}
-			AND d.stay_or_leave =
-			#{statusUserDepartment}
+			EXISTS (SELECT 1
+			FROM user_department
+			WHERE
+			user_id =
+			a.user_id
+			AND
+			((department_id = #{departmentId} AND stay_or_leave = 1))
+			)
 		</if>
 		AND e.is_activated = #{statusDepartment}
 		AND a.is_activated =
@@ -234,19 +248,21 @@
 	</update>
 
 	<!--Update Department Number Of Employee -->
-	<update id="sqlDepartmentNumberOfEmployeeUpdate"
-		parameterType="com.mockproject.du1.model.Department">
+	<update id="sqlDepartmentNumberOfEmployeeUpdate">
 
 		UPDATE public.department
 		SET
-		number_of_employee =
-		number_of_employee + #{numberOfEmployees},
-		updated_by=#{updateBy},
-		updated_timestamp
-		=#{updateTimestamp}::timestamp without time zone
+		<if test="action == 1"> number_of_employee = number_of_employee +
+			#{Department.numberOfEmployees},
+		</if>
+		<if test="action == 2"> number_of_employee = number_of_employee -
+			#{Department.numberOfEmployees},
+		</if>
+		updated_by= #{Department.updateBy},
+		updated_timestamp =
+		#{Department.updateTimestamp}::timestamp without time zone
 		WHERE
-		department_id =
-		#{departmentId}
+		department_id = #{Department.departmentId}
 	</update>
 
 	<!--Update Department Status -->
@@ -265,17 +281,19 @@
 	</update>
 
 	<!--Update User Department Status -->
-	<update id="sqlRemoveEmployeeForDeparmentUpdate"
-		parameterType="com.mockproject.du1.model.UserDepartment">
+	<update id="sqlRemoveEmployeeForDeparmentUpdate">
 
 		UPDATE public.user_department
 		SET stay_or_leave =
-		#{stayOrLeave},
-		updated_by=#{updateBy},
-		updated_timestamp
-		=#{updateTimestamp}
+		#{newStayOrLeave},
+		updated_by=#{UserDepartment.updateBy},
+		updated_timestamp = #{UserDepartment.updateTimestamp}::timestamp
 		WHERE
-		user_department_id = #{userDepartmentId}
+		department_id = #{UserDepartment.departmentId}
+		AND user_id =
+		#{UserDepartment.userId}
+		AND stay_or_leave =
+		#{UserDepartment.stayOrLeave}
 
 	</update>
 
