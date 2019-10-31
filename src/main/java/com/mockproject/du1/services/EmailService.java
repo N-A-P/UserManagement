@@ -1,14 +1,13 @@
 package com.mockproject.du1.services;
 
 import com.mockproject.du1.common.DataUtil;
-import com.mockproject.du1.mapper.CampaignCustomerMapper;
-import com.mockproject.du1.mapper.CampaignMapper;
-import com.mockproject.du1.mapper.CustomerMapper;
-import com.mockproject.du1.mapper.EmailTemplateMapper;
+import com.mockproject.du1.mapper.*;
 import com.mockproject.du1.model.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.mockproject.du1.model.Users;
@@ -49,10 +48,17 @@ public class EmailService {
     CustomerMapper customerMapper;
     @Autowired
     CampaignMapper campaignMapper;
-
+    @Autowired
+    UsersMapper usersMapper;
     public boolean sendEmailToAll(List<Customer> Customers, int sendEmailUserId, int campaignId) {
         if (Customers != null) {
             try {
+                try{
+                    UserDetails userDetail1= (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+                    sendEmailUserId=usersMapper.sqlGetUserByUsernameSelect(userDetail1.getUsername()).getUserId();
+                }catch (Exception e){
+                    usersMapper.sqlGetAllUserFullSelect(1).get(0).getUserId();
+                }
                 EmailTemplate email = emailMapper.sqlGetEmailTemplateSelectByCampaintId(campaignId);
                 LocalDate localDate = LocalDate.now();
                 Date date = new Date(localDate.atStartOfDay(ZoneId.of("America/New_York")).toEpochSecond() * 1000);
