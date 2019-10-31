@@ -56,8 +56,9 @@ public class EmailController {
         workbook.write(outputStream);
         outputStream.close();
         byte[] content = outputStream.toByteArray();
-        response.setContentType("application/x-download");
-        response.setHeader("Content-Disposition", "attachment; filename=\"" + "test (1).xlsx" + "\"");
+
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + "test.xlsx" + "\"");
         return content;
     }
     @RequestMapping(value = "/cover-excel-to-FE", method = RequestMethod.POST)
@@ -69,19 +70,21 @@ public class EmailController {
         return new ResponseEntity<String>("Enter the correct Excel file format", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/coverExcel/test", method = RequestMethod.POST)
-    public ResponseEntity coverExcelTest(@RequestParam("file") MultipartFile file) throws IOException {
-        XSSFWorkbook workbook = emailService.coverExcellFileToArray(file.getBytes());
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        workbook.write(outputStream);
-        outputStream.close();
-        byte[] content = outputStream.toByteArray();
+    @RequestMapping(value = "/coverExcel/test", method = RequestMethod.GET)
+    public byte[] coverExcelTest(HttpServletResponse response) throws IOException {
+        File file = new File("C:/employee.xlsx");
+        byte[] bytesArray = new byte[(int) file.length()];
 
-        return ResponseEntity.ok()
-                .contentLength(content.length)
-//                .header(HttpHeaders.CONTENT_TYPE, APPLICATION_MS_WORD_VALUE)
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "File.docx")
-                .body(content);
+        FileInputStream fis = new FileInputStream(file);
+        fis.read(bytesArray); //read file into bytes[]
+        fis.close();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        outputStream.close();
+        outputStream.write(bytesArray);
+        byte[] content = outputStream.toByteArray();
+        response.setContentType("application/vnd.ms-excel");
+        response.setHeader("Content-Disposition", "attachment; filename=\"" + "test.xlsx" + "\"");
+        return content;
     }
     @RequestMapping(value = "/coverExceltoFE/test", method = RequestMethod.POST)
     public ResponseEntity coverExcelToFETest(@RequestBody byte[] bytes) throws IOException {
