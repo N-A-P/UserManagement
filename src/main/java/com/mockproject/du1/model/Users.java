@@ -43,10 +43,7 @@ public class Users {
 	 * Activated Date
 	 */
 	private String activatedDate;
-	/**
-	 * End Date
-	 */
-	private String endDate;
+
 	/**
 	 * Seniority(Years)
 	 */
@@ -59,8 +56,9 @@ public class Users {
 	/**
 	 * Update Info
 	 */
-	private String updateBy;
-	private String createTimestamp;
-	private String updateTimestamp;
+	
+	private String updatedBy;
+	private String createdTimestamp;
+	private String updatedTimestamp;
 
 }

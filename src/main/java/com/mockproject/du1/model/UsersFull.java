@@ -5,9 +5,12 @@ package com.mockproject.du1.model;
  * UsersFull Model
  */
 
-import javax.persistence.Embedded;
-import java.time.LocalDateTime;
+import java.util.List;
 
+/**
+ * @author nnhlam
+ *
+ */
 @lombok.Data
 public class UsersFull {
 	/**
@@ -39,41 +42,49 @@ public class UsersFull {
 	 */
 	private String dob;
 	/**
-	 * Start Date
+	 * Registered Date
 	 */
-	private String startDate;
+	private String registeredDate;
 	/**
-	 * End Date
+	 * Activated Date
 	 */
-	private String endDate;
+	private String activatedDate;
 	/**
-	 * Tenure(Years)
+	 * Seniority (Years)
 	 */
-	private int tenure;
+	private int seniority;
 
 	/**
-	 * status
+	 * activated status
 	 */
-	private int status;
+	private int isActivated;
 	
 	/**
-	 * user Role Id
+	 * 
 	 */
-	private int userRoleId;
-
-	/**
-	 * role id
-	 */
-	private int roleId;
+	private String updatedBy;
 	
 	/**
-	 * department id
+	 * 
 	 */
-	private int departmentId;
-
-	private String updateBy;
 	private String createTimestamp;
+	/**
+	 * 
+	 */
 	private String updateTimestamp;
+	/**
+	 * String buffer of all departments
+	 */
+	private String departmentCodeAll;
+	/**
+	 * list department of Employee
+	 */
+	private List<Department> listDepartment;
+	
+	/**
+	 * list role of Employee
+	 */
+	private List<Role> listRole;
 
 
 

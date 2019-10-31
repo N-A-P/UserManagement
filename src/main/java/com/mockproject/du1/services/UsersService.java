@@ -1,14 +1,12 @@
 package com.mockproject.du1.services;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,55 +14,71 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import com.mockproject.du1.common.EmailValidate;
+import com.mockproject.du1.exception.CustomException;
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
+import com.mockproject.du1.model.Department;
+import com.mockproject.du1.model.UserDepartment;
+import com.mockproject.du1.model.UserRole;
 import com.mockproject.du1.model.Users;
 import com.mockproject.du1.model.UsersFull;
 
 @Service
 public class UsersService {
-
+	/**
+	 *
+	 */
+	private String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+	/**
+	 *
+	 */
 	@Autowired
 	private UsersMapper usersMapper;
+	/**
+	 *
+	 */
 	@Autowired
 	private RoleMapper roleMapper;
-
+	/**
+	 *
+	 */
 	HttpServletRequest request = null;
+	/**
+	 *
+	 */
+	String usernameLogin;
 
-	String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+	private static final Logger logger = LoggerFactory.getLogger(UsersService.class);
 
-	/* ---------------- GET ALL USER LIST ------------------------ */
-	public List<Users> getAllUser() {
-		return usersMapper.sqlGetAllUserSelect();
+	/*
+	 * ---------------- CHECK LOGIN USERNAME AND PASSWORD MATCH DB
+	 * ------------------------
+	 */
+	public Users getUserLogin(String username) {
+		return usersMapper.sqlGetUserLoginSelect(username);
 	}
 
+
 	/* ---------------- GET ALL USERFULL LIST ------------------------ */
-	public List<UsersFull> getAllUserFull() {
-		return usersMapper.sqlGetAllUserFullSelect();
+	public List<UsersFull> getAllUserFull(Integer isActivated) {
+		List<UsersFull> result = usersMapper.sqlGetAllUserFullSelect(isActivated);
+
+		// concat all department_code of each UserFull in List<UserFull>
+		for (UsersFull member : result) {
+			if (member.getListDepartment() != null) {
+				StringBuffer sb = new StringBuffer();
+				for (Department department : member.getListDepartment())
+					sb.append(department.getDepartmentCode() + " ");
+				member.setDepartmentCodeAll(sb.toString());
+			}
+		}
+		return result;
 	}
 
 	/* ---------------- GET 1 USER BY USERNAME ------------------------ */
 	public Users getUserByUsername(String username) {
 		return usersMapper.sqlGetUserByUsernameSelect(username);
-	}
-
-	/* ---------------- GET 1 USER BY EMAIL ------------------------ */
-	public Users getUserByEmail(String email) {
-		return usersMapper.sqlGetUserByEmailSelect(email);
-	}
-
-	/* ---------------- GET 1 USER BY ID ------------------------ */
-	public Users getUserById(long userId) {
-		return usersMapper.sqlGetUserByIdSelect(userId);
-	}
-
-	/* ---------------- GET USER LIST BY EMAIL LIST ------------------------ */
-	public List<Users> getUsersListByEmails(List<String> emails) {
-		List<Users> userList = new ArrayList<>();
-		for (String email : emails) {
-			userList.add(getUserByEmail(email));
-		}
-		return userList;
 	}
 
 	/* ---------------- GET ROLE LIST OF 1 USER ------------------------ */
@@ -75,83 +89,133 @@ public class UsersService {
 	}
 
 	/*
-	 * ---------------- CHECK LOGIN USERNAME AND PASSWORD MATCH DB
-	 * ------------------------
+	 * ---------------- ACTIVATE-DEACTIVATE USER ------------------------
 	 */
-	public boolean checkLogin(Users user) {
+	public int activateDeactivate(Users user) {
+		if (user.getIsActivated() == 1) {
+			logger.info("Deactivate user id=" + user.getUserId());
+			return deactivateUser(user);
+		}
+		if (user.getIsActivated() == 0) {
+			logger.info("Activate user id=" + user.getUserId());
+			return activateUser(user);
+		}
+		return 0;
+	}
+
+	/*
+	 * ---------------- ACTIVATE USER ------------------------
+	 */
+	private int activateUser(Users user) {
 		try {
-			if (usersMapper.sqlCheckLoginSelect(user.getUsername(), user.getPassword()) == 1) {
-				return true;
-			}
+			HttpSession session = request.getSession(false);
+			usernameLogin = (String) session.getAttribute("usernameLogin");
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
-		return false;
+
+		// check if user was in department & role
+		if (usersMapper.sqlCountUserDepartmentSelect(user.getUserId()) != 0
+				&& usersMapper.sqlCountUserRoleSelect(user.getUserId()) != 0) {
+			// create parameters
+			user.setActivatedDate(java.time.LocalDate.now().toString());
+			user.setIsActivated(1);
+			user.setUpdatedTimestamp(currentTimestamp);
+			user.setUpdatedBy(usernameLogin);
+
+			UserRole updatedUserRole = new UserRole();
+			updatedUserRole.setUserId(user.getUserId());
+			updatedUserRole.setLeaveDate(null);
+			updatedUserRole.setUpdateBy(usernameLogin);
+			updatedUserRole.setUpdateTimestamp(currentTimestamp);
+
+			UserDepartment updatedUserDepartment = new UserDepartment();
+			updatedUserDepartment.setUserId(user.getUserId());
+			updatedUserDepartment.setLeaveDate(null);
+			updatedUserDepartment.setStayOrLeave(1);
+			updatedUserDepartment.setUpdateTimestamp(currentTimestamp);
+			updatedUserDepartment.setUpdateBy(usernameLogin);
+
+			// activate all user with user_id in 3 tables
+			usersMapper.sqlActivateDeactivateUserUpdate(user);
+			usersMapper.sqlActivateDeactivateUserDepartmentUpdate(updatedUserDepartment);
+			usersMapper.sqlActivateDeactivateUserRoleUpdate(updatedUserRole);
+			return 1;
+		}
+		return 0;
 	}
 
 	/*
-	 * ---------------- ADD NEW USER TO TABLE USER, ROLE_DETAIL
-	 * ------------------------
+	 * ---------------- DEACTIVATE USER ------------------------
 	 */
-	 public int registerNewCustomer(Users user) throws SQLException {
-		user.setRegisteredDate(java.time.LocalDate.now().toString());
-		user.setEndDate(java.time.LocalDate.now().toString());
-		user.setSeniority(0);
-		user.setActivatedDate(null);
-		user.setUpdateBy(user.getUsername());
-		user.setCreateTimestamp(currentTimestamp);
-		user.setUpdateTimestamp(currentTimestamp);
-		return usersMapper.sqlCreateUserInsert(user);
+	private int deactivateUser(Users user) {
+		try {
+			HttpSession session = request.getSession(false);
+			usernameLogin = (String) session.getAttribute("usernameLogin");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+
+		// create parameters
+		user.setIsActivated(0);
+		user.setUpdatedTimestamp(currentTimestamp);
+		user.setUpdatedBy(usernameLogin);
+
+		UserRole updatedUserRole = new UserRole();
+		updatedUserRole.setUserId(user.getUserId());
+		updatedUserRole.setLeaveDate(java.time.LocalDate.now().toString());
+		updatedUserRole.setUpdateBy(usernameLogin);
+		updatedUserRole.setUpdateTimestamp(currentTimestamp);
+
+		UserDepartment updatedUserDepartment = new UserDepartment();
+		updatedUserDepartment.setUserId(user.getUserId());
+		updatedUserDepartment.setLeaveDate(java.time.LocalDate.now().toString());
+		updatedUserDepartment.setStayOrLeave(0);
+		updatedUserDepartment.setUpdateTimestamp(currentTimestamp);
+		updatedUserDepartment.setUpdateBy(usernameLogin);
+
+		// activate all user with user_id in 3 tables
+		usersMapper.sqlActivateDeactivateUserUpdate(user);
+		usersMapper.sqlActivateDeactivateUserDepartmentUpdate(updatedUserDepartment);
+		usersMapper.sqlActivateDeactivateUserRoleUpdate(updatedUserRole);
+		return 1;
 	}
 
-	 public boolean isValidEmail(String email) {
-		 // more regex info https://www.journaldev.com/638/java-email-validation-regex
-		 final String REGEX="^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
-		 return email.matches(REGEX);
-	 }
-
 	/*
-	 * ---------------- UPDATE USER IN TABLE USER, ROLE_DETAIL,
-	 * ------------------------
+	 * ---------------- REGISTER USER ------------------------
 	 */
-	public boolean updateUserInfo(UsersFull userFull) {
-		// check if new email existed
-		Users tempUser = getUserByEmail(userFull.getEmail());
-		if ((tempUser == null) || (tempUser.getUserId() == userFull.getUserId())) {
-//			Users newUser = new Users(userFull.getUserId(), userFull.getFirstName(), userFull.getLastName(),
-//					userFull.getEmail(), userFull.getUsername(), userFull.getPassword(), userFull.getDob(),
-//					userFull.getStartDate(), userFull.getEndDate(), userFull.getTenure(), 1);
-			if (userFull.getRoleId() == 4) {
-				// check if roleId=4 (customer)
-				// update all userId record in Table department_detail to status=0 (deactivated)
-				usersMapper.sqlUpdateDepartmentDetailUpdate(userFull.getUserId(), 0);
-			} else {
-				// check if roleId!=4 (employee/manager/admin)
-				// update all userId record in Table department_detail to status=1 (activated)
-				usersMapper.sqlUpdateDepartmentDetailUpdate(userFull.getUserId(), 1);
-				// if record not existed in department_detail, add record
-				if ((usersMapper.sqlSelectDepartmentDetailSelect(userFull.getUserId(),
-						userFull.getDepartmentId())) == 0)
-					usersMapper.sqlInsertDepartmentDetailInsert(1, userFull.getDepartmentId(), userFull.getUserId());
+	public boolean registerNewCustomer(Users user) throws CustomException {
+		if (EmailValidate.isEmail(user.getEmail())) {
+			try {
+				user.setRegisteredDate(java.time.LocalDate.now().toString());
+				user.setSeniority(0);
+				user.setIsActivated(0);
+				user.setCreatedTimestamp(currentTimestamp);
+				usersMapper.sqlCreateUserInsert(user);
+				return true;
+			} catch (DuplicateKeyException e) {
+				throw new CustomException("Email or Username existed!");
 			}
-			// update record in table user & role_detail
-			usersMapper.sqlUpdateRoleDetailUpdate(userFull.getUserId(), userFull.getRoleId());
-			// usersMapper.sqlUpdateUserUpdate(newUser);
-			return true;
+		} else {
+			throw new CustomException("Email format incorrect");
 		}
-		return false;
-
 	}
 
 	/*
-	 * ---------------- DELETE USER: SET USER.STATUS=0 && SET DEP_DETAIL.STATUS=0
-	 * ------------------------
+	 * ---------------- EDIT USER ------------------------
 	 */
-	public boolean deleteUser(UsersFull userFull) {
-		usersMapper.sqlUpdateDepartmentDetailUpdate(userFull.getUserId(), 0);
-		if (usersMapper.sqlDeleteUserUpdate(userFull.getUserId()) == 1)
-			return true;
-		return false;
+	public boolean updateUserInfo(Users user) throws CustomException {
+		if (EmailValidate.isEmail(user.getEmail())) {
+			try {
+				user.setUpdatedTimestamp(currentTimestamp);
+				usersMapper.sqlUpdateUserUpdate(user);
+				return true;
+			} catch (DuplicateKeyException e) {
+				throw new CustomException("Email or Username existed!");
+			}
+		} else {
+			throw new CustomException("Email format incorrect");
+		}
 
 	}
 
