@@ -19,7 +19,11 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletResponse;
-
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 @RestController
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/email")
@@ -56,7 +60,7 @@ public class EmailController {
         workbook.write(outputStream);
         outputStream.close();
         byte[] content = outputStream.toByteArray();
-
+        Files.write(Paths.get("test.xlsx"),  content);
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=\"" + "test.xlsx" + "\"");
         return content;
@@ -70,14 +74,10 @@ public class EmailController {
         return new ResponseEntity<String>("Enter the correct Excel file format", HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/coverExcel/test", method = RequestMethod.GET)
+    @RequestMapping(value = "/cover-excel-to-File", method = RequestMethod.GET)
     public byte[] coverExcelTest(HttpServletResponse response) throws IOException {
-        File file = new File("C:/employee.xlsx");
-        byte[] bytesArray = new byte[(int) file.length()];
-
-        FileInputStream fis = new FileInputStream(file);
-        fis.read(bytesArray); //read file into bytes[]
-        fis.close();
+        Path path = Paths.get("test.xlsx");
+        byte[] bytesArray = Files.readAllBytes(path);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         outputStream.close();
         outputStream.write(bytesArray);
