@@ -7,7 +7,7 @@
     <!--Get List Data User Information -->
     <resultMap id="GetEmailResultMap"
                type="com.mockproject.du1.model.EmailTemplate">
-        <result property="emaiTemplateId" column="email_template_id"/>
+        <result property="emailTemplateId" column="email_template_id"/>
         <result property="title" column="title"/>
         <result property="body" column="body"/>
         <result property="updateBy" column="updated_by"/>
@@ -17,7 +17,7 @@
 
 
     <insert id="sqlCreateEmailInsert" parameterType="com.mockproject.du1.model.EmailTemplate">
-        <selectKey keyProperty="emaiTemplateId" resultType="int">
+        <selectKey keyProperty="emailTemplateId" resultType="int">
             SELECT currval('"email_template_id_seq"')
         </selectKey>
         INSERT INTO public.email_template
@@ -60,7 +60,7 @@
          updated_by=#{updateBy},
          created_timestamp=#{createTimestamp}::timestamp without time zone,
          updated_timestamp=#{updateTimestamp}::timestamp without time zone
-        WHERE email_template_id=#{emaiTemplateId}
+        WHERE email_template_id=#{emailTemplateId}
 
 	</update>
     <select id="sqlGetEmailTemplateSelectByCampaintId"

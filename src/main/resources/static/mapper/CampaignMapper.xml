@@ -22,7 +22,7 @@
 
 
     <insert id="sqlCreateCampaignInsert" parameterType="com.mockproject.du1.model.Campaign">
-        <selectKey keyProperty="emaiTemplateId" resultType="int">
+        <selectKey keyProperty="emailTemplateId" resultType="int">
             SELECT currval('"campaign_id_seq"')
         </selectKey>
     INSERT INTO public.campaign

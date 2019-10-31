@@ -231,7 +231,7 @@ public class EmailService {
 
     public String editTopic(EmailTemplate email) {
 
-        if (emailMapper.sqlGetEmailSelectById(email.getEmaiTemplateId()) == null) {
+        if (emailMapper.sqlGetEmailSelectById(email.getEmailTemplateId()) == null) {
             return "email doesnt exit";
         }
         emailMapper.sqlEmailUpdate(email);

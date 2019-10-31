@@ -11,7 +11,7 @@ public class EmailTemplate {
 	/**
 	 * Email Template Id
 	 */
-	private int emaiTemplateId;
+	private int emailTemplateId;
 	/**
 	 * Email Template title
 	 */
