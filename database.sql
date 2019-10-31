@@ -69,7 +69,6 @@ CREATE TABLE campaign
 CREATE TABLE campaign_customer
 (
 	campaign_customer_id bigint DEFAULT nextval('campaign_customer_id_seq') NOT NULL UNIQUE,
-	join_date date NOT NULL,
 	sent_date date NOT NULL,
 	updated_by varchar(50),
 	created_timestamp timestamp with time zone,
