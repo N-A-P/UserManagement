@@ -1,8 +1,16 @@
 package com.mockproject.du1.services;
 
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +28,10 @@ public class UsersService {
 	private UsersMapper usersMapper;
 	@Autowired
 	private RoleMapper roleMapper;
+
+	HttpServletRequest request = null;
+
+	String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
 	public List<Users> getAllUser() {
@@ -59,7 +71,6 @@ public class UsersService {
 	public List<GrantedAuthority> getAuthorities(Users user) {
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-		System.out.println(authorities.get(0).getAuthority());
 		return authorities;
 	}
 
@@ -82,14 +93,22 @@ public class UsersService {
 	 * ---------------- ADD NEW USER TO TABLE USER, ROLE_DETAIL
 	 * ------------------------
 	 */
-	public boolean registerNewCustomer(Users user) {
-		if (((getUserByUsername(user.getUsername())) == null) && ((getUserByEmail(user.getEmail())) == null))
-			if (usersMapper.sqlCreateUserInsert(user) != 0) {
-//				roleMapper.sqlCreateRoleDetailInsert(1,usersMapper.sqlGetUserByUsernameSelect(user.getUsername()).getUserId());
-				return true;
-			}
-		return false;
+	 public int registerNewCustomer(Users user) throws SQLException {
+		user.setRegisteredDate(java.time.LocalDate.now().toString());
+		user.setEndDate(java.time.LocalDate.now().toString());
+		user.setSeniority(0);
+		user.setActivatedDate(null);
+		user.setUpdateBy(user.getUsername());
+		user.setCreateTimestamp(currentTimestamp);
+		user.setUpdateTimestamp(currentTimestamp);
+		return usersMapper.sqlCreateUserInsert(user);
 	}
+
+	 public boolean isValidEmail(String email) {
+		 // more regex info https://www.journaldev.com/638/java-email-validation-regex
+		 final String REGEX="^[\\w-\\+]+(\\.[\\w]+)*@[\\w-]+(\\.[\\w]+)*(\\.[a-z]{2,})$";
+		 return email.matches(REGEX);
+	 }
 
 	/*
 	 * ---------------- UPDATE USER IN TABLE USER, ROLE_DETAIL,
@@ -117,25 +136,11 @@ public class UsersService {
 			}
 			// update record in table user & role_detail
 			usersMapper.sqlUpdateRoleDetailUpdate(userFull.getUserId(), userFull.getRoleId());
-//			usersMapper.sqlUpdateUserUpdate(newUser);
+			// usersMapper.sqlUpdateUserUpdate(newUser);
 			return true;
 		}
 		return false;
 
-//				// check if roleId=4 (customer), delete record department_detail
-//				usersMapper.sqlDeleteDepartmentDetailDelete(userFull.getUserId());
-//			} else {
-//				// check if roleId!=4 (employee/manager/admin), add record department_detail
-//				if ((usersMapper.sqlSelectDepartmentDetailSelect(userFull.getUserId(),
-//						userFull.getDepartmentId())) == 0)
-//					usersMapper.sqlInsertDepartmentDetailInsert(1, userFull.getDepartmentId(), userFull.getUserId());
-//			}
-//			// update record in table user & role_detail
-//			usersMapper.sqlUpdateRoleDetailUpdate(userFull.getUserId(), userFull.getRoleId());
-//			usersMapper.sqlUpdateUserUpdate(newUser);
-//			return true;
-//		}
-//		return false;
 	}
 
 	/*

@@ -137,13 +137,15 @@
 	<insert id="sqlCreateUserInsert"
 		parameterType="com.mockproject.du1.model.Users">
 		INSERT INTO public.users
-		(first_name,last_name,email,username,password,dob,start_date,end_date,tenure,status)
+		(first_name, last_name, dob, email, username, password, 
+		registered_date, activated_date, seniority, is_activated, updated_by, 
+		created_timestamp, updated_timestamp)
 		VALUES
-		(#{firstName},#{lastName},#{email},#{username},#{password},
-		TO_DATE(#{dob},'YYYY-MM-DD'),
-		TO_DATE(#{startDate},'YYYY-MM-DD'),
-		TO_DATE(#{endDate},'YYYY-MM-DD'),
-		#{tenure},#{status})
+		(#{firstName},#{lastName},TO_DATE(#{dob},'YYYY-MM-DD'),
+		#{email},#{username},#{password},
+		TO_DATE(#{registeredDate},'YYYY-MM-DD'),
+		TO_DATE(#{activatedDate},'YYYY-MM-DD'),
+		#{seniority},0,#{updateBy},#{createTimestamp}::timestamp without time zone,#{updateTimestamp}::timestamp without time zone)
 	</insert>
 
 	<!--Insert new record into Table department_detail -->

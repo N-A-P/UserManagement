@@ -24,12 +24,25 @@ import com.mockproject.du1.services.UsersService;
 @CrossOrigin(maxAge = 3600)
 @RequestMapping("/rest")
 public class UsersRestController {
+	/**
+	 *
+	 */
 	@Autowired
 	private JwtService jwtService;
+	/**
+	 *
+	 */
 	@Autowired
 	private UsersService usersService;
+	/**
+	 *
+	 */
 	@Autowired
-	EmailService emailService;
+	private EmailService emailService;
+	/**
+	 *
+	 */
+	Logger log = LoggerFactory.getLogger(UsersRestController.class);
 
 	/* ---------------- GET ALL USER LIST ------------------------ */
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -38,39 +51,51 @@ public class UsersRestController {
 	}
 
 
+		}
+		return new ResponseEntity<String>("SUCCESS", HttpStatus.OK);
+	}
 
 	/* ---------------- REGISTRATION NEW USER ------------------------ */
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
-		user.setRegisteredDate(java.time.LocalDate.now().toString());
-		user.setEndDate(java.time.LocalDate.now().toString());
-		user.setSeniority(0);
-		user.setIsActivated(1);
-		if (usersService.registerNewCustomer(user)) {
-			return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
+		if (usersService.isValidEmail(user.getEmail())) {
+			try {
+				usersService.registerNewCustomer(user);
+				return new ResponseEntity<String>("Created!", HttpStatus.CREATED);
+			} catch (Exception e) {
+				if (e.getCause().toString().contains("org.postgresql.util.PSQLException")) {
+					log.error(e.getMessage());
+					return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+				} else {
+					log.error(e.getMessage());
+					return new ResponseEntity<String>("SERVER ERROR!", HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+			}
 		} else {
-			return new ResponseEntity<String>("Username or Email Existed!", HttpStatus.BAD_REQUEST);
+			log.warn("Invalid email format");
+			return new ResponseEntity<String>("Invalid email format!", HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	/* ---------------- SEND EMAIL TO LIST OF USERS ------------------------ */
-//	@RequestMapping(value = "/email", method = RequestMethod.POST)
-//	public ResponseEntity<List<Users>> coverExcel(@RequestBody File file) throws IOException {
-//		List<String> emails = emailService.coverExcellFileToArray(file);
-//		List<Users> users = new ArrayList<>();
-//		users = usersService.getUsersListByEmails(emails);
-//		return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
-//	}
+	// @RequestMapping(value = "/email", method = RequestMethod.POST)
+	// public ResponseEntity<List<Users>> coverExcel(@RequestBody File file) throws
+	// IOException {
+	// List<String> emails = emailService.coverExcellFileToArray(file);
+	// List<Users> users = new ArrayList<>();
+	// users = usersService.getUsersListByEmails(emails);
+	// return new ResponseEntity<List<Users>>(users, HttpStatus.OK);
+	// }
 
 	/* ---------------- LOGIN ------------------------ */
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<String> login(HttpServletRequest request, @RequestBody Users user) {
 		String result = "";
 		HttpStatus httpStatus = null;
-		
+
 		try {
 			if (usersService.checkLogin(user)) {
-				Users userToCheck=usersService.getUserByUsername(user.getUsername());
+				Users userToCheck = usersService.getUserByUsername(user.getUsername());
 				if (userToCheck.getIsActivated() == 1) {
 					result = jwtService.generateTokenLogin(user.getUsername());
 					httpStatus = HttpStatus.OK;
