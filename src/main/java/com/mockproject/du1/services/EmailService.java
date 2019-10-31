@@ -116,7 +116,7 @@ public class EmailService {
             while (rowIterator.hasNext()) {
                 Boolean nonErrorCustomer = true;
                 Row row = rowIterator.next();
-                Iterator<Cell> cellIterator = row.cellIterator();
+                row.cellIterator();
                 String errorCause = "detail:";
                 try {
                     if (!notNull(row.getCell(2))) {

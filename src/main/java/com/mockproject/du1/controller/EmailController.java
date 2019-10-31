@@ -21,8 +21,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 @RequestMapping("/email")
 public class EmailController {
     @Autowired
-    private UsersService usersService;
-    @Autowired
     EmailService emailService;
 
     @RequestMapping(value = "/sendMail", method = RequestMethod.POST)

@@ -217,44 +217,12 @@ public class DepartmentService {
 		return departmentMapper.sqlDepartmentStatusUpdate(departmentId, INACTIVE, usernameLogin, currentTimestamp);
 	}
 
-//	/**
-//	 * 
-//	 */
-//	public int addEmployeeToDepartment(int departmentDetailId) {
-//		try {
-//			return departmentMapper.sqlDepartmentDetailStatusUpdate(departmentDetailId, STATUS_STAY);
-//		} catch (Exception e) {
-//			logger.error(e.getMessage());
-//		}
-//
-//		return 0;
-//	}
-//
-//	/**
-//	 * 
-//	 */
-//	public int removeEmployeeFromDepartment(EmployeeOfDepartment employeeOfDepartment) {
-//		try {
-//			UserDepartment userDepartment = new UserDepartment();
-//			userDepartment.setUserDepartmentId(employeeOfDepartment.getUserDepartmentId());
-//			userDepartment.setLeaveDate(currentTimestamp);
-//			userDepartment.setStayOrLeave(STATUS_LEAVE);
-//			userDepartment.setUpdateBy(usernameLogin);
-//			userDepartment.setUpdateTimestamp(currentTimestamp);
-//			return departmentMapper.sqlRemoveEmployeeForDeparmentUpdate(userDepartment);
-//		} catch (Exception e) {
-//			logger.error(e.getMessage());
-//		}
-//
-//		return 0;
-//	}
 
 	public List<EmployeeOfDepartment> removeEmployeeFromDeparment(List<EmployeeOfDepartment> listEmployeeOfDepartment) {
 		List<EmployeeOfDepartment> listRecordError = new ArrayList<EmployeeOfDepartment>();
 		UserDepartment userDepartment = new UserDepartment();
 		Department department = new Department();
 
-		int count = 0;
 		try {
 			for (EmployeeOfDepartment employeeOfDepartment : listEmployeeOfDepartment) {
 
@@ -268,8 +236,9 @@ public class DepartmentService {
 					userDepartment.setUpdateTimestamp(currentTimestamp);
 
 					if (departmentMapper.sqlCheckExistUserDepartmentSelect(userDepartment) != 0) {
-						
-						int checkUpdate = departmentMapper.sqlRemoveEmployeeForDeparmentUpdate(userDepartment, STATUS_LEAVE);
+
+						int checkUpdate = departmentMapper.sqlRemoveEmployeeForDeparmentUpdate(userDepartment,
+								STATUS_LEAVE);
 
 						if (checkUpdate == 0) {
 
@@ -309,7 +278,6 @@ public class DepartmentService {
 		UserDepartment userDepartment = new UserDepartment();
 		Department department = new Department();
 		try {
-			int count = 0;
 			for (EmployeeOfDepartment employeeOfDepartment : listEmployeeOfDepartment) {
 
 				try {
@@ -331,8 +299,6 @@ public class DepartmentService {
 							listRecordError.add(employeeOfDepartment);
 
 						} else {
-
-							count++;
 
 							department.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getDepartmentId());
 							department.setNumberOfEmployees(checkInsert);
@@ -360,11 +326,6 @@ public class DepartmentService {
 	 * 
 	 */
 	public int departmentInsert(Department department) throws DuplicateKeyException, SQLException {
-		try {
-//			HttpSession session = request.getSession(false);
-//			usernameLogin = (String) session.getAttribute("usernameLogin");
-		} catch (Exception e) {
-		}
 
 		try {
 			// Check duplicate Department Name
@@ -398,21 +359,4 @@ public class DepartmentService {
 		return 0;
 	}
 
-//	/**
-//	 * 
-//	 */
-//	public int updateNumberOfEmployee(EmployeeOfDepartment employeeOfDepartment) {
-//		try {
-//			Department department = new Department();
-//			department.setNumberOfEmployees(employeeOfDepartment.getDepartments().get(0).getNumberOfEmployees());
-//			department.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getDepartmentId());
-//			department.setUpdateBy(usernameLogin);
-//			department.setUpdateTimestamp(currentTimestamp);
-//			return departmentMapper.sqlDepartmentNumberOfEmployeeUpdate(department);
-//		} catch (Exception e) {
-//			logger.error(e.getMessage());
-//			return 0;
-//		}
-//
-//	}
 }

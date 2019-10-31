@@ -18,9 +18,6 @@ public class UsersService {
 
 	@Autowired
 	private UsersMapper usersMapper;
-	@Autowired
-	private RoleMapper roleMapper;
-
 	/* ---------------- GET ALL USER LIST ------------------------ */
 	public List<Users> getAllUser() {
 		return usersMapper.sqlGetAllUserSelect();
