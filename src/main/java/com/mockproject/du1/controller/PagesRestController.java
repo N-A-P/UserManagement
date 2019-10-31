@@ -56,7 +56,7 @@ public class PagesRestController {
 	/**
 	 * Search Pages by Name or Code
 	 */
-	@RequestMapping(value = "/getPagesByNameOrCodeSelect", method = RequestMethod.GET)
+	@RequestMapping(value = "/getPagesByNameOrCodeSelect/{extractCondition}", method = RequestMethod.GET)
 	public ResponseEntity<List<Pages>> getPagesByNameOrCodeSelect(@Valid @PathVariable String extractCondition) {
 		List<Pages> pages = pageService.getPagesByNameOrCodeSelect(extractCondition);
 		try {
@@ -89,14 +89,14 @@ public class PagesRestController {
 	public ResponseEntity<String> updatePagesInfomation(@Valid @RequestBody Pages page) {
 
 		try {
-
-			if (pageService.editPagesInfoUpdate(page) == CONSTANT_CHECK_DUPLICATED_CODE) {
+			int checkUpdateSuccess = pageService.editPagesInfoUpdate(page);
+			if (checkUpdateSuccess == CONSTANT_CHECK_DUPLICATED_CODE) {
 				return new ResponseEntity<String>("Duplicated Pages code!!! Please Check!!!", HttpStatus.BAD_REQUEST);
 
-			} else if (pageService.editPagesInfoUpdate(page) == CONSTANT_CHECK_DUPLICATED_NAME) {
+			} else if (checkUpdateSuccess == CONSTANT_CHECK_DUPLICATED_NAME) {
 				return new ResponseEntity<String>("Duplicated Pages name!!! Please Check!!!", HttpStatus.BAD_REQUEST);
 
-			} else if (pageService.editPagesInfoUpdate(page) == 0) {
+			} else if (checkUpdateSuccess == 0) {
 				return new ResponseEntity<String>("Database rollback!!! Modify Pages failed!!!",
 						HttpStatus.BAD_REQUEST);
 			} else {

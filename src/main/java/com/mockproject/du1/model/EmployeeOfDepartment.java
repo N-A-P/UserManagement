@@ -1,51 +1,65 @@
 package com.mockproject.du1.model;
 
+import java.util.List;
+
 @lombok.Data
 public class EmployeeOfDepartment {
-	/**
+	/***
 	 * User Id
 	 */
 	private int userId;
 	/**
-	 * User First Name
+	 * First Name
 	 */
 	private String firstName;
 	/**
-	 * User Last Name
+	 * Last Name
 	 */
 	private String lastName;
 	/**
-	 * User Email
+	 * Email
 	 */
 	private String email;
 	/**
-	 * User seniority
+	 * Username
+	 */
+	private String username;
+	/**
+	 * Password
+	 */
+	private String password;
+	/**
+	 * Date Of birth
+	 */
+	private String dob;
+	/**
+	 * Registered Date
+	 */
+	private String registeredDate;
+	/**
+	 * Activated Date
+	 */
+	private String activatedDate;
+	/**
+	 * Seniority(Years)
 	 */
 	private int seniority;
-	/**
-	 * User Role Id
-	 */
-	private int userRoleId;
-	/**
-	 * Role Id
-	 */
-	private int roleId;
-	/**
-	 * Role Name
-	 */
-	private String roleName;
 	/**
 	 * User Department Id
 	 */
 	private int userDepartmentId;
 	/**
-	 * Department Id
+	 * User Role Id
 	 */
-	private int departmentId;
+	private int userRoleId;
 	/**
-	 * Department Name
+	 * 
 	 */
-	private String departmentName;
-	
+	private List<Department> departments;
+
+	/**
+	 * 
+	 */
+	private List<Role> roles;
 
 }

@@ -16,7 +16,7 @@ public interface PagesMapper {
 	/**
 	 * 
 	 */
-	Pages sqlGetPagesByIdSelect(@Param("pageId") int pageId);
+	Pages sqlGetPagesByIdSelect(@Param("pagesId") int pagesId);
 
 	/**
 	 * 
@@ -26,12 +26,12 @@ public interface PagesMapper {
 	/**
 	 * 
 	 */
-	long sqlCountPagesByNameSelect(@Param("pageName") String pageName);
+	long sqlCountPagesByNameSelect(@Param("pagesName") String pagesName);
 	
 	/**
 	 * 
 	 */
-	long sqlCountPagesByCodeSelect(@Param("pageCode") String pageCode);
+	long sqlCountPagesByCodeSelect(@Param("pagesCode") String pagesCode);
 
 	/**
 	 * 

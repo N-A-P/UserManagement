@@ -12,10 +12,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-import com.mockproject.du1.common.DataUtil;
 import com.mockproject.du1.mapper.DepartmentMapper;
 import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.EmployeeOfDepartment;
+import com.mockproject.du1.model.UserDepartment;
 
 @Service
 public class DepartmentService {
@@ -233,9 +233,15 @@ public class DepartmentService {
 	/**
 	 * 
 	 */
-	public int removeEmployeeFromDepartment(int departmentDetailId) {
+	public int removeEmployeeFromDepartment(EmployeeOfDepartment employeeOfDepartment) {
 		try {
-			return departmentMapper.sqlDepartmentDetailStatusUpdate(departmentDetailId, STATUS_LEAVE);
+			UserDepartment userDepartment = new UserDepartment();
+			userDepartment.setUserDepartmentId(employeeOfDepartment.getUserDepartmentId());
+			userDepartment.setLeaveDate(currentTimestamp);
+			userDepartment.setStayOrLeave(STATUS_LEAVE);
+			userDepartment.setUpdateBy(usernameLogin);
+			userDepartment.setUpdateTimestamp(currentTimestamp);
+			return departmentMapper.sqlRemoveEmployeeForDeparmentUpdate(userDepartment);
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
@@ -291,14 +297,32 @@ public class DepartmentService {
 	public List<EmployeeOfDepartment> newEmployeeForDeparmentInsert(
 			List<EmployeeOfDepartment> listEmployeeOfDepartment) {
 		List<EmployeeOfDepartment> listRecordError = new ArrayList<EmployeeOfDepartment>();
+		UserDepartment userDepartment = new UserDepartment();
 		try {
-
+			
 			for (EmployeeOfDepartment employeeOfDepartment : listEmployeeOfDepartment) {
 				try {
-					if (departmentMapper.sqlNewEmployeeForDeparmentInsert(employeeOfDepartment, STATUS_STAY,
-							STATUS_STAY) == 0) {
+
+					userDepartment.setUserId(employeeOfDepartment.getUserId());
+					userDepartment.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getDepartmentId());
+					userDepartment.setJoinDate(currentTimestamp);
+					userDepartment.setLeaveDate(null);
+					userDepartment.setStayOrLeave(STATUS_STAY);
+					userDepartment.setUpdateBy(usernameLogin);
+					userDepartment.setCreateTimestamp(currentTimestamp);
+					userDepartment.setUpdateTimestamp(currentTimestamp);
+
+					if (departmentMapper.sqlCheckExistUserDepartmentSelect(userDepartment) == 0) {
+
+						if (departmentMapper.sqlNewEmployeeForDeparmentInsert(userDepartment) == 0) {
+
+							listRecordError.add(employeeOfDepartment);
+
+						}
+					} else {
 						listRecordError.add(employeeOfDepartment);
 					}
+
 				} catch (DuplicateKeyException e) {
 					listRecordError.add(employeeOfDepartment);
 				}
@@ -307,5 +331,23 @@ public class DepartmentService {
 			logger.error(e.getMessage());
 		}
 		return listRecordError;
+	}
+
+	/**
+	 * 
+	 */
+	public int updateNumberOfEmployee(EmployeeOfDepartment employeeOfDepartment) {
+		try {
+			Department department = new Department();
+			department.setNumberOfEmployees(employeeOfDepartment.getDepartments().get(0).getNumberOfEmployees());
+			department.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getDepartmentId());
+			department.setUpdateBy(usernameLogin);
+			department.setUpdateTimestamp(currentTimestamp);
+			return departmentMapper.sqlDepartmentNumberOfEmployeeUpdate(department);
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			return 0;
+		}
+
 	}
 }

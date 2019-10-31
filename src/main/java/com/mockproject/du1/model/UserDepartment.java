@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @lombok.Data
 public class UserDepartment {
 	/**
-	 * Department Detail Id
+	 * User Department Id
 	 */
 	private int userDepartmentId;
 	/**

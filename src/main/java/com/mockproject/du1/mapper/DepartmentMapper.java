@@ -4,6 +4,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.EmployeeOfDepartment;
+import com.mockproject.du1.model.UserDepartment;
 
 public interface DepartmentMapper {
 	/**
@@ -64,11 +65,10 @@ public interface DepartmentMapper {
 	int sqlDepartmentInfoUpdate(Department department);
 
 	/**
-	 * Update Department Information
+	 * Update User Department Information
 	 *
 	 */
-	int sqlDepartmentDetailStatusUpdate(@Param("departmentDetailId") int departmentDetailId,
-			@Param("status") int status);
+	int sqlRemoveEmployeeForDeparmentUpdate(UserDepartment userDepartment);
 
 	/**
 	 * Update Department Status
@@ -82,12 +82,24 @@ public interface DepartmentMapper {
 	 *
 	 */
 	int sqlDepartmentInsert(Department department);
+	
+	/**
+	 * Insert New Employee For Deparment
+	 *
+	 */
+	
+	long sqlCheckExistUserDepartmentSelect(UserDepartment userDepartment);
 
 	/**
 	 * Insert New Employee For Deparment
 	 *
 	 */
-	int sqlNewEmployeeForDeparmentInsert(@Param("EmployeeOfDepartment") EmployeeOfDepartment employeeOfDepartment,
-			@Param("statusDepartment") int statusDepartment, @Param("statusUser") int statusUser);
+	int sqlNewEmployeeForDeparmentInsert(UserDepartment userDepartment);
+	
+	/**
+	 * Insert New Employee For Deparment
+	 *
+	 */
+	int sqlDepartmentNumberOfEmployeeUpdate(Department department);
 
 }
