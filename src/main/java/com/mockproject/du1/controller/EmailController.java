@@ -29,8 +29,6 @@ import java.nio.file.Paths;
 @RequestMapping("/email")
 public class EmailController {
     @Autowired
-    private UsersService usersService;
-    @Autowired
     EmailService emailService;
 
     @RequestMapping(value = "/sendMail", method = RequestMethod.POST)

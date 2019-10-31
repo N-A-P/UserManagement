@@ -56,7 +56,7 @@ public interface DepartmentMapper {
 	 */
 	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("departmentId") int departmentId,
 			@Param("statusUserDepartment") int statusUserDepartment, @Param("statusDepartment") int statusDepartment,
-			@Param("statusUser") int statusUser, int action);
+			@Param("statusUser") int statusUser, @Param("action") int action);
 
 	/**
 	 * Update Department Information
@@ -68,7 +68,7 @@ public interface DepartmentMapper {
 	 * Update User Department Information
 	 *
 	 */
-	int sqlRemoveEmployeeForDeparmentUpdate(UserDepartment userDepartment);
+	int sqlRemoveEmployeeForDeparmentUpdate( @Param("UserDepartment") UserDepartment userDepartment, @Param("newStayOrLeave") int newStayOrLeave);
 
 	/**
 	 * Update Department Status
@@ -100,6 +100,6 @@ public interface DepartmentMapper {
 	 * Insert New Employee For Deparment
 	 *
 	 */
-	int sqlDepartmentNumberOfEmployeeUpdate(Department department);
+	int sqlDepartmentNumberOfEmployeeUpdate(@Param("Department")Department department, @Param("action") int action);
 
 }

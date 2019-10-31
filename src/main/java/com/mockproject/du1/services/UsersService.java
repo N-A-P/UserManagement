@@ -1,28 +1,15 @@
 package com.mockproject.du1.services;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import com.mockproject.du1.common.EmailValidate;
-import com.mockproject.du1.exception.CustomException;
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.mapper.UsersMapper;
-import com.mockproject.du1.model.Department;
-import com.mockproject.du1.model.UserDepartment;
-import com.mockproject.du1.model.UserRole;
 import com.mockproject.du1.model.Users;
 import com.mockproject.du1.model.UsersFull;
 
