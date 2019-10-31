@@ -52,7 +52,6 @@ public class EmailController {
         customers.add(Customer.builder().customerId(13).customerEmail("admin123@gmail.com").build());
         return MailOfUser.builder().campaignId(1).sendEmailUserId(1).customers(customers).build();
     }
-    private static final String APPLICATION_MS_WORD_VALUE = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
     @RequestMapping(value = "/cover-excel-to-DB", method = RequestMethod.POST)
     public byte[] coverExcel(@RequestBody MultipartFile file, HttpServletResponse response) throws IOException {
         XSSFWorkbook workbook = emailService.coverExcellFileToArray(file.getBytes());
@@ -127,8 +126,9 @@ public class EmailController {
     }
     @RequestMapping(value = "/add-campaign", method = RequestMethod.POST)
     public ResponseEntity addCampaign(@RequestBody Campaign campaign) {
-        if (emailService.addCampaign(campaign).equalsIgnoreCase("success"))
-            return new ResponseEntity<String>("success", HttpStatus.OK);
+        String result=emailService.addCampaign(campaign);
+        if (!result.equalsIgnoreCase("start date mush befor end date"))
+            return new ResponseEntity<String>(result, HttpStatus.OK);
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }
 

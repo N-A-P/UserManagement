@@ -22,6 +22,9 @@
 
 
     <insert id="sqlCreateCampaignInsert" parameterType="com.mockproject.du1.model.Campaign">
+        <selectKey keyProperty="emaiTemplateId" resultType="int">
+            SELECT currval('"campaign_id_seq"')
+        </selectKey>
     INSERT INTO public.campaign
     (title, description, duration, start_date, end_date, updated_by, created_timestamp, updated_timestamp,email_template_id)
     VALUES(#{title}, #{description}, #{duration}, #{startDate}, #{endDate}, #{updateBy}, #{createTimestamp}::timestamp without time zone, #{updateTimestamp}::timestamp without time zone,#{emailTemplateId});

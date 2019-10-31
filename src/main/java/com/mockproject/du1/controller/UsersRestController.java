@@ -6,7 +6,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,22 +30,22 @@ import com.mockproject.du1.services.UsersService;
 @RequestMapping("/rest")
 public class UsersRestController {
 	/**
-	 * 
+	 *
 	 */
 	@Autowired
 	private JwtService jwtService;
 	/**
-	 * 
+	 *
 	 */
 	@Autowired
 	private UsersService usersService;
 	/**
-	 * 
+	 *
 	 */
 	@Autowired
 	private EmailService emailService;
 	/**
-	 * 
+	 *
 	 */
 	Logger log = LoggerFactory.getLogger(UsersRestController.class);
 

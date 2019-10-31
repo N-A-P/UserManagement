@@ -252,7 +252,7 @@ public class EmailService {
             int getDiff = campaign.getEndDate().getDate() - campaign.getStartDate().getDate();
             campaign.setDuration(getDiff);
             campaignMapper.sqlCreateCampaignInsert(campaign);
-            return "success";
+            return campaign.getCampaignId()+"";
         }
 
         return "start date mush befor end date";
