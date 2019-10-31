@@ -35,13 +35,13 @@ public class EmailController {
     public ResponseEntity sendMail(@RequestBody MailOfUser mailOfUser) {
         if (emailService.sendEmailToAll(mailOfUser.getCustomers(), mailOfUser.getSendEmailUserId(), mailOfUser.getCampaignId()))
             return new ResponseEntity<String>("Success", HttpStatus.OK);
-        return new ResponseEntity("Failen", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity("Bạn không có gửi mail", HttpStatus.BAD_REQUEST);
     }
     @RequestMapping(value = "/send-campaign", method = RequestMethod.POST)
     public ResponseEntity sendCampaign(@RequestBody List<MailOfUser> mailOfUsers) {
         if (emailService.sendListCampaign(mailOfUsers))
             return new ResponseEntity<String>("Success", HttpStatus.OK);
-        return new ResponseEntity("Failen", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity("Bạn không có gửi mail", HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/test", method = RequestMethod.GET)
