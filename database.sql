@@ -74,8 +74,8 @@ CREATE TABLE campaign_customer
 	created_timestamp timestamp with time zone,
 	updated_timestamp timestamp with time zone,
 	campaign_id bigint NOT NULL,
-	user_id bigint NOT NULL,
 	customer_id bigint NOT NULL,
+	user_id bigint NOT NULL,
 	PRIMARY KEY (campaign_customer_id)
 ) WITHOUT OIDS;
 
@@ -166,8 +166,8 @@ CREATE TABLE users
 	first_name varchar(50),
 	last_name varchar(50),
 	dob date,
-	email varchar(50) NOT NULL,
-	username varchar(50) NOT NULL,
+	email varchar(50) NOT NULL UNIQUE,
+	username varchar(50) NOT NULL UNIQUE,
 	password varchar(50) NOT NULL,
 	registered_date date NOT NULL,
 	activated_date date,
