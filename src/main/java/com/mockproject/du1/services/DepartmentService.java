@@ -270,7 +270,7 @@ public class DepartmentService {
 			logger.error(e.getMessage());
 		}
 
-		return departmentMapper.sqlGetAllDepartmentSelect();
+		return null;
 	}
 
 	/**

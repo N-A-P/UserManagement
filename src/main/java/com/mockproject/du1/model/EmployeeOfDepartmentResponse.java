@@ -4,7 +4,9 @@ import java.util.List;
 
 @lombok.Data
 public class EmployeeOfDepartmentResponse {
-
+	/**
+	 * 
+	 */
 	private List<EmployeeOfDepartment> employeeOfDepartmentsError;
 
 	/**
