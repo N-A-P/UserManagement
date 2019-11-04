@@ -2,6 +2,8 @@ package com.mockproject.du1.controller;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -132,9 +134,10 @@ public class DepartmentRestController {
 	public ResponseEntity<String> updateDepartmentInfomation(@Valid @RequestBody Department department) {
 
 		try {
-			int checkUpdateSuccess = departmentService.departmentInfoUpdate(department);
-
-			if (checkUpdateSuccess == CONSTANT_CHECK_DUPLICATED_CODE) {
+			Map<Integer, List<Department>> mapDepartment = departmentService.departmentInfoUpdate(department);
+			Set<Integer> checkUpdateSuccess = mapDepartment.keySet();
+			
+			if ( == CONSTANT_CHECK_DUPLICATED_CODE) {
 				return new ResponseEntity<String>("Duplicated Department code!!! Please Check!!!",
 						HttpStatus.BAD_REQUEST);
 
