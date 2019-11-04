@@ -38,9 +38,6 @@
         (first_name, last_name, dob, email, is_activated, updated_by, created_timestamp, updated_timestamp, address, company)
         VALUES
         (#{firstName}, #{lastName}, #{dob}, #{customerEmail}, #{isActivated}, #{updateBy}, #{createTimestamp}::timestamp without time zone, #{updateTimestamp}::timestamp without time zone, #{address}, #{company});
-
-
-
 	</insert>
 
     <select id="sqlGetCustomerByEmailSelect"

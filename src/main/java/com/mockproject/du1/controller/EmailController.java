@@ -97,13 +97,13 @@ public class EmailController {
     @RequestMapping(value = "/edit-topic", method = RequestMethod.POST)
     public ResponseEntity editTopic(@RequestBody EmailTemplate email) {
         if (emailService.editTopic(email).equalsIgnoreCase("success"))
-            return new ResponseEntity<String>("success", HttpStatus.OK);
+            return new ResponseEntity<List<EmailTemplate>>(emailService.getAllTopic(), HttpStatus.OK);
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }
     @RequestMapping(value = "/add-topic", method = RequestMethod.POST)
     public ResponseEntity addTopic(@RequestBody EmailTemplate email) {
         if (emailService.addTopic(email).equalsIgnoreCase("success"))
-            return new ResponseEntity<String>("success", HttpStatus.OK);
+            return new ResponseEntity<List<EmailTemplate>>(emailService.getAllTopic(), HttpStatus.OK);
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }
     @RequestMapping(value = "/get-all-topic", method = RequestMethod.GET)
@@ -112,22 +112,34 @@ public class EmailController {
     }
     @RequestMapping(value = "/edit-campaign", method = RequestMethod.POST)
     public ResponseEntity editCampaign(@RequestBody Campaign campaign) {
-        if (emailService.editCampaign(campaign).equalsIgnoreCase("success"))
-            return new ResponseEntity<String>("success", HttpStatus.OK);
+        if (emailService.editCampaign(campaign).equalsIgnoreCase("success")){
+            List<CampaignDetail> campaignDetails = emailService.getAllCampaignDetail();
+        if (campaignDetails != null) {
+            return new ResponseEntity<List<CampaignDetail>>(campaignDetails, HttpStatus.OK);
+        }
+        }
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }
     @RequestMapping(value = "/edit-email-template-campaign", method = RequestMethod.POST)
     public ResponseEntity editEmailTemplateCampaign(@RequestBody Campaign campaign) {
-        if (emailService.editEmailTemplateCampaign(campaign).equalsIgnoreCase("success"))
-            return new ResponseEntity<String>("success", HttpStatus.OK);
+        if (emailService.editEmailTemplateCampaign(campaign).equalsIgnoreCase("success")){
+            List<CampaignDetail> campaignDetails = emailService.getAllCampaignDetail();
+            if (campaignDetails != null) {
+                return new ResponseEntity<List<CampaignDetail>>(campaignDetails, HttpStatus.OK);
+            }
+        }
         return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
     }
     @RequestMapping(value = "/add-campaign", method = RequestMethod.POST)
     public ResponseEntity addCampaign(@RequestBody Campaign campaign) {
         String result=emailService.addCampaign(campaign);
-        if (!result.equalsIgnoreCase("start date mush befor end date"))
-            return new ResponseEntity<String>(result, HttpStatus.OK);
-        return new ResponseEntity<String>("false", HttpStatus.BAD_REQUEST);
+        if (!result.equalsIgnoreCase("start date mush befor end date")) {
+            List<CampaignDetail> campaignDetails = emailService.getAllCampaignDetail();
+            if (campaignDetails != null) {
+                return new ResponseEntity<List<CampaignDetail>>(campaignDetails, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<String>("start date mush befor end date", HttpStatus.BAD_REQUEST);
     }
 
     @RequestMapping(value = "/getAllCustomer", method = RequestMethod.GET)
