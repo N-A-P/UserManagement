@@ -8,7 +8,7 @@
 	<!--Get List Data User Information -->
 	<resultMap id="GetUserResultMap"
 		type="com.mockproject.du1.model.Users">
-		<result property="userId" column="user_id" />
+		<result property="id" column="id" />
 		<result property="firstName" column="first_name" />
 		<result property="lastName" column="last_name" />
 		<result property="dob" column="dob" />
@@ -26,7 +26,7 @@
 
 	<resultMap id="GetUserFullResultMap"
 		type="com.mockproject.du1.model.UsersFull">
-		<result property="userId" column="user_id" />
+		<result property="userId" column="id" />
 		<result property="firstName" column="first_name" />
 		<result property="lastName" column="last_name" />
 		<result property="dob" column="dob" />
@@ -37,8 +37,6 @@
 		<result property="seniority" column="seniority" />
 		<result property="isActivated" column="is_activated" />
 		<result property="activatedDate" column="activated_date" />
-		<collection property="listRole"
-			resultMap="GetRoleResultMap" />
 		<collection property="listDepartment"
 			resultMap="GetDepartResultMap" />
 
@@ -46,15 +44,18 @@
 
 	<resultMap id="GetDepartResultMap"
 		type="com.mockproject.du1.model.Department">
-		<result property="departmentId" column="department_id" />
-		<result property="departmentName" column="department_name" />
-		<result property="departmentCode" column="department_code" />	
+		<result property="departmentId" column="id" />
+		<result property="name" column="name" />
+		<result property="code" column="code" />
+		<collection property="role"
+			resultMap="GetRoleResultMap" />	
 	</resultMap>
 
 	<resultMap id="GetRoleResultMap"
 		type="com.mockproject.du1.model.Role">
-		<result property="roleId" column="role_id" />
-		<result property="roleName" column="role_name" />
+		<result property="roleId" column="id" />
+		<result property="name" column="name" />
+		<result property="code" column="code" />
 	</resultMap>
 
 
@@ -76,7 +77,7 @@
 	<select id="sqlGetAllUserFullSelect"
 		resultMap="GetUserFullResultMap" parameterType="Integer">
 		SELECT
-		users.user_id,
+		users.id,
 		users.first_name,
 		users.last_name,
 		users.is_activated,
@@ -85,26 +86,26 @@
 		users.password,
 		users.dob,
 		users.registered_date,
-		department.department_id,
-		department.department_name,
-		department.department_code,
-		public.role.role_id,
-		public.role.role_name
+		department.id as department_id,
+		department.name,
+		department.code,
+		public.role.id as role_id,
+		public.role.name
 		FROM
-		users left join user_department on
-		users.user_id =
+		users left join
+		user_department on
+		users.id =
 		user_department.user_id
-		left join department ON
-		department.department_id =
+		left join
+		department ON
+		department.id =
 		user_department.department_id
 		left join
-		user_role ON users.user_id = user_role.user_id left join role
-		on
-		user_role.role_id = role.role_id
-		<if test="isActivated != null">
+		role ON user_department.role_id = role.id
+		<!-- <if test="isActivated != null">
 			where
 			users.is_activated = #{isActivated}
-		</if>
+		</if> -->
 	</select>
 
 	<!--Get List Data User Information By Username -->

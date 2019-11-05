@@ -1,5 +1,6 @@
 package com.mockproject.du1.services;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,7 +28,9 @@ public class UsersService {
 	/**
 	 *
 	 */
-	private String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+	private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	String datecurrent = format.format(new Date());
+	
 	/**
 	 *
 	 */
@@ -62,15 +65,15 @@ public class UsersService {
 	public List<UsersFull> getAllUserFull(Integer isActivated) {
 		List<UsersFull> result = usersMapper.sqlGetAllUserFullSelect(isActivated);
 
-		// concat all department_code of each UserFull in List<UserFull>
-		for (UsersFull member : result) {
-			if (member.getListDepartment() != null) {
-				StringBuffer sb = new StringBuffer();
-				for (Department department : member.getListDepartment())
-					sb.append(department.getDepartmentCode()).append(" ");
-				member.setDepartmentCodeAll(sb.toString());
-			}
-		}
+//		// concat all department_code of each UserFull in List<UserFull>
+//		for (UsersFull member : result) {
+//			if (member.getListDepartment() != null) {
+//				StringBuffer sb = new StringBuffer();
+//				for (Department department : member.getListDepartment())
+//					sb.append(department.getCode()).append(" ");
+//				member.setDepartmentCodeAll(sb.toString());
+//			}
+//		}
 		return result;
 	}
 
@@ -89,103 +92,104 @@ public class UsersService {
 	/*
 	 * ---------------- ACTIVATE-DEACTIVATE USER ------------------------
 	 */
-	public int activateDeactivate(Users user) {
-		if (user.getIsActivated() == 1) {
-			logger.info("Deactivate user id=" + user.getUserId());
-			return deactivateUser(user);
-		}
-		if (user.getIsActivated() == 0) {
-			logger.info("Activate user id=" + user.getUserId());
-			return activateUser(user);
-		}
-		return 0;
-	}
+//	public int activateDeactivate(Users user) {
+//		if (user.getIsActivated() == 1) {
+//			logger.info("Deactivate user id=" + user.getId());
+//			return deactivateUser(user);
+//		}
+//		if (user.getIsActivated() == 0) {
+//			logger.info("Activate user id=" + user.getId());
+//			return activateUser(user);
+//		}
+//		return 0;
+//	}
 
 	/*
 	 * ---------------- ACTIVATE USER ------------------------
 	 */
-	private int activateUser(Users user) {
-		try {
-			HttpSession session = request.getSession(false);
-			usernameLogin = (String) session.getAttribute("usernameLogin");
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-
-		// check if user was in department & role
-		if (usersMapper.sqlCountUserDepartmentSelect(user.getUserId()) != 0
-				&& usersMapper.sqlCountUserRoleSelect(user.getUserId()) != 0) {
-			// create parameters
-			user.setActivatedDate(java.time.LocalDate.now().toString());
-			user.setIsActivated(1);
-			user.setUpdatedTimestamp(currentTimestamp);
-			user.setUpdatedBy(usernameLogin);
-
-			UserRole updatedUserRole = new UserRole();
-			updatedUserRole.setUserId(user.getUserId());
-			updatedUserRole.setLeaveDate(null);
-			updatedUserRole.setUpdateBy(usernameLogin);
-			updatedUserRole.setUpdateTimestamp(currentTimestamp);
-
-			UserDepartment updatedUserDepartment = new UserDepartment();
-			updatedUserDepartment.setUserId(user.getUserId());
-			updatedUserDepartment.setLeaveDate(null);
-			updatedUserDepartment.setStayOrLeave(1);
-			updatedUserDepartment.setUpdateTimestamp(currentTimestamp);
-			updatedUserDepartment.setUpdateBy(usernameLogin);
-
-			// activate all user with user_id in 3 tables
-			usersMapper.sqlActivateDeactivateUserUpdate(user);
-			usersMapper.sqlActivateDeactivateUserDepartmentUpdate(updatedUserDepartment);
-			usersMapper.sqlActivateDeactivateUserRoleUpdate(updatedUserRole);
-			return 1;
-		}
-		return 0;
-	}
+//	private int activateUser(Users user) {
+//		try {
+//			HttpSession session = request.getSession(false);
+//			usernameLogin = (String) session.getAttribute("usernameLogin");
+//		} catch (Exception e) {
+//			logger.error(e.getMessage());
+//		}
+//
+//		// check if user was in department & role
+//		if (usersMapper.sqlCountUserDepartmentSelect(user.getUserId()) != 0
+//				&& usersMapper.sqlCountUserRoleSelect(user.getUserId()) != 0) {
+//			// create parameters
+//			user.setActivatedDate(java.time.LocalDate.now().toString());
+//			user.setIsActivated(1);
+//			user.setUpdatedTimestamp(currentTimestamp);
+//			user.setUpdatedBy(usernameLogin);
+//
+//			UserRole updatedUserRole = new UserRole();
+//			updatedUserRole.setUserId(user.getUserId());
+//			updatedUserRole.setLeaveDate(null);
+//			updatedUserRole.setUpdateBy(usernameLogin);
+//			updatedUserRole.setUpdateTimestamp(currentTimestamp);
+//
+//			UserDepartment updatedUserDepartment = new UserDepartment();
+//			updatedUserDepartment.setUserId(user.getUserId());
+//			updatedUserDepartment.setLeaveDate(null);
+//			updatedUserDepartment.setStayOrLeave(1);
+//			updatedUserDepartment.setUpdateTimestamp(currentTimestamp);
+//			updatedUserDepartment.setUpdateBy(usernameLogin);
+//
+//			// activate all user with user_id in 3 tables
+//			usersMapper.sqlActivateDeactivateUserUpdate(user);
+//			usersMapper.sqlActivateDeactivateUserDepartmentUpdate(updatedUserDepartment);
+//			usersMapper.sqlActivateDeactivateUserRoleUpdate(updatedUserRole);
+//			return 1;
+//		}
+//		return 0;
+//	}
 
 	/*
 	 * ---------------- DEACTIVATE USER ------------------------
 	 */
-	private int deactivateUser(Users user) {
-		try {
-			HttpSession session = request.getSession(false);
-			usernameLogin = (String) session.getAttribute("usernameLogin");
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-
-		// create parameters
-		user.setIsActivated(0);
-		user.setUpdatedTimestamp(currentTimestamp);
-		user.setUpdatedBy(usernameLogin);
-
-		UserRole updatedUserRole = new UserRole();
-		updatedUserRole.setUserId(user.getUserId());
-		updatedUserRole.setLeaveDate(java.time.LocalDate.now().toString());
-		updatedUserRole.setUpdateBy(usernameLogin);
-		updatedUserRole.setUpdateTimestamp(currentTimestamp);
-
-		UserDepartment updatedUserDepartment = new UserDepartment();
-		updatedUserDepartment.setUserId(user.getUserId());
-		updatedUserDepartment.setLeaveDate(java.time.LocalDate.now().toString());
-		updatedUserDepartment.setStayOrLeave(0);
-		updatedUserDepartment.setUpdateTimestamp(currentTimestamp);
-		updatedUserDepartment.setUpdateBy(usernameLogin);
-
-		// activate all user with user_id in 3 tables
-		usersMapper.sqlActivateDeactivateUserUpdate(user);
-		usersMapper.sqlActivateDeactivateUserDepartmentUpdate(updatedUserDepartment);
-		usersMapper.sqlActivateDeactivateUserRoleUpdate(updatedUserRole);
-		return 1;
-	}
+//	private int deactivateUser(Users user) {
+//		try {
+//			HttpSession session = request.getSession(false);
+//			usernameLogin = (String) session.getAttribute("usernameLogin");
+//		} catch (Exception e) {
+//			logger.error(e.getMessage());
+//		}
+//
+//		// create parameters
+//		user.setIsActivated(0);
+//		user.setUpdatedTimestamp(currentTimestamp);
+//		user.setUpdatedBy(usernameLogin);
+//
+//		UserRole updatedUserRole = new UserRole();
+//		updatedUserRole.setUserId(user.getUserId());
+//		updatedUserRole.setLeaveDate(java.time.LocalDate.now().toString());
+//		updatedUserRole.setUpdateBy(usernameLogin);
+//		updatedUserRole.setUpdateTimestamp(currentTimestamp);
+//
+//		UserDepartment updatedUserDepartment = new UserDepartment();
+//		updatedUserDepartment.setUserId(user.getUserId());
+//		updatedUserDepartment.setLeaveDate(java.time.LocalDate.now().toString());
+//		updatedUserDepartment.setStayOrLeave(0);
+//		updatedUserDepartment.setUpdateTimestamp(currentTimestamp);
+//		updatedUserDepartment.setUpdateBy(usernameLogin);
+//
+//		// activate all user with user_id in 3 tables
+//		usersMapper.sqlActivateDeactivateUserUpdate(user);
+//		usersMapper.sqlActivateDeactivateUserDepartmentUpdate(updatedUserDepartment);
+//		usersMapper.sqlActivateDeactivateUserRoleUpdate(updatedUserRole);
+//		return 1;
+//	}
 
 	/*
 	 * ---------------- REGISTER USER ------------------------
 	 */
-	public boolean registerNewCustomer(Users user) throws CustomException {
+	public boolean registerNewCustomer(Users user) throws CustomException, ParseException {
 		if (EmailValidate.isEmail(user.getEmail())) {
 			try {
-				user.setRegisteredDate(java.time.LocalDate.now().toString());
+				Date currentTimestamp = format.parse(datecurrent);
+				user.setRegisteredDate(new Date());
 				user.setSeniority(0);
 				user.setIsActivated(0);
 				user.setCreatedTimestamp(currentTimestamp);
@@ -202,9 +206,10 @@ public class UsersService {
 	/*
 	 * ---------------- EDIT USER ------------------------
 	 */
-	public boolean updateUserInfo(Users user) throws CustomException {
+	public boolean updateUserInfo(Users user) throws CustomException, ParseException {
 		if (EmailValidate.isEmail(user.getEmail())) {
 			try {
+				Date currentTimestamp = format.parse(datecurrent);
 				user.setUpdatedTimestamp(currentTimestamp);
 				usersMapper.sqlUpdateUserUpdate(user);
 				return true;

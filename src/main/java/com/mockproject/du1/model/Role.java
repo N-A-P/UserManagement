@@ -10,7 +10,7 @@ public class Role {
      *
      * @mbg.generated Mon Nov 04 16:54:30 ICT 2019
      */
-    private Long id;
+    private Long roleId;
 
     /**
      *
@@ -74,8 +74,8 @@ public class Role {
      *
      * @mbg.generated Mon Nov 04 16:54:30 ICT 2019
      */
-    public Long getId() {
-        return id;
+    public Long getRoleId() {
+        return roleId;
     }
 
     /**
@@ -86,8 +86,8 @@ public class Role {
      *
      * @mbg.generated Mon Nov 04 16:54:30 ICT 2019
      */
-    public void setId(Long id) {
-        this.id = id;
+    public void setRoleId(Long id) {
+        this.roleId = id;
     }
 
     /**

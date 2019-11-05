@@ -62,17 +62,17 @@ public class UsersRestController {
 	}
 
 
-	/* ---------------- REGISTRATION NEW USER ------------------------ */
-	@RequestMapping(value = {"/register","/users/add"}, method = RequestMethod.POST)
-	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
-		try {
-			usersService.registerNewCustomer(user);
-			return new ResponseEntity<String>("Created!", HttpStatus.OK);
-		} catch (CustomException e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);
-		}
-	}
+//	/* ---------------- REGISTRATION NEW USER ------------------------ */
+//	@RequestMapping(value = {"/register","/users/add"}, method = RequestMethod.POST)
+//	public ResponseEntity<String> registerNewCustomer(@RequestBody Users user) {
+//		try {
+//			usersService.registerNewCustomer(user);
+//			return new ResponseEntity<String>("Created!", HttpStatus.OK);
+//		} catch (CustomException e) {
+//			e.printStackTrace();
+//			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);
+//		}
+//	}
 
 	/* ---------------- SEND EMAIL TO LIST OF USERS ------------------------ */
 	// @RequestMapping(value = "/email", method = RequestMethod.POST)
@@ -115,32 +115,32 @@ public class UsersRestController {
 		return new ResponseEntity<String>(message, status);
 	}
 
-	/* ---------------- EDIT USER ------------------------ */
-	@RequestMapping(value = "/users/edit", method = RequestMethod.POST)
-	public ResponseEntity<String> editUserManagement(HttpServletRequest request, @RequestBody Users user) {
-		try {
-			HttpSession session = request.getSession();
-			String userName = (String) session.getAttribute("usernameLogin");
-			user.setUpdatedBy(userName);
-			usersService.updateUserInfo(user);
-			return new ResponseEntity<String>("Update!", HttpStatus.OK);
-		} catch (CustomException e) {
-			e.printStackTrace();
-			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);
-		}
-	}
+//	/* ---------------- EDIT USER ------------------------ */
+//	@RequestMapping(value = "/users/edit", method = RequestMethod.POST)
+//	public ResponseEntity<String> editUserManagement(HttpServletRequest request, @RequestBody Users user) {
+//		try {
+//			HttpSession session = request.getSession();
+//			String userName = (String) session.getAttribute("usernameLogin");
+//			user.setUpdatedBy(userName);
+//			usersService.updateUserInfo(user);
+//			return new ResponseEntity<String>("Update!", HttpStatus.OK);
+//		} catch (CustomException e) {
+//			e.printStackTrace();
+//			return new ResponseEntity<String>(e.message, HttpStatus.BAD_REQUEST);
+//		}
+//	}
 
-	/* ---------------- ACTIVATE/DEACTIVATE USER ------------------------ */
-	@RequestMapping(value = "/users/activate-deactivate-user", method = RequestMethod.POST)
-	public ResponseEntity<String> activateDeactivateUser(HttpServletRequest request, @RequestBody Users user) {
-		try {
-			if (usersService.activateDeactivate(user) == 1)
-				return new ResponseEntity<String>("Success", HttpStatus.OK);
-			else
-				return new ResponseEntity<String>("Failed", HttpStatus.BAD_REQUEST);
-
-		} catch (Exception e) {
-			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-		}
-	}
+//	/* ---------------- ACTIVATE/DEACTIVATE USER ------------------------ */
+//	@RequestMapping(value = "/users/activate-deactivate-user", method = RequestMethod.POST)
+//	public ResponseEntity<String> activateDeactivateUser(HttpServletRequest request, @RequestBody Users user) {
+//		try {
+//			if (usersService.activateDeactivate(user) == 1)
+//				return new ResponseEntity<String>("Success", HttpStatus.OK);
+//			else
+//				return new ResponseEntity<String>("Failed", HttpStatus.BAD_REQUEST);
+//
+//		} catch (Exception e) {
+//			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//		}
+//	}
 }

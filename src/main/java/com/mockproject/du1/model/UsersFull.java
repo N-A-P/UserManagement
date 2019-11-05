@@ -71,21 +71,8 @@ public class UsersFull {
      */
     private String updateTimestamp;
 	/**
-	 *
-	 */
-	/**
-	 * String buffer of all departments
-	 */
-	private String departmentCodeAll;
-	/**
 	 * list department of Employee
 	 */
 	private List<Department> listDepartment;
-
-	/**
-	 * list role of Employee
-	 */
-	private List<Role> listRole;
-
 
 }
