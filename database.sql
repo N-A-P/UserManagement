@@ -57,6 +57,7 @@ CREATE TABLE campaign
 	duration int,
 	start_date date,
 	end_date date,
+	is_activated int,
 	updated_by varchar(50),
 	created_timestamp timestamp with time zone,
 	updated_timestamp timestamp with time zone,
@@ -140,6 +141,7 @@ CREATE TABLE role
 	id bigint DEFAULT nextval('role_id_seq') NOT NULL UNIQUE,
 	code varchar(13) NOT NULL UNIQUE,
 	name varchar(50) NOT NULL UNIQUE,
+	is_activated int,
 	updated_by varchar(50),
 	created_timestamp timestamp with time zone,
 	updated_timestamp timestamp with time zone,
@@ -155,8 +157,7 @@ CREATE TABLE role_pages
 	updated_timestamp timestamp with time zone,
 	role_id bigint NOT NULL,
 	pages_id bigint NOT NULL,
-	CONSTRAINT id PRIMARY KEY (id),
-	role
+	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
 
