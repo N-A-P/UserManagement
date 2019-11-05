@@ -93,10 +93,10 @@ public class DepartmentRestController {
 	/**
 	 *
 	 */
-	@GetMapping(value = "/getListEmployeeOfDepartment/{departmentId}")
+	@GetMapping(value = "/getListEmployeeOfDepartment/{id}")
 	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeOfDepartment(
-			@PathVariable @Valid int departmentId) {
-		List<EmployeeOfDepartment> departments = departmentService.getListEmployeeOfDepartment(departmentId);
+			@PathVariable @Valid long id) {
+		List<EmployeeOfDepartment> departments = departmentService.getListEmployeeOfDepartment(id);
 		try {
 			if (departments != null && !departments.isEmpty()) {
 				return new ResponseEntity<List<EmployeeOfDepartment>>(departments, HttpStatus.OK);
@@ -112,8 +112,8 @@ public class DepartmentRestController {
 	/**
 	 *
 	 */
-	@GetMapping(value = "/getListEmployeeNotInDepartment/{departmentId}")
-	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeNotInDepartment(@PathVariable int id) {
+	@GetMapping(value = "/getListEmployeeNotInDepartment/{id}")
+	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeNotInDepartment(@PathVariable long id) {
 		List<EmployeeOfDepartment> departments = departmentService.getListEmployeeNotInDepartment(id);
 		try {
 			if (departments != null && !departments.isEmpty()) {
