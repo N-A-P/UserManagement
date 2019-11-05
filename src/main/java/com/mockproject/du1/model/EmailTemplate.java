@@ -3,6 +3,8 @@ package com.mockproject.du1.model;
 import lombok.Builder;
 
 import java.util.Date;
+
+import java.util.Date;
 @Builder
 public class EmailTemplate {
 	/**
@@ -196,4 +198,5 @@ public class EmailTemplate {
 	public void setUpdatedTimestamp(Date updatedTimestamp) {
 		this.updatedTimestamp = updatedTimestamp;
 	}
+
 }
