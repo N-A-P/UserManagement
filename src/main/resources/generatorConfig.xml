@@ -1,13 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
 <generatorConfiguration>
-  <context id="context1">
-    <jdbcConnection connectionURL="???" driverClass="???" password="???" userId="???" />
-    <javaModelGenerator targetPackage="???" targetProject="???" />
-    <sqlMapGenerator targetPackage="???" targetProject="???" />
-    <javaClientGenerator targetPackage="???" targetProject="???" type="XMLMAPPER" />
-    <table schema="???" tableName="???">
-      <columnOverride column="???" property="???" />
+  <context id="my" targetRuntime="MyBatis3">
+    <jdbcConnection driverClass="org.postgresql.Driver"
+                    connectionURL="jdbc:postgresql://localhost:5432/postgres"
+                    userId="postgres"
+                    password="123456">
+    </jdbcConnection>
+
+    <javaTypeResolver >
+      <property name="forceBigDecimals" value="false" />
+    </javaTypeResolver>
+
+    <javaModelGenerator targetPackage="com.mockproject.du1.test" targetProject="src/main/java">
+      <property name="enableSubPackages" value="false" />
+      <property name="trimStrings" value="false" />
+    </javaModelGenerator>
+
+    <sqlMapGenerator targetPackage="com.mockproject.du1.test"  targetProject="src/main/java">
+      <property name="enableSubPackages" value="false" />
+    </sqlMapGenerator>
+
+    <javaClientGenerator type="XMLMAPPER" targetPackage="com.mockproject.du1.test"  targetProject="src/main/java">
+      <property name="enableSubPackages" value="false" />
+    </javaClientGenerator>
+
+    <table schema="public" tableName="customer" domainObjectName="Customer" >
+      <property name="ignoreQualifiersAtRuntime" value="true"/>
+      <generatedKey column="ID" sqlStatement="DB2" identity="true" />
     </table>
+
   </context>
 </generatorConfiguration>

@@ -47,7 +47,10 @@ public class EmailController {
     @RequestMapping(value = "/test", method = RequestMethod.GET)
     public MailOfUser sendMail() {
         List<Customer> customers=new ArrayList<>();
-        customers.add(Customer.builder().customerId(13).customerEmail("admin123@gmail.com").build());
+        customers.add(Customer.builder()
+                .id(13)
+                .email("admin123@gmail.com")
+                .build());
         return MailOfUser.builder().campaignId(1).sendEmailUserId(1).customers(customers).build();
     }
     @RequestMapping(value = "/cover-excel-to-DB", method = RequestMethod.POST)
@@ -83,13 +86,10 @@ public class EmailController {
         response.setHeader("Content-Disposition", "attachment; filename=\"" + "test.xlsx" + "\"");
         return content;
     }
-    @RequestMapping(value = "/coverExceltoFE/test", method = RequestMethod.POST)
+    @RequestMapping(value = "/coverExceltoDB/test", method = RequestMethod.POST)
     public ResponseEntity coverExcelToFETest(@RequestBody byte[] bytes) throws IOException {
-        List<Customer> customers=emailService.coverExcellFileToArrayList(bytes);
-        if(customers!=null){
-            return new ResponseEntity<List<Customer>>(customers, HttpStatus.OK);
-        }
-        return new ResponseEntity<String>("Enter the correct Excel file format", HttpStatus.OK);
+        emailService.coverExcellFileToArray(bytes);
+        return new ResponseEntity<String>("Enter the correct Excel file format", HttpStatus.BAD_REQUEST);
     }
 
 

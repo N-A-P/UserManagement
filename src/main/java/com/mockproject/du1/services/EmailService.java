@@ -39,7 +39,7 @@ import static com.mockproject.du1.common.MessageUtils.getMessage;
 
 @Service
 public class EmailService {
-    String currentTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+    Date currentTimestamp =new Date();
     @Autowired
     EmailTemplateMapper emailMapper;
     @Autowired
@@ -94,12 +94,12 @@ public class EmailService {
 //        SendGrid sg = new SendGrid(System.getenv("SENDGRID_API_KEY"));
 //        Response response = sg.api(request);
         mailHistoryMapper.sqlInsertMailHistoryl(CampaignCustomer.builder()
-                .sendTime(sendTime)
-                .userId(sendUserId)
-                .createTimestamp(currentTimestamp)
-                .updateTimestamp(currentTimestamp)
+                .sentDate(sendTime)
+                .id(sendUserId)
+                .createdTimestamp(new Date())
+                .updatedTimestamp(new Date())
                 .campaignId(campaignId)
-                .customerId(customer.getCustomerId())
+                .customerId(customer.getId())
                 .build());
 
     }
@@ -112,8 +112,8 @@ public class EmailService {
         finalText.append(emailBodyText + "\n");
         finalText.append(signature);
         Email fromEmail = new Email("moneydontsleep8888@gmail.com");
-        Email toEmail = new Email(customer.getCustomerEmail());
-        if (!isValid(customer.getCustomerEmail())) {
+        Email toEmail = new Email(customer.getEmail());
+        if (!isValid(customer.getEmail())) {
             throw new IllegalArgumentException("email inValid");
         }
         Content content = new Content("text/plain", finalText.toString());
@@ -184,13 +184,13 @@ public class EmailService {
 
                     if (nonErrorCustomer) {
                         Customer customer = Customer.builder()
-                                .customerEmail(email)
+                                .email(email)
                                 .firstName(firstName)
                                 .lastName(LastName)
                                 .dob(row.getCell(5).getStringCellValue() == "" ? null : row.getCell(5).getStringCellValue())
                                 .address(row.getCell(6).getStringCellValue())
-                                .createTimestamp(currentTimestamp)
-                                .updateTimestamp(currentTimestamp)
+                                .createdTimestamp(currentTimestamp)
+                                .updatedTimestamp(currentTimestamp)
                                 .company(row.getCell(7).getStringCellValue())
                                 .build();
                         customerMapper.sqlCreateCustomerInsert(customer);
@@ -231,7 +231,7 @@ public class EmailService {
 
     public String editTopic(EmailTemplate email) {
 
-        if (emailMapper.sqlGetEmailSelectById(email.getEmailTemplateId()) == null) {
+        if (emailMapper.sqlGetEmailSelectById(email.getId()) == null) {
             return "email doesnt exit";
         }
         emailMapper.sqlEmailUpdate(email);
@@ -258,7 +258,7 @@ public class EmailService {
             int getDiff = campaign.getEndDate().getDate() - campaign.getStartDate().getDate();
             campaign.setDuration(getDiff);
             campaignMapper.sqlCreateCampaignInsert(campaign);
-            return campaign.getCampaignId()+"";
+            return campaign.getId()+"";
         }
 
         return "start date mush befor end date";
@@ -280,7 +280,7 @@ public class EmailService {
         for (Campaign campaign : campaigns) {
             CampaignDetail campaignDetail = CampaignDetail.builder()
                     .campaign(campaign)
-                    .customerList(customers).customerCheck(customerMapper.sqlGetCustomerByCampaignAndMaxTime(campaign.getCampaignId())).build();
+                    .customerList(customers).customerCheck(customerMapper.sqlGetCustomerByCampaignAndMaxTime(campaign.getId())).build();
             campaignDetails.add(campaignDetail);
         }
         return campaignDetails;
@@ -308,13 +308,13 @@ public class EmailService {
                     String firstName = row.getCell(3).getStringCellValue();
                     String LastName = row.getCell(4).getStringCellValue();
                     Customer customer = Customer.builder()
-                            .customerEmail(email)
+                            .email(email)
                             .firstName(firstName)
                             .lastName(LastName)
                             .dob(row.getCell(5).getStringCellValue() == "" ? null : row.getCell(5).getStringCellValue())
                             .address(row.getCell(6).getStringCellValue())
-                            .createTimestamp(currentTimestamp)
-                            .updateTimestamp(currentTimestamp)
+                            .createdTimestamp(currentTimestamp)
+                            .createdTimestamp(currentTimestamp)
                             .company(row.getCell(7).getStringCellValue())
                             .build();
                     customers.add(customer);
