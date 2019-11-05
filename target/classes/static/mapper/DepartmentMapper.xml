@@ -42,6 +42,7 @@
 		FROM
 		public.department
 		ORDER BY
+		id,
 		code,
 		name
 ]]>
@@ -68,6 +69,7 @@
 		WHERE
 		is_activated = #{isActivated}
         ORDER BY
+        id,
         code,
         name
 ]]>
@@ -339,9 +341,6 @@
             21:55:34 ICT 2019. -->
         INSERT INTO public.department
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
             <if test="code != null">
                 code,
             </if>
@@ -365,9 +364,6 @@
             </if>
         </trim>
         <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=BIGINT},
-            </if>
             <if test="code != null">
                 #{code,jdbcType=VARCHAR},
             </if>
@@ -384,10 +380,10 @@
                 #{updatedBy,jdbcType=VARCHAR},
             </if>
             <if test="createdTimestamp != null">
-                #{createdTimestamp,jdbcType=TIMESTAMP},
+                #{createdTimestamp,jdbcType=TIMESTAMP}::timestamp without time zone,
             </if>
             <if test="updatedTimestamp != null">
-                #{updatedTimestamp,jdbcType=TIMESTAMP},
+                #{updatedTimestamp,jdbcType=TIMESTAMP}::timestamp without time zone,
             </if>
         </trim>
     </insert>

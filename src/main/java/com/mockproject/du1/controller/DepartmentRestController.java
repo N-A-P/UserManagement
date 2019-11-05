@@ -48,13 +48,15 @@ public class DepartmentRestController {
 			}
 
 		} catch (Exception e) {
-			ResponseEntity.status(HttpStatus.NOT_FOUND);
+			departments = null;
 		}
-		return null;
+		return new ResponseEntity<List<Department>>(departments, HttpStatus.NOT_FOUND);
 	}
 
 	/**
-	 *
+	 * Show list department(Active)
+	 * 
+	 * @return
 	 */
 	@GetMapping(value = "/getListDepartmentActive")
 	public ResponseEntity<List<Department>> getListDepartmentActive() {
@@ -65,9 +67,28 @@ public class DepartmentRestController {
 			}
 
 		} catch (Exception e) {
-			ResponseEntity.status(HttpStatus.NOT_FOUND);
+			departments = null;
 		}
-		return null;
+		return new ResponseEntity<List<Department>>(departments, HttpStatus.NOT_FOUND);
+	}
+
+	/**
+	 * Show list department(Active)
+	 * 
+	 * @return
+	 */
+	@GetMapping(value = "/getListDepartmentInActive")
+	public ResponseEntity<List<Department>> getListDepartmentInActive() {
+		List<Department> departments = departmentService.getListDepartmentInActive();
+		try {
+			if (departments != null && !departments.isEmpty()) {
+				return new ResponseEntity<List<Department>>(departments, HttpStatus.OK);
+			}
+
+		} catch (Exception e) {
+			departments = null;
+		}
+		return new ResponseEntity<List<Department>>(departments, HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -84,18 +105,16 @@ public class DepartmentRestController {
 			}
 
 		} catch (Exception e) {
-			ResponseEntity.status(HttpStatus.NOT_FOUND);
+			department = null;
 		}
-
-		return null;
+		return new ResponseEntity<Department>(department, HttpStatus.NOT_FOUND);
 	}
 
 	/**
 	 *
 	 */
 	@GetMapping(value = "/getListEmployeeOfDepartment/{id}")
-	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeOfDepartment(
-			@PathVariable @Valid long id) {
+	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeOfDepartment(@PathVariable @Valid long id) {
 		List<EmployeeOfDepartment> departments = departmentService.getListEmployeeOfDepartment(id);
 		try {
 			if (departments != null && !departments.isEmpty()) {
@@ -113,7 +132,7 @@ public class DepartmentRestController {
 	 *
 	 */
 	@GetMapping(value = "/getListEmployeeNotInDepartment/{id}")
-	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeNotInDepartment(@PathVariable long id) {
+	public ResponseEntity<List<EmployeeOfDepartment>> getListEmployeeNotInDepartment(@PathVariable int id) {
 		List<EmployeeOfDepartment> departments = departmentService.getListEmployeeNotInDepartment(id);
 		try {
 			if (departments != null && !departments.isEmpty()) {

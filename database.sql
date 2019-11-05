@@ -61,7 +61,7 @@ CREATE TABLE campaign
 	updated_by varchar(50),
 	created_timestamp timestamp with time zone,
 	updated_timestamp timestamp with time zone,
-	email_tempale_id bigint NOT NULL UNIQUE,
+	email_tempale_id bigint NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
@@ -192,7 +192,7 @@ CREATE TABLE user_department
 	updated_timestamp timestamp with time zone,
 	department_id bigint NOT NULL,
 	user_id bigint NOT NULL,
-	role_id bigint DEFAULT nextval('role_id_seq') NOT NULL UNIQUE,
+	role_id bigint DEFAULT nextval('role_id_seq') NOT NULL,
 	PRIMARY KEY (id)
 ) WITHOUT OIDS;
 
