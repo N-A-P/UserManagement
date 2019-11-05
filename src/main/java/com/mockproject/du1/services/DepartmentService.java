@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+
 import com.mockproject.du1.mapper.DepartmentMapper;
 import com.mockproject.du1.model.Department;
 import com.mockproject.du1.model.EmployeeOfDepartment;
@@ -169,99 +170,109 @@ public class DepartmentService {
 	 * 
 	 */
 
-	@SuppressWarnings("unchecked")
 	public Map<Integer, List<Department>> departmentInfoUpdate(Department department) throws SQLException {
 		Map<Integer, List<Department>> mapDepartment = new HashMap<>();
 
 		try {
 			// Check duplicate Department Name
-			if (departmentMapper.sqlCountDepartmentByNameSelect(department.getDepartmentName()) == 0) {
+			if (departmentMapper.sqlCountDepartmentByNameSelect(department.getName()) == 0) {
 				// Check duplicate Department Code
-				if (departmentMapper.sqlCountDepartmentByCodeSelect(department.getDepartmentCode()) == 0) {
+				if (departmentMapper.sqlCountDepartmentByCodeSelect(department.getCode()) == 0) {
 
 					// set value for field public.department.updated_by
-					department.setUpdateBy(usernameLogin);
+					department.setUpdatedBy(usernameLogin);
 					// set value for field public.department.created_timestamp
-					department.setCreateTimestamp(currentTimestamp);
+					department.setCreatedTimestamp(currentTimestamp);
 					// set value for field public.department.updated_timestamp
 					department.setUpdateTimestamp(currentTimestamp);
 
 					// return result update database query
 					int checkUpdate = departmentMapper.sqlDepartmentInfoUpdate(department);
 					if (checkUpdate != 0) {
-						return (Map<Integer, List<Department>>) mapDepartment.put(checkUpdate,
-								departmentMapper.sqlGetAllDepartmentSelect());
+						mapDepartment.put(checkUpdate, departmentMapper.sqlGetAllDepartmentSelect());
+						return mapDepartment;
 					}
 
 				} else {
 
-					return (Map<Integer, List<Department>>) mapDepartment.put(CONSTANT_CHECK_DUPLICATED_CODE, null);
+					mapDepartment.put(CONSTANT_CHECK_DUPLICATED_CODE, null);
+					return mapDepartment;
 				}
 			} else {
-				return (Map<Integer, List<Department>>) mapDepartment.put(CONSTANT_CHECK_DUPLICATED_NAME, null);
+				mapDepartment.put(CONSTANT_CHECK_DUPLICATED_NAME, null);
+				return mapDepartment;
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			mapDepartment.put(0, null);
 		}
-		return (Map<Integer, List<Department>>) mapDepartment.put(0, null);
+
+		return mapDepartment;
 	}
 
 	/**
 	 * 
 	 */
-	@SuppressWarnings("unchecked")
+
 	public Map<Integer, List<Department>> departmentInsert(Department department)
 			throws DuplicateKeyException, SQLException {
 
-		Map<Integer, List<Department>> mapDepartment = new HashMap<>();
+		Map<Integer, List<Department>> mapDepartment = new HashMap<Integer, List<Department>>();
 
 		try {
 			// Check duplicate Department Name
-			if (departmentMapper.sqlCountDepartmentByNameSelect(department.getDepartmentName()) == 0) {
+			if (departmentMapper.sqlCountDepartmentByNameSelect(department.getName()) == 0) {
 				// Check duplicate Department Code
-				if (departmentMapper.sqlCountDepartmentByCodeSelect(department.getDepartmentCode()) == 0) {
+				if (departmentMapper.sqlCountDepartmentByCodeSelect(department.getCode()) == 0) {
 
 					// set value for field public.department.number_of_employee
-					department.setNumberOfEmployees(NUMBER_OF_EMPLOYEE_ZERO);
+					department.setNumberOfEmployee(NUMBER_OF_EMPLOYEE_ZERO);
 					// set value for field public.department.is_activated
 					department.setIsActivated(ACTIVE);
 					// set value for field public.department.updated_by
-					department.setUpdateBy(usernameLogin);
+					department.setUpdatedBy(usernameLogin);
 					// set value for field public.department.created_timestamp
-					department.setCreateTimestamp(currentTimestamp);
+					department.setCreatedTimestamp(currentTimestamp);
 					// set value for field public.department.updated_timestamp
 					department.setUpdateTimestamp(currentTimestamp);
 
 					// return result insert database query
 					int checkInsert = departmentMapper.sqlDepartmentInsert(department);
 					if (checkInsert != 0) {
-						return (Map<Integer, List<Department>>) mapDepartment.put(checkInsert,
-								departmentMapper.sqlGetAllDepartmentSelect());
+						mapDepartment.put(checkInsert, departmentMapper.sqlGetAllDepartmentSelect());
+						return mapDepartment;
 					}
 
 				} else {
-					return (Map<Integer, List<Department>>) mapDepartment.put(CONSTANT_CHECK_DUPLICATED_CODE, null);
+					mapDepartment.put(CONSTANT_CHECK_DUPLICATED_CODE, null);
+					return mapDepartment;
 				}
 			} else {
-				return (Map<Integer, List<Department>>) mapDepartment.put(CONSTANT_CHECK_DUPLICATED_NAME, null);
+				mapDepartment.put(CONSTANT_CHECK_DUPLICATED_NAME, null);
+				return mapDepartment;
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage());
 		}
-		return (Map<Integer, List<Department>>) mapDepartment.put(0, null);
+		mapDepartment.put(0, null);
+		return mapDepartment;
 	}
 
 	/**
 	 * 
 	 */
-	public List<Department> activeDepartment(int departmentId) throws SQLException {
+	public List<Department> activeDepartment(long departmentId) throws SQLException {
 
 		int checkUpdate = 0;
+		Department department = new Department();
 		try {
 
 			// return result update database query
-			checkUpdate = departmentMapper.sqlDepartmentStatusUpdate(departmentId, ACTIVE, usernameLogin,
-					currentTimestamp);
+			department.setId(departmentId);
+			department.setIsActivated(ACTIVE);
+			department.setUpdatedBy(usernameLogin);
+			department.setUpdateTimestamp(currentTimestamp);
+			checkUpdate = departmentMapper.sqlDepartmentStatusUpdate(department);
 			if (checkUpdate != 0) {
 				return departmentMapper.sqlGetAllDepartmentSelect();
 			}
@@ -276,14 +287,17 @@ public class DepartmentService {
 	/**
 	 * 
 	 */
-	public List<Department> inActiveDepartment(int departmentId) throws SQLException {
+	public List<Department> inActiveDepartment(long departmentId) throws SQLException {
 
 		int checkUpdate = 0;
+		Department department = new Department();
 		try {
-
+			department.setId(departmentId);
+			department.setIsActivated(INACTIVE);
+			department.setUpdatedBy(usernameLogin);
+			department.setUpdateTimestamp(currentTimestamp);
 			// return result update database query
-			checkUpdate = departmentMapper.sqlDepartmentStatusUpdate(departmentId, INACTIVE, usernameLogin,
-					currentTimestamp);
+			checkUpdate = departmentMapper.sqlDepartmentStatusUpdate(department);
 			if (checkUpdate != 0) {
 				return departmentMapper.sqlGetAllDepartmentSelect();
 			}
@@ -310,10 +324,10 @@ public class DepartmentService {
 				try {
 
 					userDepartment.setUserId(employeeOfDepartment.getUserId());
-					userDepartment.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getDepartmentId());
+					userDepartment.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getId());
 					userDepartment.setLeaveDate(currentTimestamp);
 					userDepartment.setStayOrLeave(STATUS_STAY);
-					userDepartment.setUpdateBy(usernameLogin);
+					userDepartment.setUpdatedBy(usernameLogin);
 					userDepartment.setUpdateTimestamp(currentTimestamp);
 
 					if (departmentMapper.sqlCheckExistUserDepartmentSelect(userDepartment) != 0) {
@@ -327,14 +341,14 @@ public class DepartmentService {
 
 						} else {
 
-							department.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getDepartmentId());
-							department.setNumberOfEmployees(checkUpdate);
-							department.setUpdateBy(usernameLogin);
+							department.setId(employeeOfDepartment.getDepartments().get(0).getId());
+							department.setNumberOfEmployee(checkUpdate);
+							department.setUpdatedBy(usernameLogin);
 							department.setUpdateTimestamp(currentTimestamp);
 
 							departmentMapper.sqlDepartmentNumberOfEmployeeUpdate(department, ACTION_DELETE);
 							employeeOfDepartmentsReturn = getListEmployeeOfDepartment(
-									employeeOfDepartment.getDepartments().get(0).getDepartmentId());
+									employeeOfDepartment.getDepartments().get(0).getId());
 
 						}
 					} else {
@@ -369,12 +383,12 @@ public class DepartmentService {
 
 				try {
 					userDepartment.setUserId(employeeOfDepartment.getUserId());
-					userDepartment.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getDepartmentId());
+					userDepartment.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getId());
 					userDepartment.setJoinDate(currentTimestamp);
 					userDepartment.setLeaveDate(null);
 					userDepartment.setStayOrLeave(STATUS_STAY);
-					userDepartment.setUpdateBy(usernameLogin);
-					userDepartment.setCreateTimestamp(currentTimestamp);
+					userDepartment.setUpdatedBy(usernameLogin);
+					userDepartment.setCreatedTimestamp(currentTimestamp);
 					userDepartment.setUpdateTimestamp(currentTimestamp);
 
 					if (departmentMapper.sqlCheckExistUserDepartmentSelect(userDepartment) == 0) {
@@ -387,14 +401,14 @@ public class DepartmentService {
 
 						} else {
 
-							department.setDepartmentId(employeeOfDepartment.getDepartments().get(0).getDepartmentId());
-							department.setNumberOfEmployees(checkInsert);
-							department.setUpdateBy(usernameLogin);
+							department.setId(employeeOfDepartment.getDepartments().get(0).getId());
+							department.setNumberOfEmployee(checkInsert);
+							department.setUpdatedBy(usernameLogin);
 							department.setUpdateTimestamp(currentTimestamp);
 
 							departmentMapper.sqlDepartmentNumberOfEmployeeUpdate(department, ACTION_ADD);
 							employeeOfDepartmentsReturn = getListEmployeeNotInDepartment(
-									employeeOfDepartment.getDepartments().get(0).getDepartmentId());
+									employeeOfDepartment.getDepartments().get(0).getId());
 
 						}
 					} else {

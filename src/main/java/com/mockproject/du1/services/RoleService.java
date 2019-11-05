@@ -100,9 +100,9 @@ public class RoleService {
 
 		try {
 			// Check duplicate Role Name
-			if (roleMapper.sqlCountRoleByNameSelect(role.getRoleName()) == 0) {
+			if (roleMapper.sqlCountRoleByNameSelect(role.getName()) == 0) {
 				// Check duplicate Role Code
-				if (roleMapper.sqlCountRoleByCodeSelect(role.getRoleCode()) == 0) {
+				if (roleMapper.sqlCountRoleByCodeSelect(role.getCode()) == 0) {
 
 					// set value for field public.role.updated_by
 					role.setUpdateBy(usernameLogin);
@@ -130,18 +130,12 @@ public class RoleService {
 	 * 
 	 */
 	public int addNewRole(Role role) throws DuplicateKeyException, SQLException {
-		try {
-			HttpSession session = request.getSession(false);
-			usernameLogin = (String) session.getAttribute("usernameLogin");
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
 
 		try {
 			// Check duplicate Role Name
-			if (roleMapper.sqlCountRoleByNameSelect(role.getRoleName()) == 0) {
+			if (roleMapper.sqlCountRoleByNameSelect(role.getName()) == 0) {
 				// Check duplicate Role Code
-				if (roleMapper.sqlCountRoleByCodeSelect(role.getRoleCode()) == 0) {
+				if (roleMapper.sqlCountRoleByCodeSelect(role.getCode()) == 0) {
 
 					// set value for field public.role.updated_by
 					role.setUpdateBy(usernameLogin);

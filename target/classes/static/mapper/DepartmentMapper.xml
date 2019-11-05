@@ -266,7 +266,7 @@
 	</update>
 
 	<!--Update Department Status -->
-	<update id="sqlDepartmentStatusUpdate">
+	<update id="sqlDepartmentStatusUpdate" parameterType="com.mockproject.du1.model.Department">
 
 		UPDATE public.department
 		SET is_activated =

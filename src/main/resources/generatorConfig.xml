@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
-  <context id="context1">
-    <jdbcConnection connectionURL="???" driverClass="???" password="???" userId="???" />
-    <javaModelGenerator targetPackage="???" targetProject="???" />
-    <sqlMapGenerator targetPackage="???" targetProject="???" />
-    <javaClientGenerator targetPackage="???" targetProject="???" type="XMLMAPPER" />
-    <table schema="???" tableName="???">
-      <columnOverride column="???" property="???" />
-    </table>
-  </context>
+	<classPathEntry
+		location="C:/Users/ntgpt/.m2/repository/org/postgresql/postgresql/42.2.6/postgresql-42.2.6-sources.jar" />
+	<context id="context1">
+		<jdbcConnection
+			connectionURL="jdbc:postgresql://localhost:5432/mockprojectdu1"
+			driverClass="org.postgresql.Driver" password="root" userId="postgres" />
+		<javaModelGenerator
+			targetPackage="com.mockproject.du1.model"
+			targetProject="UserManagement" />
+		<sqlMapGenerator
+			targetPackage="com.mockproject.du1.SQLMapper"
+			targetProject="UserManagement" />
+		<javaClientGenerator targetPackage="com.mockproject.du1.mapper"
+			targetProject="UserManagement" type="XMLMAPPER" />
+		<table schema="public" tableName="campaign" />
+		<table schema="public" tableName="campaign_customer" />
+		<table schema="public" tableName="customer" />
+		<table schema="public" tableName="department" />
+		<table schema="public" tableName="email_template" />
+		<table schema="public" tableName="pages" />
+		<table schema="public" tableName="role" />
+		<table schema="public" tableName="role_pages" />
+		<table schema="public" tableName="users" />
+		<table schema="public" tableName="user_department" />
+
+	</context>
 </generatorConfiguration>
