@@ -82,12 +82,12 @@ public interface RolePagesMapper {
 	/**
 	 * 
 	 */
-	long sqlCheckRolePagesExistSelect(@Param("roleId") int roleId, @Param("pageId") int pageId);
+	long sqlCheckRolePagesExistSelect(@Param("roleId") long roleId, @Param("pageId") long pageId);
 
 	/**
 	 * 
 	 */
-	int sqlRolePagesDelete(@Param("roleId") int roleId, @Param("pageId") int pageId);
+	int sqlRolePagesDelete(@Param("roleId") long roleId, @Param("pageId") long pageId);
 
 	/**
 	 * 

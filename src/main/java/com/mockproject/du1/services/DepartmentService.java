@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,7 +140,7 @@ public class DepartmentService {
 	/**
 	 * 
 	 */
-	public List<EmployeeOfDepartment> getListEmployeeOfDepartment(int department_id) {
+	public List<EmployeeOfDepartment> getListEmployeeOfDepartment(long department_id) {
 		try {
 			return departmentMapper.sqlGetListEmployeeOfDepartmentByStatus(department_id, STATUS_STAY, ACTIVE, ACTIVE,
 					ACTION_DELETE);
@@ -155,7 +154,7 @@ public class DepartmentService {
 	/**
 	 * 
 	 */
-	public List<EmployeeOfDepartment> getListEmployeeNotInDepartment(int department_id) {
+	public List<EmployeeOfDepartment> getListEmployeeNotInDepartment(long department_id) {
 		try {
 			return departmentMapper.sqlGetListEmployeeOfDepartmentByStatus(department_id, STATUS_LEAVE, ACTIVE, ACTIVE,
 					ACTION_ADD);
@@ -184,7 +183,7 @@ public class DepartmentService {
 					// set value for field public.department.created_timestamp
 					department.setCreatedTimestamp(currentTimestamp);
 					// set value for field public.department.updated_timestamp
-					department.setUpdateTimestamp(currentTimestamp);
+					department.setUpdatedTimestamp(currentTimestamp);
 
 					// return result update database query
 					int checkUpdate = departmentMapper.sqlDepartmentInfoUpdate(department);
@@ -234,7 +233,7 @@ public class DepartmentService {
 					// set value for field public.department.created_timestamp
 					department.setCreatedTimestamp(currentTimestamp);
 					// set value for field public.department.updated_timestamp
-					department.setUpdateTimestamp(currentTimestamp);
+					department.setUpdatedTimestamp(currentTimestamp);
 
 					// return result insert database query
 					int checkInsert = departmentMapper.sqlDepartmentInsert(department);
@@ -271,7 +270,7 @@ public class DepartmentService {
 			department.setId(departmentId);
 			department.setIsActivated(ACTIVE);
 			department.setUpdatedBy(usernameLogin);
-			department.setUpdateTimestamp(currentTimestamp);
+			department.setUpdatedTimestamp(currentTimestamp);
 			checkUpdate = departmentMapper.sqlDepartmentStatusUpdate(department);
 			if (checkUpdate != 0) {
 				return departmentMapper.sqlGetAllDepartmentSelect();
@@ -295,7 +294,7 @@ public class DepartmentService {
 			department.setId(departmentId);
 			department.setIsActivated(INACTIVE);
 			department.setUpdatedBy(usernameLogin);
-			department.setUpdateTimestamp(currentTimestamp);
+			department.setUpdatedTimestamp(currentTimestamp);
 			// return result update database query
 			checkUpdate = departmentMapper.sqlDepartmentStatusUpdate(department);
 			if (checkUpdate != 0) {
@@ -328,7 +327,7 @@ public class DepartmentService {
 					userDepartment.setLeaveDate(currentTimestamp);
 					userDepartment.setStayOrLeave(STATUS_STAY);
 					userDepartment.setUpdatedBy(usernameLogin);
-					userDepartment.setUpdateTimestamp(currentTimestamp);
+					userDepartment.setUpdatedTimestamp(currentTimestamp);
 
 					if (departmentMapper.sqlCheckExistUserDepartmentSelect(userDepartment) != 0) {
 
@@ -344,7 +343,7 @@ public class DepartmentService {
 							department.setId(employeeOfDepartment.getDepartments().get(0).getId());
 							department.setNumberOfEmployee(checkUpdate);
 							department.setUpdatedBy(usernameLogin);
-							department.setUpdateTimestamp(currentTimestamp);
+							department.setUpdatedTimestamp(currentTimestamp);
 
 							departmentMapper.sqlDepartmentNumberOfEmployeeUpdate(department, ACTION_DELETE);
 							employeeOfDepartmentsReturn = getListEmployeeOfDepartment(
@@ -389,7 +388,7 @@ public class DepartmentService {
 					userDepartment.setStayOrLeave(STATUS_STAY);
 					userDepartment.setUpdatedBy(usernameLogin);
 					userDepartment.setCreatedTimestamp(currentTimestamp);
-					userDepartment.setUpdateTimestamp(currentTimestamp);
+					userDepartment.setUpdatedTimestamp(currentTimestamp);
 
 					if (departmentMapper.sqlCheckExistUserDepartmentSelect(userDepartment) == 0) {
 
@@ -404,7 +403,7 @@ public class DepartmentService {
 							department.setId(employeeOfDepartment.getDepartments().get(0).getId());
 							department.setNumberOfEmployee(checkInsert);
 							department.setUpdatedBy(usernameLogin);
-							department.setUpdateTimestamp(currentTimestamp);
+							department.setUpdatedTimestamp(currentTimestamp);
 
 							departmentMapper.sqlDepartmentNumberOfEmployeeUpdate(department, ACTION_ADD);
 							employeeOfDepartmentsReturn = getListEmployeeNotInDepartment(

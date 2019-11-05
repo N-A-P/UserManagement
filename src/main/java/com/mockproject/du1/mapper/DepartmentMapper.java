@@ -154,7 +154,7 @@ public interface DepartmentMapper {
 	 * @param action
 	 * @return List<EmployeeOfDepartment>
 	 */
-	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("departmentId") int departmentId,
+	List<EmployeeOfDepartment> sqlGetListEmployeeOfDepartmentByStatus(@Param("departmentId") long departmentId,
 			@Param("statusUserDepartment") int statusUserDepartment, @Param("statusDepartment") int statusDepartment,
 			@Param("statusUser") int statusUser, @Param("action") int action);
 

@@ -7,7 +7,7 @@ public class EmployeeOfDepartment {
 	/***
 	 * User Id
 	 */
-	private int userId;
+	private long userId;
 	/**
 	 * First Name
 	 */
@@ -47,11 +47,11 @@ public class EmployeeOfDepartment {
 	/**
 	 * User Department Id
 	 */
-	private int userDepartmentId;
+	private long userDepartmentId;
 	/**
 	 * User Role Id
 	 */
-	private int userRoleId;
+	private long userRoleId;
 	/**
 	 * 
 	 */

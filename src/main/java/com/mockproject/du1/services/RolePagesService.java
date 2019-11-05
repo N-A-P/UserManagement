@@ -47,14 +47,14 @@ public class RolePagesService {
 
 		for (RolePages rolePages : listRolePages) {
 			for (Pages pages : listPages) {
-				if (pages.getPagesId() == rolePages.getPagesId()) {
+				if (pages.getId() == rolePages.getPagesId()) {
 					roleForPages.setSelectedFlg(1);
-					roleForPages.setRolePagesId(rolePages.getRolePagesId());
+					roleForPages.setRolePagesId(rolePages.getId());
 					roleForPages.setRoleId(rolePages.getRoleId());
-					roleForPages.setPagesId(pages.getPagesId());
-					roleForPages.setPagesCode(pages.getPagesCode());
-					roleForPages.setPagesName(pages.getPagesName());
-					roleForPages.setPagesUrl(pages.getPagesUrl());
+					roleForPages.setPagesId(pages.getId());
+					roleForPages.setPagesCode(pages.getCode());
+					roleForPages.setPagesName(pages.getName());
+					roleForPages.setPagesUrl(pages.getUrl());
 					listSeleced.add(roleForPages);
 					break;
 				}
@@ -72,9 +72,9 @@ public class RolePagesService {
 
 				rolePages.setRoleId(items.getRoleId());
 				rolePages.setPagesId(items.getPagesId());
-				rolePages.setUpdateBy(usernameLogin);
-				rolePages.setCreateTimestamp(currentTimestamp);
-				rolePages.setUpdateTimestamp(currentTimestamp);
+				rolePages.setUpdatedBy(usernameLogin);
+				rolePages.setCreatedTimestamp(currentTimestamp);
+				rolePages.setUpdatedTimestamp(currentTimestamp);
 
 				return rolePagesMapper.sqlRolePagesInsert(rolePages);
 			} else if (rolePagesMapper.sqlCheckRolePagesExistSelect(items.getRoleId(), items.getPagesId()) == 1

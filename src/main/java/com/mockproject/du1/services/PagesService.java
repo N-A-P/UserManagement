@@ -96,16 +96,16 @@ public class PagesService {
 
 		try {
 			// Check duplicate Pages Name
-			if (pageMapper.sqlCountPagesByNameSelect(page.getPagesName()) == 0) {
+			if (pageMapper.sqlCountPagesByNameSelect(page.getName()) == 0) {
 				// Check duplicate Pages Code
-				if (pageMapper.sqlCountPagesByCodeSelect(page.getPagesCode()) == 0) {
+				if (pageMapper.sqlCountPagesByCodeSelect(page.getCode()) == 0) {
 
 					// set value for field public.page.updated_by
-					page.setUpdateBy(usernameLogin);
+					page.setUpdatedBy(usernameLogin);
 					// set value for field public.page.created_timestamp
-					page.setCreateTimestamp(DataUtil.getCurrentTimestamp().toString());
+					page.setCreatedTimestamp(DataUtil.getCurrentTimestamp().toString());
 					// set value for field public.page.updated_timestamp
-					page.setUpdateTimestamp(DataUtil.getCurrentTimestamp().toString());
+					page.setUpdatedTimestamp(DataUtil.getCurrentTimestamp().toString());
 
 					// return result update database query
 					return pageMapper.sqlEditPagesInfoUpdate(page);
@@ -135,16 +135,16 @@ public class PagesService {
 
 		try {
 			// Check duplicate Pages Name
-			if (pageMapper.sqlCountPagesByNameSelect(page.getPagesName()) == 0) {
+			if (pageMapper.sqlCountPagesByNameSelect(page.getName()) == 0) {
 				// Check duplicate Pages Code
-				if (pageMapper.sqlCountPagesByCodeSelect(page.getPagesCode()) == 0) {
+				if (pageMapper.sqlCountPagesByCodeSelect(page.getCode()) == 0) {
 
 					// set value for field public.page.updated_by
-					page.setUpdateBy(usernameLogin);
+					page.setUpdatedBy(usernameLogin);
 					// set value for field public.page.created_timestamp
-					page.setCreateTimestamp(currentTimestamp);
+					page.setCreatedTimestamp(currentTimestamp);
 					// set value for field public.page.updated_timestamp
-					page.setUpdateTimestamp(currentTimestamp);
+					page.setUpdatedTimestamp(currentTimestamp);
 
 					// return result insert database query
 					return pageMapper.sqlPagesInsert(page);

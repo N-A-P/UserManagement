@@ -4,17 +4,13 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
-
-import com.mockproject.du1.common.DataUtil;
 import com.mockproject.du1.mapper.RoleMapper;
 import com.mockproject.du1.model.Role;
 
@@ -105,11 +101,11 @@ public class RoleService {
 				if (roleMapper.sqlCountRoleByCodeSelect(role.getCode()) == 0) {
 
 					// set value for field public.role.updated_by
-					role.setUpdateBy(usernameLogin);
+					role.setUpdatedBy(usernameLogin);
 					// set value for field public.role.created_timestamp
-					role.setCreateTimestamp(currentTimestamp);
+					role.setCreatedTimestamp(currentTimestamp);
 					// set value for field public.role.updated_timestamp
-					role.setUpdateTimestamp(currentTimestamp);
+					role.setUpdatedTimestamp(currentTimestamp);
 
 					// return result update database query
 					return roleMapper.sqlEditRoleInfoUpdate(role);
@@ -138,11 +134,11 @@ public class RoleService {
 				if (roleMapper.sqlCountRoleByCodeSelect(role.getCode()) == 0) {
 
 					// set value for field public.role.updated_by
-					role.setUpdateBy(usernameLogin);
+					role.setUpdatedBy(usernameLogin);
 					// set value for field public.role.created_timestamp
-					role.setCreateTimestamp(currentTimestamp);
+					role.setCreatedTimestamp(currentTimestamp);
 					// set value for field public.role.updated_timestamp
-					role.setUpdateTimestamp(currentTimestamp);
+					role.setUpdatedTimestamp(currentTimestamp);
 
 					// return result insert database query
 					return roleMapper.sqlRoleInsert(role);

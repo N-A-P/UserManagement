@@ -10,11 +10,11 @@ public class RoleForPages {
 	/**
 	 * Role Pages Id
 	 */
-	private int rolePagesId;
+	private long rolePagesId;
 	/**
 	 * Role Id
 	 */
-	private int roleId;
+	private long roleId;
 	/**
 	 * Role Name
 	 */
@@ -22,7 +22,7 @@ public class RoleForPages {
 	/**
 	 * Pages Id
 	 */
-	private int pagesId;
+	private long pagesId;
 	/**
 	 * Pages Name
 	 */
