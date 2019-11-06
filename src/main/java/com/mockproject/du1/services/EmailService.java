@@ -191,6 +191,7 @@ public class EmailService {
                                 .address(row.getCell(6).getStringCellValue())
                                 .createdTimestamp(currentTimestamp)
                                 .updatedTimestamp(currentTimestamp)
+                                .isActivated(1)
                                 .company(row.getCell(7).getStringCellValue())
                                 .build();
                         customerMapper.sqlCreateCustomerInsert(customer);
