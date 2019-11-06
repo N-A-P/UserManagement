@@ -110,6 +110,8 @@
         select
         <include refid="Base_Column_List" />
         from campaign
+        where
+        is_activated=1
 	</select>
     <update id="sqlGetCampainById"
             parameterType="com.mockproject.du1.model.Campaign">
@@ -118,7 +120,6 @@
         <include refid="Base_Column_List" />
         from campaign
         where id = #{id,jdbcType=BIGINT}
-
 	</update>
 
     <update id="sqlCampaignInfoUpdate"

@@ -12,4 +12,5 @@ public interface CustomerMapper {
     List<Customer> sqlGetCustomerByCampaignAndMaxTime(int CampaignId);
     Customer selectByPrimaryKey(int campaign_id);
 
+    int updateCustomer(Customer customer);
 }
